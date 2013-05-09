@@ -1,0 +1,6 @@
+# view AndroidManifest.xml #generated:24
+-keep class com.jackhxs.cardbank.CardHolder { <init>(...); }
+
+# view AndroidManifest.xml #generated:15
+-keep class com.jackhxs.cardbank.MainActivity { <init>(...); }
+

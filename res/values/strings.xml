@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Card Bank</string>
+    <string name="hint_enter_text">Enter Text</string>
+    <string name="button_send">Send</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="menu_settings">Settings</string>
+    <string name="title_activity_card_holder">Card Holder</string>
+
+    <string name="login_login_string">Login</string>
+    <string name="login_email">Email</string>
+    <string name="login_password">Password</string>
+
+</resources>
