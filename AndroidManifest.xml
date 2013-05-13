@@ -15,6 +15,7 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
+      
         <activity
             android:name=".LoginActivity"
             android:label="@string/app_name" >
@@ -24,14 +25,17 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name" >
         </activity>
+
         <activity
             android:name=".CardList"
             android:label="@string/app_name" >
         </activity>
+
         <activity
             android:name=".CardHolder"
             android:label="@string/title_activity_card_holder" >
@@ -41,6 +45,7 @@
                 <data android:mimeType="application/com.jackhxs.cardbank" />
             </intent-filter>
         </activity>
+
     </application>
 
 </manifest>
