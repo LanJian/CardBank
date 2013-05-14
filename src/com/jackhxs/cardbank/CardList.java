@@ -8,6 +8,8 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
+import com.jackhxs.data.Card;
+
 public class CardList extends Activity {
   private ListView myListView;
 

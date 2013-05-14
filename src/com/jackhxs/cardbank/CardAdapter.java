@@ -9,6 +9,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.jackhxs.data.Card;
+
 public class CardAdapter extends ArrayAdapter<Card> {
 
   private Card[] myData;
