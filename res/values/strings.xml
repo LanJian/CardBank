@@ -6,7 +6,7 @@
     <string name="button_send">Send</string>
     <string name="hello_world">Hello world!</string>
     <string name="menu_settings">Settings</string>
-    <string name="title_activity_card_holder">Card Holder</string>
+    <string name="title_activity_card_view">Card View</string>
 
     <string name="login_login_string">Login</string>
     <string name="login_email">Email</string>

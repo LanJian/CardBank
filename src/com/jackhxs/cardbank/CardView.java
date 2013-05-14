@@ -9,25 +9,25 @@ import android.os.Parcelable;
 import android.view.Menu;
 import android.widget.TextView;
 
-public class CardHolder extends Activity {
+public class CardView extends Activity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_card_holder);
+        setContentView(R.layout.activity_card_view);
     }
 
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.activity_card_holder, menu);
+        getMenuInflater().inflate(R.menu.activity_card_view, menu);
         return true;
     }
 
 
     @Override
     public void onResume() {
-      System.out.println("=========== cardholder resume ============");
+      System.out.println("=========== cardview resume ============");
       super.onResume();
       if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(getIntent().getAction())) {
         processIntent(getIntent());

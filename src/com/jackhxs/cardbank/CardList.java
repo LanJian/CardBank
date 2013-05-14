@@ -1,25 +1,42 @@
 package com.jackhxs.cardbank;
 
-import android.app.ListActivity;
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ArrayAdapter;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
-public class CardList extends ListActivity {
-  public void onCreate(Bundle icicle) {
-    super.onCreate(icicle);
-    String[] values = new String[] { "Android", "iPhone", "WindowsMobile",
-      "Blackberry", "WebOS", "Ubuntu", "Windows7", "Max OS X",
-      "Linux", "OS/2", "random", "foo", "bar", "yoyo" };
-    ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-        android.R.layout.simple_list_item_1, values);
-    setListAdapter(adapter);
+public class CardList extends Activity {
+  private ListView myListView;
+
+  public void onCreate(Bundle bundle) {
+    super.onCreate(bundle);
+    //String[] values = new String[] { "Android", "iPhone", "WindowsMobile",
+    //"Blackberry", "WebOS", "Ubuntu", "Windows7", "Max OS X",
+    //"Linux", "OS/2", "random", "foo", "bar", "yoyo" };
+    //ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+    //android.R.layout.simple_list_item_1, values);
+    //setListAdapter(adapter);
+
+    setContentView(R.layout.activity_card_list);
+    myListView = (ListView) findViewById(R.id.list_view);
+
+    Card[] cardData = { new Card("Alice"), new Card("Bob"),
+        new Card("Carl"), new Card("Dan") };
+    CardAdapter adapter = new CardAdapter(this, R.layout.list_view_row,
+        cardData);
+    myListView.setAdapter(adapter);
+    myListView.setOnItemClickListener(new OnItemClickListener() {
+      public void onItemClick(AdapterView<?> l, View v, int position, long id) {
+        onListItemClick(l, v, position, id);
+      }
+    });
   }
 
-  public void onListItemClick(ListView l, View v, int position, long id) {
-    Intent intent = new Intent(this, CardHolder.class);
+  public void onListItemClick(AdapterView<?> l, View v, int position, long id) {
+    Intent intent = new Intent(this, CardView.class);
     startActivity(intent);
   }
 }

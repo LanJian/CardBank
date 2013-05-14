@@ -37,8 +37,8 @@
         </activity>
 
         <activity
-            android:name=".CardHolder"
-            android:label="@string/title_activity_card_holder" >
+            android:name=".CardView"
+            android:label="@string/title_activity_card_view" >
             <intent-filter>
                 <action android:name="android.nfc.action.NDEF_DISCOVERED" />
                 <category android:name="android.intent.category.DEFAULT" />
