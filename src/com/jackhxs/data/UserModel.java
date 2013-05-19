@@ -1,17 +1,26 @@
 package com.jackhxs.data;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 import android.content.Context;
 import android.database.SQLException;
-import android.database.sqlite.SQLiteDatabase;
+
+/**
+ * Main Entry for Getting Card Array;
+ * 
+ * Once authenticated, initiate this object
+ * 
+ * @author MooMou
+ *
+ */
 
 public class UserModel {
-	private SQLiteDBHelper.SQLiteOpener mDbHelper;
-	private SQLiteDatabase mDb;
 	private final Context mCtx;
-	
-	private String user;
-	private CardDBAdapter cardDBHelper;
-	private ContactAdapter contactDBHelper;
+	private final String username;
+	private final CardDBAdapter cardDBHelper;
+	private final ContactAdapter contactDBHelper;
 	
 	/**
 	 * Constructor - takes the context to allow the database to be
@@ -20,13 +29,13 @@ public class UserModel {
 	 * @param ctx
 	 *            the Context within which to work
 	 */
-	public UserModel(Context ctx) {
+	public UserModel(Context ctx, String _username) {
 		this.mCtx = ctx;
+		username = _username;
+		
+		//initiating specific table helper
 		cardDBHelper = new CardDBAdapter(ctx);
 		contactDBHelper = new ContactAdapter(ctx);
-		
-		cardDBHelper.open();
-		contactDBHelper.open();
 	}
 
 	/**
@@ -40,8 +49,9 @@ public class UserModel {
 	 *             if the database could be neither opened or created
 	 */
 	public UserModel open() throws SQLException {
-		this.mDbHelper = new SQLiteDBHelper.SQLiteOpener(this.mCtx);
-		this.mDb = this.mDbHelper.getWritableDatabase();
+		cardDBHelper.open();
+		contactDBHelper.open();
+		
 		return this;
 	}
 
@@ -49,7 +59,54 @@ public class UserModel {
 	 * close return type: void
 	 */
 	public void close() {
-		this.mDbHelper.close();
+		cardDBHelper.close();
+		contactDBHelper.close();
+	}
+	
+	public List<Card> getContactCards() {
+		List<String> objectIds = contactDBHelper.getAllContact(username);
+		List<Card> cards = new ArrayList<Card>();
+		
+		for(Iterator<String> i = objectIds.iterator(); i.hasNext(); ) {
+			String objectId = i.next();
+			Card contactCard = cardDBHelper.getCard(objectId);
+			
+			if (contactCard != null) {
+				cards.add(contactCard);
+			}
+			else { //not in the database
+				//if online, retrieve it,
+				//else add a blank card
+			}
+		}
+		
+		return cards;
+	}
+	
+	public Boolean addContact(Card newContact) {
+		/*
+		 * Add card to table if not already in
+		 * Add an entry to contact table if not already there
+		 */
+		
+		if (newContact != null) {
+			if (cardDBHelper.getCard(newContact.getObjectId()) == null) {
+				cardDBHelper.createCard(newContact);
+			}
+			
+			return contactDBHelper.addContact(new Contact(username, newContact.getObjectId()));
+		}
+		
+		return false;
+	}
+	
+	public Boolean removeContact(Card contact) {
+		return null;
+	}
+	
+	public Boolean syncContact() {
+		//Connect to the server to retrieve new cards and update old cards
+		return null;
 	}
 
 }

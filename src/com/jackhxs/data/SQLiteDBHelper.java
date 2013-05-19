@@ -7,17 +7,15 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class SQLiteDBHelper {
   /*
-    3 Table Architecture
-    -> user table: 
-        username
-        password
-        objectId - unique
+    2 Table Architecture
         
-    -> card entry table: 
+ 	-> card entry table:
+ 	 Contains unique contact info downloaded from server
         objectId - unique
         owner - a list
         
     -> contact table:
+     For each user, we store the contact in his/her network; this supports multi user in the future
     	username
     	objectId
   */
@@ -25,17 +23,13 @@ public class SQLiteDBHelper {
   public static final String DATABASE_NAME = "cardbank";
   public static final int DATABASE_VERSION = 1;
 
-  private static final String CREATE_TABLE_USER = 
-    "create table user (_id integer primary key autoincrement, " //$NON-NLS-1$
-    + UserDBAdapter.USERNAME +" TEXT," //$NON-NLS-1$
-    + UserDBAdapter.HASHEDPWD +" TEXT"+ ");"; //$NON-NLS-1$  //$NON-NLS-2$
-
   private static final String CREATE_TABLE_CARD =
     "create table card (_id integer autoincrement, " //$NON-NLS-1$
     + CardDBAdapter.FIRST_NAME + " TEXT," //$NON-NLS-1$
     + CardDBAdapter.LAST_NAME + " TEXT," //$NON-NLS-1$
     + CardDBAdapter.EMAIL + " TEXT," //$NON-NLS-1$
     + CardDBAdapter.PHONE_NUMBER + " TEXT," //$NON-NLS-1$
+    + CardDBAdapter.VERSION + " INTEGER," //$NON-NLS-1$
     + CardDBAdapter.OBJECT_ID + " INTEGER primary key" + ");"; //$NON-NLS-1$ //$NON-NLS-2$
 
   private static final String CREATE_TABLE_CONTACT = "create table contact (_id integer primary key autoincrement, " //$NON-NLS-1$
@@ -45,7 +39,6 @@ public class SQLiteDBHelper {
   private final Context context; 
   private DatabaseHelper DBHelper;
   private SQLiteDatabase db;
-
 
   public static class SQLiteOpener extends SQLiteOpenHelper {
 	  SQLiteOpener(Context context) {
@@ -79,7 +72,6 @@ public class SQLiteDBHelper {
 
       @Override
       public void onCreate(SQLiteDatabase db) {
-          db.execSQL(CREATE_TABLE_USER);
           db.execSQL(CREATE_TABLE_CARD);
           db.execSQL(CREATE_TABLE_CONTACT);           
       }

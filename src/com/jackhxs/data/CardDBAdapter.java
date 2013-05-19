@@ -17,6 +17,7 @@ public class CardDBAdapter {
   public static final String EMAIL = "email";
   public static final String PHONE_NUMBER = "phone_number";
   public static final String OBJECT_ID = "object_id";
+  public static final String VERSION = "version";
  
   private static final String DATABASE_TABLE = "cards";
 
@@ -24,6 +25,17 @@ public class CardDBAdapter {
   private SQLiteDatabase mDb;
   private final Context mCtx;
 
+  private Card cursorToCard(Cursor cardCursor) {
+	  Card card = new Card(cardCursor.getLong(0),
+			  				cardCursor.getString(1),
+			  				cardCursor.getString(2),
+			  				cardCursor.getString(3),
+			  				cardCursor.getString(4),
+			  				cardCursor.getString(5),
+			  				cardCursor.getInt(6));
+	  return card;
+  }
+  
   /**
    * Constructor - takes the context to allow the database to be
    * opened/created
@@ -67,20 +79,17 @@ public class CardDBAdapter {
    * @param year
    * @return rowId or -1 if failed
    */
-  public long createCard(String firstName,
-		  				 String lastName,
-		  				 String email,
-		  				 String phoneNumber,
-		  				 String objectId) {
+  public long createCard(Card newCard) {
 	  
       ContentValues initialValues = new ContentValues();
       
-      initialValues.put(FIRST_NAME, firstName);
-      initialValues.put(LAST_NAME, lastName);
-      initialValues.put(EMAIL, email);
-      initialValues.put(PHONE_NUMBER, phoneNumber);
-      initialValues.put(OBJECT_ID, objectId);
-      
+      initialValues.put(FIRST_NAME, newCard.getFirstName());
+      initialValues.put(LAST_NAME, newCard.getLastName());
+      initialValues.put(EMAIL, newCard.getEmail());
+      initialValues.put(PHONE_NUMBER, newCard.getPhoneNumber());
+      initialValues.put(OBJECT_ID, newCard.getObjectId());
+      initialValues.put(VERSION, newCard.getVersion() + 1);
+	  
       return this.mDb.insert(DATABASE_TABLE, null, initialValues);
   }
 
@@ -91,20 +100,7 @@ public class CardDBAdapter {
    * @return true if deleted, false otherwise
    */
   public boolean deleteCard(long rowId) {
-
       return this.mDb.delete(DATABASE_TABLE, ROW_ID + "=" + rowId, null) > 0;
-  }
-
-  /**
-   * Return a Cursor over the list of all cars in the database
-   * 
-   * @return Cursor over all cars
-   */
-  public Cursor getAllCards() {
-      /*return this.mDb.query(DATABASE_TABLE, new String[] { ROW_ID,
-              NAME, MODEL, YEAR }, null, null, null, null, null);
-       */
-	  return null;
   }
   
   /**
@@ -113,40 +109,29 @@ public class CardDBAdapter {
    * @return Cursor positioned to matching car, if found
    * @throws SQLException if car could not be found/retrieved
    */
-  public Cursor getCard(long rowId) throws SQLException {
-	  /*
-      Cursor mCursor =
+  public Card getCard(String objectId) throws SQLException {
 
-      this.mDb.query(true, DATABASE_TABLE, new String[] { ROW_ID, NAME,
-              MODEL, YEAR}, ROW_ID + "=" + rowId, null, null, null, null, null);
+      Cursor mCursor = mDb.rawQuery("FROM cards WHERE object_id = ?", new String[]{objectId});
+
       if (mCursor != null) {
           mCursor.moveToFirst();
+          return cursorToCard(mCursor);
       }
-      return mCursor;
-      */
+      
 	  return null;
   }
 
-  /**
-   * Update the car.
-   * 
-   * @param rowId
-   * @param name
-   * @param model
-   * @param year
-   * @return true if the note was successfully updated, false otherwise
-   */
-  public boolean updateCard(long rowId, String name, String model,
-          String year){
-	  /*
-      ContentValues args = new ContentValues();
-      args.put(NAME, name);
-      args.put(MODEL, model);
-      args.put(YEAR, year);
+  public boolean updateCard(Card card) {
 
-      return this.mDb.update(DATABASE_TABLE, args, ROW_ID + "=" + rowId, null) >0; 
-	  */
-	  return true;
+	  ContentValues newValues = new ContentValues();
+
+	  newValues.put(FIRST_NAME, card.getFirstName());
+	  newValues.put(LAST_NAME, card.getLastName());
+	  newValues.put(EMAIL, card.getEmail());
+	  newValues.put(PHONE_NUMBER, card.getPhoneNumber());
+	  newValues.put(OBJECT_ID, card.getObjectId());
+	  newValues.put(VERSION, card.getVersion() + 1);
+
+	  return this.mDb.update(DATABASE_TABLE, newValues, ROW_ID + "=" + card.getRowId(), null) >0;
   }
-
 }
