@@ -16,10 +16,10 @@ public class CardDBAdapter {
   public static final String LAST_NAME = "last_name";
   public static final String EMAIL = "email";
   public static final String PHONE_NUMBER = "phone_number";
-  public static final String OBJECT_ID = "object_id";
+  public static final String REMOTE_ID = "remote_id";
   public static final String VERSION = "version";
  
-  private static final String DATABASE_TABLE = "cards";
+  private static final String DATABASE_TABLE = "card";
 
   private SQLiteOpener mDbHelper;
   private SQLiteDatabase mDb;
@@ -87,8 +87,8 @@ public class CardDBAdapter {
       initialValues.put(LAST_NAME, newCard.getLastName());
       initialValues.put(EMAIL, newCard.getEmail());
       initialValues.put(PHONE_NUMBER, newCard.getPhoneNumber());
-      initialValues.put(OBJECT_ID, newCard.getObjectId());
-      initialValues.put(VERSION, newCard.getVersion() + 1);
+      initialValues.put(REMOTE_ID, newCard.getId());
+      initialValues.put(VERSION, newCard.getVersion());
 	  
       return this.mDb.insert(DATABASE_TABLE, null, initialValues);
   }
@@ -111,7 +111,7 @@ public class CardDBAdapter {
    */
   public Card getCard(String objectId) throws SQLException {
 
-      Cursor mCursor = mDb.rawQuery("FROM cards WHERE object_id = ?", new String[]{objectId});
+      Cursor mCursor = mDb.rawQuery("FROM cards WHERE REMOTE_ID = ?", new String[]{objectId});
 
       if (mCursor != null) {
           mCursor.moveToFirst();
@@ -122,16 +122,28 @@ public class CardDBAdapter {
   }
 
   public boolean updateCard(Card card) {
+	  Card localCard = this.getCard(card.getId());
+	  
+	  if (localCard != null) {
+		  if (localCard.getVersion() < card.getVersion()) { 
+			  //can this ever happen? the user should not be able to modify other people's info, right?
+			  //I guess we need to use a fork strategy and store local user updates...next iteration
+			  return true;
+		  }
+		  
+		  ContentValues newValues = new ContentValues();
 
-	  ContentValues newValues = new ContentValues();
+		  newValues.put(FIRST_NAME, card.getFirstName());
+		  newValues.put(LAST_NAME, card.getLastName());
+		  newValues.put(EMAIL, card.getEmail());
+		  newValues.put(PHONE_NUMBER, card.getPhoneNumber());
+		  newValues.put(REMOTE_ID, card.getId());
+		  newValues.put(VERSION, card.getVersion() + 1);
 
-	  newValues.put(FIRST_NAME, card.getFirstName());
-	  newValues.put(LAST_NAME, card.getLastName());
-	  newValues.put(EMAIL, card.getEmail());
-	  newValues.put(PHONE_NUMBER, card.getPhoneNumber());
-	  newValues.put(OBJECT_ID, card.getObjectId());
-	  newValues.put(VERSION, card.getVersion() + 1);
-
-	  return this.mDb.update(DATABASE_TABLE, newValues, ROW_ID + "=" + card.getRowId(), null) >0;
+		  return this.mDb.update(DATABASE_TABLE, newValues, ROW_ID + "=" + card.getRowId(), null) > 0;
+	  }
+	  else {
+		  return this.createCard(card) > 0;
+	  }
   }
 }

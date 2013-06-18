@@ -6,7 +6,7 @@ public class Card {
   private String lastName;
   private String email;
   private String phoneNumber;
-  private String objectId; //unique id in remote db
+  private String id; //unique id in remote db
   private Integer version;
   
   public Card(Long _rowId,
@@ -14,7 +14,7 @@ public class Card {
 		  		String _lastName,
 		  		String _email,
 		  		String _phoneString,
-		  		String _objectId,
+		  		String _id,
 		  		Integer _version) {
 	  
 	  rowId = _rowId;
@@ -22,30 +22,18 @@ public class Card {
 	  lastName = _lastName;
 	  email = _email;
 	  phoneNumber = _phoneString;
-	  objectId = _objectId;
+	  id = _id;
 	  version = _version;
   }
   public Card(String _firstName,
 	  		String _lastName,
 	  		String _email,
 	  		String _phoneString,
-	  		String _objectId,
+	  		String _id,
 	  		Integer _version) {
-	  
-	  firstName = _firstName;
-	  lastName = _lastName;
-	  email = _email;
-	  phoneNumber = _phoneString;
-	  objectId = _objectId;
-	  version = 0;
+	  this(null, _firstName, _lastName, _email, _phoneString, _id, _version);
   }
   
-  public Card(Long _rowId) {
-	  rowId = _rowId;
-  }
-  public Card(String name) {//TODO: delete later
-	  firstName = name;
-  }
 
   public Long getRowId() {
 	  return rowId;
@@ -83,11 +71,11 @@ public class Card {
     email = _email;
   }
   
-  public String getObjectId() {
-	  return objectId;
+  public String getId() {
+	  return id;
   }
-  public void setObjectId(String _objectId) {
-	  objectId = _objectId;
+  public void setId(String _id) {
+	  id = _id;
   }
   
   public Integer getVersion() {

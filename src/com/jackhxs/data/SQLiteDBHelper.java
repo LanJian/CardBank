@@ -11,13 +11,13 @@ public class SQLiteDBHelper {
         
  	-> card entry table:
  	 Contains unique contact info downloaded from server
-        objectId - unique
+        objectId - uniquehttp://flamefusion.net/software/shapeshifter-clipboard-manager
         owner - a list
         
     -> contact table:
      For each user, we store the contact in his/her network; this supports multi user in the future
-    	username
-    	objectId
+    	username - current user
+    	objectId - remote db
   */
 
   public static final String DATABASE_NAME = "cardbank";
@@ -30,11 +30,11 @@ public class SQLiteDBHelper {
     + CardDBAdapter.EMAIL + " TEXT," //$NON-NLS-1$
     + CardDBAdapter.PHONE_NUMBER + " TEXT," //$NON-NLS-1$
     + CardDBAdapter.VERSION + " INTEGER," //$NON-NLS-1$
-    + CardDBAdapter.OBJECT_ID + " INTEGER primary key" + ");"; //$NON-NLS-1$ //$NON-NLS-2$
+    + CardDBAdapter.REMOTE_ID + " INTEGER primary key" + ");"; //$NON-NLS-1$ //$NON-NLS-2$
 
   private static final String CREATE_TABLE_CONTACT = "create table contact (_id integer primary key autoincrement, " //$NON-NLS-1$
   +ContactAdapter.USERNAME + " TEXT," //$NON-NLS-1$
-  +ContactAdapter.OBJECT_ID+" INTEGER"+ ");"; //$NON-NLS-1$  //$NON-NLS-2$
+  +ContactAdapter.REMOTE_ID +" INTEGER primary key"+ ");"; //$NON-NLS-1$  //$NON-NLS-2$
 
   private final Context context; 
   private DatabaseHelper DBHelper;

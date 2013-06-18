@@ -3,15 +3,15 @@ package com.jackhxs.data;
 public class Contact {
   private Long rowId;
   private String owner;
-  private String objectId; //unique id referring to a 
+  private String id; //unique id referring to a 
   
-  public Contact(Long _rowId, String _owner, String _objectId) {
+  public Contact(Long _rowId, String _owner, String _id) {
     rowId = _rowId;
     owner = _owner;
-    objectId = _objectId;
+    id = _id;
   }
-  public Contact(String _owner, String _objectId) {
-	this(null, _owner, _objectId);
+  public Contact(String _owner, String _id) {
+	this(null, _owner, _id);
   }
   
   public String getOwner() {
@@ -21,10 +21,10 @@ public class Contact {
 	  owner = _owner;
   }
   
-  public String getObjectId() {
-	  return objectId;
+  public String getId() {
+	  return id;
   }
-  public void setObjectId(String _objectId) {
-	  objectId = _objectId;
+  public void setId(String _id) {
+	  id = _id;
   }
 }
