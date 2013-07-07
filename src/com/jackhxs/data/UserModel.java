@@ -1,20 +1,12 @@
 package com.jackhxs.data;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-
 import android.content.Context;
 import android.database.SQLException;
-import android.os.AsyncTask;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonIOException;
@@ -37,36 +29,6 @@ public class UserModel {
 	private final String username;
 	private final CardDBAdapter cardDBHelper;
 	private final ContactAdapter contactDBHelper;
-
-	private class DownloadJSON extends AsyncTask<String, Void, String> {
-		@Override
-		protected String doInBackground(String... urls) {
-			String response = "";
-			for (String url : urls) {
-				DefaultHttpClient client = new DefaultHttpClient();
-				HttpGet httpGet = new HttpGet(url);
-				try {
-					HttpResponse execute = client.execute(httpGet);
-					InputStream content = execute.getEntity().getContent();
-
-					BufferedReader buffer = new BufferedReader(new InputStreamReader(content));
-					String s = "";
-					while ((s = buffer.readLine()) != null) {
-						response += s;
-					}
-
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-			return response;
-		}
-
-		@Override
-		protected void onPostExecute(String result) {
-			
-		}
-	}
 
 	/**
 	 * Constructor - takes the context to allow the database to be
@@ -149,13 +111,7 @@ public class UserModel {
 	public Boolean removeContact(Card contact) {
 		return null;
 	}
-	
-	public void startSyncProcess() {
-		
-		DownloadJSON task = new DownloadJSON();
-		task.execute(ContactURL.replace("username", username));
-	}
-	
+
 	//Override Local Database with Remote State
 	public Boolean syncWithRemote(String inputJSON) throws JsonIOException, JsonSyntaxException, MalformedURLException {
 		List<Card> remoteContactCards = new Gson().fromJson(inputJSON,
