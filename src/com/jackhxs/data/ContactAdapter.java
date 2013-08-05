@@ -65,7 +65,7 @@ public class ContactAdapter {
 		if (!cursor.isAfterLast()) {
 			return this.cursorToContact(cursor);
 		}
-		
+
 		return null;
 	}
 

@@ -44,6 +44,8 @@ public class UserModel {
 		//initiating specific table helper
 		cardDBHelper = new CardDBAdapter(ctx);
 		contactDBHelper = new ContactAdapter(ctx);
+		
+		// sync with remote if possible
 	}
 
 	/**
@@ -119,7 +121,6 @@ public class UserModel {
 		Map<String, String> localContactIds = contactDBHelper.getAllContactIds(username);
 		
 		for (Card remoteContact: remoteContactCards) {
-			String id = remoteContact.getId();
 			cardDBHelper.updateCard(remoteContact); //update if exists else create
 			localContactIds.remove(remoteContact.getId());
 		}

@@ -25,8 +25,7 @@ public class CardList extends Activity {
     setContentView(R.layout.activity_card_list);
     myListView = (ListView) findViewById(R.id.list_view);
 
-    Card[] cardData = { new Card("Alice"), new Card("Bob"),
-        new Card("Carl"), new Card("Dan") };
+    Card[] cardData = {};
     CardAdapter adapter = new CardAdapter(this, R.layout.list_view_row,
         cardData);
     myListView.setAdapter(adapter);
