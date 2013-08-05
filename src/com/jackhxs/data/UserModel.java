@@ -22,9 +22,6 @@ import com.google.gson.reflect.TypeToken;
  *
  */
 public class UserModel {
-	private final String ContactURL = "http://dummy.com/user/:username/contacts";
-	private final String CardURL = "dummy://";
-
 	private final Context mCtx;
 	private final String username;
 	private final CardDBAdapter cardDBHelper;
@@ -35,10 +32,10 @@ public class UserModel {
 	 * opened/created
 	 * 
 	 * @param ctx
-	 *            the Context within which to work
+	 * 	the Context within which to work
 	 */
 	public UserModel(Context ctx, String _username) {
-		this.mCtx = ctx;
+		mCtx = ctx;
 		username = _username;
 
 		//initiating specific table helper

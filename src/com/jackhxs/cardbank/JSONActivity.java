@@ -12,6 +12,8 @@ public class JSONActivity extends Activity {
 	
 	GetJSONListener l = new GetJSONListener(){
 		public void onRemoteCallComplete(JSONObject jsonFromNet) {
+
+            System.out.println(jsonFromNet);
 			// add code to act on the JSON object that is returned			
 		}
 	};
@@ -20,11 +22,11 @@ public class JSONActivity extends Activity {
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+    	super.onCreate(savedInstanceState);
+
 		setContentView(R.layout.main);
+
 		JSONClient client = new JSONClient(this, l);
-		String url = "url that will return JSON";
-		
 		client.execute(url);
 	}	
 }
