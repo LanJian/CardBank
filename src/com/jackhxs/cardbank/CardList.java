@@ -15,6 +15,7 @@ public class CardList extends Activity {
 
   public void onCreate(Bundle bundle) {
     super.onCreate(bundle);
+
     //String[] values = new String[] { "Android", "iPhone", "WindowsMobile",
     //"Blackberry", "WebOS", "Ubuntu", "Windows7", "Max OS X",
     //"Linux", "OS/2", "random", "foo", "bar", "yoyo" };
@@ -25,7 +26,7 @@ public class CardList extends Activity {
     setContentView(R.layout.activity_card_list);
     myListView = (ListView) findViewById(R.id.list_view);
 
-    Card[] cardData = { };
+    Card[] cardData = {};
     CardAdapter adapter = new CardAdapter(this, R.layout.list_view_row,
         cardData);
     myListView.setAdapter(adapter);

@@ -26,7 +26,7 @@ public class CardDBAdapter {
   private final Context mCtx;
 
   private Card cursorToCard(Cursor cardCursor) {
-	  Card card = new Card(cardCursor.getLong(0),
+	  Card card = new Card(cardCursor .getLong(0),
 			  				cardCursor.getString(1),
 			  				cardCursor.getString(2),
 			  				cardCursor.getString(3),
@@ -126,8 +126,8 @@ public class CardDBAdapter {
 	  
 	  if (localCard != null) {
 		  if (localCard.getVersion() < card.getVersion()) { 
-			  //can this ever happen? the user should not be able to modify other people's info, right?
-			  //I guess we need to use a fork strategy and store local user updates...next iteration
+			  // can this ever happen? the user should not be able to modify other people's info, right?
+			  // I guess we need to use a fork strategy and store local user updates...next iteration
 			  return true;
 		  }
 		  

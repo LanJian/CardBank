@@ -17,13 +17,11 @@ public class CardView extends Activity {
         setContentView(R.layout.activity_card_view);
     }
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.activity_card_view, menu);
         return true;
     }
-
 
     @Override
     public void onResume() {
@@ -33,7 +31,6 @@ public class CardView extends Activity {
         processIntent(getIntent());
       }
     }
-
 
     public void processIntent(Intent intent) {
       TextView textView = (TextView) findViewById(R.id.text_view);
