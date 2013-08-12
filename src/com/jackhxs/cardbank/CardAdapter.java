@@ -10,14 +10,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.jackhxs.data.Card;
+import com.jackhxs.data.SimpleCard;
 
-public class CardAdapter extends ArrayAdapter<Card> {
+public class CardAdapter extends ArrayAdapter<SimpleCard> {
 
-  private Card[] myData;
+  private SimpleCard[] myData;
   private int myResourceId;
   private Context myContext;
 
-  public CardAdapter(Context context, int resourceId, Card[] objects) {
+  public CardAdapter(Context context, int resourceId, SimpleCard[] objects) {
     super(context, resourceId, objects);
     myData = objects;
     myResourceId = resourceId;
@@ -34,8 +35,7 @@ public class CardAdapter extends ArrayAdapter<Card> {
 
     TextView txtView = (TextView)row.findViewById(R.id.txtTitle);
     ImageView imgView = (ImageView)row.findViewById(R.id.imgIcon);
-    System.out.println(myData[position].getName());
-    txtView.setText(myData[position].getName());
+    
     imgView.setImageResource(R.drawable.ic_launcher);
 
     //WeatherHolder holder = null;

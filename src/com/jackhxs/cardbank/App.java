@@ -1,6 +1,6 @@
 package com.jackhxs.cardbank;
 
-import com.jackhxs.data.RestInterface;
+import com.jackhxs.remote.RestInterface;
 
 import retrofit.RestAdapter;
 import android.app.Application;
