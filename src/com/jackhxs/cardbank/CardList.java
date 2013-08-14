@@ -37,11 +37,6 @@ public class CardList extends Activity implements JSONResultReceiver.Receiver {
 
 	public void onListItemClick(AdapterView<?> l, View v, int position, long id) {
 		Intent intent = new Intent(this, CardFlipView.class);
-//		Bundle b = new Bundle();
-//		b.putParcelableArray("contacts", myCards);
-//		Log.e("paul", "-----------------|" + String.valueOf(myCards) + "|");
-//		intent.putExtras(b);
-		// intent.putExtra("contacts", myCards);
 		startActivity(intent);
 	}
 
@@ -51,8 +46,13 @@ public class CardList extends Activity implements JSONResultReceiver.Receiver {
 		switch (resultCode) {
 		case Constants.STATUS_FINISHED: {
 			Log.e("paul", "--------*(&*(^&*%^^*($&---------|" + resultData.getParcelableArray("contacts") + "|");
+			
 			myCards = (SimpleCard[]) resultData.getParcelableArray("contacts");
+			
+			// setting a global reference
 			((App) getApplication()).myCards = myCards;
+			((App) getApplication()).ownCard = myCards[0];
+			
 			Log.e("paul", String.valueOf(myCards.length));
 
 			setContentView(R.layout.activity_card_list);
