@@ -46,6 +46,8 @@
                 <data android:mimeType="application/com.jackhxs.cardbank" />
             </intent-filter>
         </activity>
+        <activity android:name="CardFlipView"></activity>
+        <service android:name="com.jackhxs.remote.RemoteService"></service>
 
     </application>
 

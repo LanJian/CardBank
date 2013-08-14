@@ -14,8 +14,8 @@ import com.jackhxs.data.SimpleCard;
  * Created by moomou on 8/4/13.
  */
 public interface RestInterface {
-  @GET("/5208262aa8f9330c0009cda5")
-  List<SimpleCard> listCards(@Path("user") String user);
+  @GET("/520830efa8f933420009cda6")
+  SimpleCard[] listCards();
 
   @GET("/users/{user}/contacts")
   List<Contact> listContacts(@Path("user") String user);

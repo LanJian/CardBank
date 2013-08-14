@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -16,6 +17,9 @@ import com.jackhxs.remote.RemoteService;
 
 public class CardList extends Activity implements JSONResultReceiver.Receiver {
 	private ListView myListView;
+	private CardAdapter myAdapter;
+	private SimpleCard[] myCards;
+
 	public JSONResultReceiver mReceiver;
 
 	public void onCreate(Bundle bundle) {
@@ -24,31 +28,43 @@ public class CardList extends Activity implements JSONResultReceiver.Receiver {
 		mReceiver = new JSONResultReceiver(new Handler());
 		mReceiver.setReceiver(this);
 
-		final Intent intent = new Intent(Intent.ACTION_SYNC, null, this, RemoteService.class);
+		final Intent intent = new Intent(Intent.ACTION_SYNC, null, this,
+				RemoteService.class);
 		intent.putExtra("receiver", mReceiver);
 		intent.putExtra("operation", 1);
 		startService(intent);
 	}
 
 	public void onListItemClick(AdapterView<?> l, View v, int position, long id) {
-		Intent intent = new Intent(this, CardView.class);
+		Intent intent = new Intent(this, CardFlipView.class);
+//		Bundle b = new Bundle();
+//		b.putParcelableArray("contacts", myCards);
+//		Log.e("paul", "-----------------|" + String.valueOf(myCards) + "|");
+//		intent.putExtras(b);
+		// intent.putExtra("contacts", myCards);
 		startActivity(intent);
 	}
 
 	public void onReceiveResult(int resultCode, Bundle resultData) {
-		switch(resultCode) {
+		Log.e("paul", String.valueOf(resultCode));
+
+		switch (resultCode) {
 		case Constants.STATUS_FINISHED: {
-			SimpleCard[] cards = (SimpleCard[]) resultData.getParcelableArray("contacts");
+			Log.e("paul", "--------*(&*(^&*%^^*($&---------|" + resultData.getParcelableArray("contacts") + "|");
+			myCards = (SimpleCard[]) resultData.getParcelableArray("contacts");
+			((App) getApplication()).myCards = myCards;
+			Log.e("paul", String.valueOf(myCards.length));
 
 			setContentView(R.layout.activity_card_list);
 			myListView = (ListView) findViewById(R.id.list_view);
 
-			CardAdapter adapter = new CardAdapter(this, R.layout.list_view_row, cards);
+			myAdapter = new CardAdapter(this, R.layout.list_view_row, myCards);
 
-			myListView.setAdapter(adapter);
+			myListView.setAdapter(myAdapter);
 
 			myListView.setOnItemClickListener(new OnItemClickListener() {
-				public void onItemClick(AdapterView<?> l, View v, int position, long id) {
+				public void onItemClick(AdapterView<?> l, View v, int position,
+						long id) {
 					onListItemClick(l, v, position, id);
 				}
 			});

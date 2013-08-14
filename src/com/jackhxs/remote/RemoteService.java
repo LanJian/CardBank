@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import android.os.ResultReceiver;
+import android.util.Log;
 
 import com.jackhxs.data.SimpleCard;
 import com.jackhxs.remote.Constants.Operation;
@@ -17,6 +18,10 @@ public class RemoteService extends IntentService {
 	.setServer("http://www.mocky.io/v2")
 	.build();
 	private final RestInterface service;
+	
+	public RemoteService() {
+		this("remoteService");
+	}
 
 	public RemoteService(String name) {
 		super(name);
@@ -30,6 +35,7 @@ public class RemoteService extends IntentService {
 		Bundle b = new Bundle();
 
 		Operation command = Constants.OperationVals[intent.getIntExtra("operation", 0)];
+		Log.e("paul", command.toString());
 		String userId = intent.getStringExtra("userId");
 		
 		receiver.send(Constants.STATUS_RUNNING, Bundle.EMPTY);
@@ -39,8 +45,8 @@ public class RemoteService extends IntentService {
 			break;
 		}
 		case GET_CONTACTS:
-			List<SimpleCard> contacts = service.listCards(userId);
-			b.putParcelableArray("contacts", (SimpleCard[]) contacts.toArray());
+			SimpleCard[] contacts = service.listCards();
+			b.putParcelableArray("contacts", contacts);
             receiver.send(Constants.STATUS_FINISHED, b);
 			break;
 		}

@@ -23,16 +23,21 @@ public class LoginActivity extends Activity {
 		String email = emailField.getText().toString();
 		String password = passwordField.getText().toString();
 		
-		App app = (App) getApplication();
-		String result = app.simpleApi.authenticate(email, password);
+//		App app = (App) getApplication();
+//		String result = app.simpleApi.authenticate(email, password);
+//		
+//		if (!result.equals("")) {
+//			app.username = result;
+//			
+//			Intent intent = new Intent(this, CardList.class);
+//		    startActivity(intent);
+//		}
+//		else {
+//		}
+
+		Intent intent = new Intent(this, CardList.class);
+		startActivity(intent);
 		
-		if (!result.equals("")) {
-			app.username = result;
-			
-			Intent intent = new Intent(this, CardList.class);
-		    startActivity(intent);
-		}
-		else {
-		}
+		
 	}
 }

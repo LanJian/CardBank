@@ -1,19 +1,12 @@
 package com.jackhxs.cardbank;
 
-import com.jackhxs.remote.RestInterface;
-
-import retrofit.RestAdapter;
 import android.app.Application;
 import android.content.res.Configuration;
 
+import com.jackhxs.data.SimpleCard;
+
 public class App extends Application {
-	final private String BASE_URL = "http://localhost:8080";
-	final private RestAdapter restAdapter = new RestAdapter.Builder()
-	.setServer(BASE_URL)
-	.build();
-	
-	final RestInterface simpleApi = restAdapter.create(RestInterface.class);
-	String username = "";
+	public SimpleCard[] myCards;
 	
 	public Boolean addContact() {
 		return null;

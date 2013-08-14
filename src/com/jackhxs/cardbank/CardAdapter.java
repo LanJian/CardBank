@@ -34,6 +34,7 @@ public class CardAdapter extends ArrayAdapter<SimpleCard> {
     row = inflater.inflate(myResourceId, parent, false);
 
     TextView txtView = (TextView)row.findViewById(R.id.txtTitle);
+    txtView.setText(myData[position].firstName + myData[position].lastName);
     ImageView imgView = (ImageView)row.findViewById(R.id.imgIcon);
     
     imgView.setImageResource(R.drawable.ic_launcher);
