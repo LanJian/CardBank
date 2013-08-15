@@ -9,7 +9,9 @@ public final class Constants {
 	/** REST Interface Constants */
 	public enum Operation {
 		GET_CARDS,
-		GET_CONTACTS
+		GET_CONTACTS,
+		POST_LOGIN,
+		POST_CARD
 	}
 	
 	public final static Operation[] OperationVals = Operation.values();
