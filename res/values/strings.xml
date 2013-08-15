@@ -12,4 +12,8 @@
     <string name="login_email">Email</string>
     <string name="login_password">Password</string>
 
+    <string name="card_flip_view_name_label">Name</string>
+    <string name="card_flip_view_phoneNo_label">Phone</string>
+    <string name="card_flip_view_email_label">email</string>
+
 </resources>

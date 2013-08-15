@@ -26,7 +26,7 @@ public class CardFlipView extends Activity {
 //				.getParcelableArrayExtra("contacts");
 		// SimpleCard[] cards = (SimpleCard[]) b.getParcelableArray("contacts");
 
-		CardAdapter adapter = new CardAdapter(this, R.layout.list_view_row,
+		CardAdapter adapter = new CardAdapter(this, R.layout.card_flip_view,
 				((App)getApplication()).myCards);
 
 		myFlipView = new FlipViewController(this);
@@ -38,7 +38,6 @@ public class CardFlipView extends Activity {
 
 	@Override
 	protected void onResume() {
-		Log.e("paul", "resume on cardflip");
 		super.onResume();
 		myFlipView.onResume();
 	}

@@ -28,6 +28,17 @@ public class CardAdapter extends ArrayAdapter<SimpleCard> {
 
   @Override
   public View getView(int position, View convertView, ViewGroup parent) {
+    switch(myResourceId) {
+      case R.layout.list_view_row:
+        return getRowView(position, convertView, parent);
+      case R.layout.card_flip_view:
+        return getFlipItemView(position, convertView, parent);
+    }
+    
+    return null;
+  }
+
+  public View getRowView(int position, View convertView, ViewGroup parent) {
     View row = convertView;
 
     LayoutInflater inflater = ((Activity)myContext).getLayoutInflater();
@@ -39,29 +50,26 @@ public class CardAdapter extends ArrayAdapter<SimpleCard> {
     
     imgView.setImageResource(R.drawable.ic_launcher);
 
-    //WeatherHolder holder = null;
-
-    //if(row == null)
-    //{
-      //LayoutInflater inflater = ((Activity)myContext).getLayoutInflater();
-      //row = inflater.inflate(myResourceId, parent, false);
-
-      //holder = new WeatherHolder();
-      //holder.imgIcon = (ImageView)row.findViewById(R.id.imgIcon);
-      //holder.txtTitle = (TextView)row.findViewById(R.id.txtTitle);
-
-      //row.setTag(holder);
-    //}
-    //else
-    //{
-      //holder = (WeatherHolder)row.getTag();
-    //}
-
-    //Weather weather = data[position];
-    //holder.txtTitle.setText(weather.title);
-    //holder.imgIcon.setImageResource(weather.icon);
 
     return row;
+  }
+
+  public View getFlipItemView(int position, View convertView, ViewGroup parent) {
+    View item = convertView;
+
+    LayoutInflater inflater = ((Activity)myContext).getLayoutInflater();
+    item = inflater.inflate(myResourceId, parent, false);
+
+    TextView txtView = (TextView)item.findViewById(R.id.card_flip_view_name);
+    txtView.setText(myData[position].firstName + " " + myData[position].lastName);
+
+    txtView = (TextView)item.findViewById(R.id.card_flip_view_phoneNo);
+    txtView.setText(myData[position].phoneNo);
+
+    txtView = (TextView)item.findViewById(R.id.card_flip_view_email);
+    txtView.setText(myData[position].email);
+    
+    return item;
   }
 
 }

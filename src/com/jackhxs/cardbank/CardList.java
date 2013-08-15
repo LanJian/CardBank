@@ -37,11 +37,6 @@ public class CardList extends Activity implements JSONResultReceiver.Receiver {
 
 	public void onListItemClick(AdapterView<?> l, View v, int position, long id) {
 		Intent intent = new Intent(this, CardFlipView.class);
-//		Bundle b = new Bundle();
-//		b.putParcelableArray("contacts", myCards);
-//		Log.e("paul", "-----------------|" + String.valueOf(myCards) + "|");
-//		intent.putExtras(b);
-		// intent.putExtra("contacts", myCards);
 		startActivity(intent);
 	}
 
