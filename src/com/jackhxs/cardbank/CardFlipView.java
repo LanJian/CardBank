@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.aphidmobile.flip.FlipViewController;
 import com.google.gson.Gson;
 import com.jackhxs.remote.Constants;
+import com.jackhxs.remote.Constants.Operation;
 import com.jackhxs.remote.JSONResultReceiver;
 import com.jackhxs.remote.RemoteService;
 
@@ -38,8 +39,13 @@ public class CardFlipView extends Activity implements CreateNdefMessageCallback,
 
 		cardViewMode = getIntent().getStringExtra("mode");
 
-		CardAdapter adapter = new CardAdapter(this, R.layout.card_flip_view,
-				((App)getApplication()).myCards);
+		CardAdapter adapter;
+		if (cardViewMode.equals("contact")) {
+			adapter = new CardAdapter(this, R.layout.card_flip_view, ((App)getApplication()).myContacts);
+		}
+		else {
+			adapter = new CardAdapter(this, R.layout.card_flip_view, ((App)getApplication()).myCards);
+		}
 
 		myFlipView = new FlipViewController(this);
 		myFlipView.setAdapter(adapter);
@@ -53,7 +59,7 @@ public class CardFlipView extends Activity implements CreateNdefMessageCallback,
 		}
 
 		mNfcAdapter.setNdefPushMessageCallback(this, this);
-		
+
 		mReceiver = new JSONResultReceiver(new Handler());
 		mReceiver.setReceiver(this);
 	}
@@ -62,11 +68,11 @@ public class CardFlipView extends Activity implements CreateNdefMessageCallback,
 	protected void onResume() {
 		super.onResume();
 		myFlipView.onResume();
-		
+
 		// Check to see that the Activity started due to an Android Beam
-        if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(getIntent().getAction())) {
-            processIntent(getIntent());
-        }
+		if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(getIntent().getAction())) {
+			processIntent(getIntent());
+		}
 	}
 
 	@Override
@@ -76,47 +82,47 @@ public class CardFlipView extends Activity implements CreateNdefMessageCallback,
 	}
 
 	@Override
-    public void onNewIntent(Intent intent) {
-        // onResume gets called after this to handle the intent
-        setIntent(intent);
-    }
-	
-    /**
-     * Parses the NDEF Message from the intent and prints to the TextView
-     */
-    void processIntent(Intent intent) {
-        Parcelable[] rawMsgs = intent.getParcelableArrayExtra(
-                NfcAdapter.EXTRA_NDEF_MESSAGES);
-        
-        // only one message sent during the beam
-        NdefMessage msg = (NdefMessage) rawMsgs[0];
-        
-        // record 0 contains the MIME type, record 1 is the AAR, if present
-        String simpleCardJSON = (new String(msg.getRecords()[0].getPayload()));
-        
-        Log.e("NFC Data", simpleCardJSON);
-        
-        // send the result back to server
+	public void onNewIntent(Intent intent) {
+		// onResume gets called after this to handle the intent
+		setIntent(intent);
+	}
+
+	/**
+	 * Parses the NDEF Message from the intent and prints to the TextView
+	 */
+	void processIntent(Intent intent) {
+		Parcelable[] rawMsgs = intent.getParcelableArrayExtra(
+				NfcAdapter.EXTRA_NDEF_MESSAGES);
+
+		// only one message sent during the beam
+		NdefMessage msg = (NdefMessage) rawMsgs[0];
+
+		// record 0 contains the MIME type, record 1 is the AAR, if present
+		String simpleCardJSON = (new String(msg.getRecords()[0].getPayload()));
+
+		Log.e("NFC Data", simpleCardJSON);
+
+		// send the result back to server
 		final Intent serviceIntent = new Intent(Intent.ACTION_SYNC, null, this,
 				RemoteService.class);
-		
+
 		intent.putExtra("receiver", mReceiver);
-		intent.putExtra("operation", 3);
-		intent.putExtra("newCardJSON", simpleCardJSON);
-		
+		intent.putExtra("operation", (Parcelable) Operation.POST_CONTACT);
+		intent.putExtra("newContactJSON", simpleCardJSON);
+
 		startService(serviceIntent);	
-    }
-    
+	}
+
 	/**
 	 * {@inheritDoc}
 	 * @see NfcAdapter.CreateNdefMessageCallback#createNdefMessage(NfcEvent)
 	 */
 	public NdefMessage createNdefMessage(NfcEvent event) {
 		App app = ((App) getApplication());
-		
-		String serializedCard = (new Gson()).toJson(app.ownCard);
+
+		String serializedCard = (new Gson()).toJson(app.myCards[0]);
 		Log.e("Serialized JSON", serializedCard);
-		
+
 		NdefMessage msg = new NdefMessage(
 				new NdefRecord[] {
 						createMimeRecord("application/com.jackhxs.cardbank", serializedCard.getBytes()),
@@ -131,17 +137,19 @@ public class CardFlipView extends Activity implements CreateNdefMessageCallback,
 	 */
 	public NdefRecord createMimeRecord(String mimeType, byte[] payload) {
 		byte[] mimeBytes = mimeType.getBytes(Charset.forName("US-ASCII"));
-		
+
 		NdefRecord mimeRecord = new NdefRecord(
 				NdefRecord.TNF_MIME_MEDIA, mimeBytes, new byte[0], payload);
-		
+
 		return mimeRecord;
 	}
 
 	public void saveCardEdit() {
-		
+		if (cardViewMode.equals("contacts")) {
+			return;
+		}
 	}
-	
+
 	@Override
 	public void onReceiveResult(int resultCode, Bundle resultData) {
 		switch (resultCode) {
@@ -154,6 +162,6 @@ public class CardFlipView extends Activity implements CreateNdefMessageCallback,
 			break;
 		}
 		}
-		
+
 	}
 }

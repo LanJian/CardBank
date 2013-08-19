@@ -4,12 +4,14 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.EditText;
 
 import com.jackhxs.remote.Constants;
+import com.jackhxs.remote.Constants.Operation;
 import com.jackhxs.remote.JSONResultReceiver;
 import com.jackhxs.remote.RemoteService;
 
@@ -52,7 +54,7 @@ public class LoginActivity extends Activity implements JSONResultReceiver.Receiv
 				RemoteService.class);
 		
 		intent.putExtra("receiver", mReceiver);
-		intent.putExtra("operation", 2); // 2 is for login activity operation
+		intent.putExtra("operation", (Parcelable) Operation.POST_LOGIN);
 		intent.putExtra("email", email);
 		intent.putExtra("password", password);
 		
