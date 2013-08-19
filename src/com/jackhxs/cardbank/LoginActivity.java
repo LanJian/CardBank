@@ -67,7 +67,8 @@ public class LoginActivity extends Activity implements JSONResultReceiver.Receiv
 		switch (resultCode) {
 		
 		case Constants.STATUS_FINISHED: {
-			app.accessToken = resultData.getString("accessToken");
+//			app.accessToken = resultData.getString("accessToken");
+			app.accessToken = "aaa";
 			Log.e("paul", app.accessToken);
 			
 			break;

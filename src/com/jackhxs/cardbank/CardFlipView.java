@@ -38,7 +38,7 @@ public class CardFlipView extends Activity implements CreateNdefMessageCallback,
 
 		cardViewMode = getIntent().getStringExtra("mode");
 
-		CardAdapter adapter = new CardAdapter(this, R.layout.list_view_row,
+		CardAdapter adapter = new CardAdapter(this, R.layout.card_flip_view,
 				((App)getApplication()).myCards);
 
 		myFlipView = new FlipViewController(this);
