@@ -33,7 +33,7 @@ public class CardFlipView extends Activity implements CreateNdefMessageCallback,
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		CardAdapter adapter = new CardAdapter(this, R.layout.list_view_row,
+		CardAdapter adapter = new CardAdapter(this, R.layout.card_flip_view,
 				((App)getApplication()).myCards);
 
 		myFlipView = new FlipViewController(this);
