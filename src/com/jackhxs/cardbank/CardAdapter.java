@@ -14,6 +14,10 @@ import com.jackhxs.data.SimpleCard;
 
 public class CardAdapter extends ArrayAdapter<SimpleCard> {
 
+  private static final int[] ICON_BG_COLORS = {
+    0xff1b7c59, 0xffe76e66, 0xffdca46b, 0xff5699a9, 0xff695b8e, 0xff8c5e7a
+  };
+
   private SimpleCard[] myData;
   private int myResourceId;
   private Context myContext;
@@ -45,11 +49,12 @@ public class CardAdapter extends ArrayAdapter<SimpleCard> {
     row = inflater.inflate(myResourceId, parent, false);
 
     TextView txtView = (TextView)row.findViewById(R.id.txtTitle);
-    txtView.setText(myData[position].firstName + myData[position].lastName);
-    ImageView imgView = (ImageView)row.findViewById(R.id.imgIcon);
-    
-    imgView.setImageResource(R.drawable.ic_launcher);
+    txtView.setText(myData[position].firstName + " " + myData[position].lastName);
 
+    txtView = (TextView)row.findViewById(R.id.imgIcon);
+    txtView.setText(myData[position].lastName.substring(0,1).toUpperCase());
+    int rand = (int)(Math.random() * ICON_BG_COLORS.length);
+    txtView.setBackgroundColor(ICON_BG_COLORS[rand]);
 
     return row;
   }
