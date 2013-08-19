@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.widget.EditText;
 
 import com.jackhxs.remote.Constants;
@@ -19,7 +20,8 @@ public class LoginActivity extends Activity implements JSONResultReceiver.Receiv
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
+		
+		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_login);
 
 		mReceiver = new JSONResultReceiver(new Handler());
@@ -29,6 +31,19 @@ public class LoginActivity extends Activity implements JSONResultReceiver.Receiv
 		passwordField = (EditText) findViewById(R.id.login_password);
 	}
 
+	@Override
+    public void onResume() {
+		super.onResume();
+
+		App app = (App) getApplication();
+
+		if (app.accessToken != null && !app.accessToken.equals("")) {
+			Intent intent = new Intent(this, CardList.class);
+			startActivity(intent);
+			this.finish();
+		}
+    }
+	
 	public void login(View view) {
 		String email = emailField.getText().toString();
 		String password = passwordField.getText().toString();
@@ -37,7 +52,7 @@ public class LoginActivity extends Activity implements JSONResultReceiver.Receiv
 				RemoteService.class);
 		
 		intent.putExtra("receiver", mReceiver);
-		intent.putExtra("operation", 1);
+		intent.putExtra("operation", 2); // 2 is for login activity operation
 		
 		intent.putExtra("email", email);
 		intent.putExtra("password", password);
@@ -68,6 +83,7 @@ public class LoginActivity extends Activity implements JSONResultReceiver.Receiv
 			Log.e("Success", "logged in");
 			Intent intent = new Intent(this, CardList.class);
 			startActivity(intent);
+			this.finish();
 		}
 		else {
 			Log.e("Failed", "logged in");
