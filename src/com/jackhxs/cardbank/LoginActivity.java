@@ -53,7 +53,6 @@ public class LoginActivity extends Activity implements JSONResultReceiver.Receiv
 		
 		intent.putExtra("receiver", mReceiver);
 		intent.putExtra("operation", 2); // 2 is for login activity operation
-		
 		intent.putExtra("email", email);
 		intent.putExtra("password", password);
 		
@@ -82,6 +81,7 @@ public class LoginActivity extends Activity implements JSONResultReceiver.Receiv
 		if (app.accessToken != null && !app.accessToken.equals("")) {
 			Log.e("Success", "logged in");
 			Intent intent = new Intent(this, CardList.class);
+			intent.putExtra("mode", "contact");
 			startActivity(intent);
 			this.finish();
 		}

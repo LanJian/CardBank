@@ -23,7 +23,10 @@ import com.jackhxs.remote.RemoteService;
 
 public class CardFlipView extends Activity implements CreateNdefMessageCallback,  JSONResultReceiver.Receiver {
 	public JSONResultReceiver mReceiver;
+	public String cardViewMode;
+
 	private NfcAdapter mNfcAdapter;
+
 	protected FlipViewController myFlipView;
 
 	/**
@@ -32,6 +35,8 @@ public class CardFlipView extends Activity implements CreateNdefMessageCallback,
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
+		cardViewMode = getIntent().getStringExtra("mode");
 
 		CardAdapter adapter = new CardAdapter(this, R.layout.list_view_row,
 				((App)getApplication()).myCards);
@@ -69,7 +74,6 @@ public class CardFlipView extends Activity implements CreateNdefMessageCallback,
 		super.onPause();
 		myFlipView.onPause();
 	}
-
 
 	@Override
     public void onNewIntent(Intent intent) {
@@ -122,7 +126,6 @@ public class CardFlipView extends Activity implements CreateNdefMessageCallback,
 		return msg;
 	}
 
-
 	/**
 	 * Creates a custom MIME type encapsulated in an NDEF record
 	 */
@@ -135,6 +138,10 @@ public class CardFlipView extends Activity implements CreateNdefMessageCallback,
 		return mimeRecord;
 	}
 
+	public void saveCardEdit() {
+		
+	}
+	
 	@Override
 	public void onReceiveResult(int resultCode, Bundle resultData) {
 		switch (resultCode) {
