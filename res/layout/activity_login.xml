@@ -2,26 +2,50 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/titleText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="50dip"
+        android:layout_marginTop="100dip"
+        android:text="@string/appName"
+        android:textSize="36sp" />
 
     <EditText
         android:id="@+id/login_email"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="top"
+        android:hint="@string/login_email"
         android:inputType="textEmailAddress"
-        android:hint="@string/login_email" />
+        android:lines="4"
+        android:maxLength="760"
+        android:width="250dip" />
 
     <EditText
         android:id="@+id/login_password"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:password="true"
-        android:hint="@string/login_password" />
+        android:layout_gravity="center"
+        android:gravity="top"
+        android:hint="@string/login_password"
+        android:inputType="textPassword"
+        android:lines="4"
+        android:maxLength="760"
+        android:width="250dip" />
 
     <Button
         android:id="@+id/login_login_button"
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical|fill_vertical"
+        android:layout_marginLeft="10dip"
+        android:layout_marginRight="10dip"
+        android:layout_marginTop="50dip"
         android:onClick="login"
         android:text="@string/login_login_string" />
 

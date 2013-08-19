@@ -16,4 +16,6 @@
     <string name="card_flip_view_phoneNo_label">Phone</string>
     <string name="card_flip_view_email_label">email</string>
 
+    <string name="appName">CardBeam</string>
+
 </resources>

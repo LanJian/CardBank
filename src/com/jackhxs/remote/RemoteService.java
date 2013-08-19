@@ -34,7 +34,7 @@ public class RemoteService extends IntentService {
 
 		Operation command = Constants.OperationVals[intent.getIntExtra("operation", 0)];
 		
-		Log.e("paul", command.toString());
+		Log.i("paul", command.toString());
 		receiver.send(Constants.STATUS_RUNNING, Bundle.EMPTY);
 		
 		switch (command) { 
@@ -51,7 +51,10 @@ public class RemoteService extends IntentService {
 			String username = intent.getStringExtra("username");
 			String password = intent.getStringExtra("password");
 			String accessToken = service.login(username, password);
+			
 			b.putString("accessToken", accessToken);
+			
+			Log.i("remoteService", accessToken);
 			receiver.send(Constants.STATUS_FINISHED, b);
 			break;
 		}
