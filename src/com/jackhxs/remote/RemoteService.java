@@ -17,6 +17,7 @@ public class RemoteService extends IntentService {
 	private final RestAdapter restAdapter = new RestAdapter.Builder()
 	.setServer("http://www.mocky.io/v2")
 	.build();
+
 	private final RestInterface service;
 	
 	public RemoteService() {
@@ -71,18 +72,20 @@ public class RemoteService extends IntentService {
             receiver.send(Constants.STATUS_FINISHED, b);
 			break;
 		}
+		case PUT_CARD: 
 		case POST_CARD: {
 			String simpleCardJSON = intent.getStringExtra("simpleCardJSON");
-			
+
 			SimpleCard simpleCard = new Gson().fromJson(simpleCardJSON, SimpleCard.class);
 			Boolean result = service.addCard(accessToken, simpleCard);
-			
+
 			b.putBoolean("result", result);
 			receiver.send(Constants.STATUS_FINISHED, b);
 			break;
 		}
 		case POST_CONTACT: {
 			String simpleCardJSON = intent.getStringExtra("newContactJSON");
+
 			SimpleCard simpleCard = new Gson().fromJson(simpleCardJSON, SimpleCard.class);
 			Boolean result = service.addContact(accessToken, simpleCard);
 			
@@ -90,14 +93,23 @@ public class RemoteService extends IntentService {
 			receiver.send(Constants.STATUS_FINISHED, b);
 			break;
 		}
-		case DEL_CARD:
+		case DEL_CARD: {
+			SimpleCard existingCard = intent.getParcelableExtra("existingCard");
+			Boolean result = service.deleteCard(accessToken, existingCard);
+			b.putBoolean("result", result);
+			receiver.send(Constants.STATUS_FINISHED, b);
 			break;
-		case DEL_CONTACT:
+		}
+		case DEL_CONTACT: {
+			SimpleCard existingCard = intent.getParcelableExtra("existingCard");
+			Boolean result = service.deleteCard(accessToken, existingCard);
+			b.putBoolean("result", result);
+			receiver.send(Constants.STATUS_FINISHED, b);
 			break;
-		case PUT_CARD:
+		}
+		default: {
 			break;
-		default:
-			break;
+		}
 		}
 		this.stopSelf();
 	}

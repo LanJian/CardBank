@@ -30,15 +30,8 @@ public class CardFlipView extends Activity implements CreateNdefMessageCallback,
 
 	protected FlipViewController myFlipView;
 
-	/**
-	 * Called when the activity is first created.
-	 */
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-
-		cardViewMode = getIntent().getStringExtra("mode");
-
+	
+	private void updateCardFlipView() {
 		CardAdapter adapter;
 		if (cardViewMode.equals("contact")) {
 			adapter = new CardAdapter(this, R.layout.card_flip_view, ((App)getApplication()).myContacts);
@@ -50,16 +43,29 @@ public class CardFlipView extends Activity implements CreateNdefMessageCallback,
 		myFlipView = new FlipViewController(this);
 		myFlipView.setAdapter(adapter);
 		setContentView(myFlipView);
+	}
 
+	/**
+	 * Called when the activity is first created.
+	 */
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+
+		cardViewMode = getIntent().getStringExtra("mode");
+
+		updateCardFlipView();
+
+		// update NFC related configs
 		mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
 
 		if (mNfcAdapter == null) {
 			Toast.makeText(this, "NFC not available", Toast.LENGTH_LONG).show();
 			return;
 		}
-
 		mNfcAdapter.setNdefPushMessageCallback(this, this);
 
+		// configure remote service callback
 		mReceiver = new JSONResultReceiver(new Handler());
 		mReceiver.setReceiver(this);
 	}
@@ -148,6 +154,7 @@ public class CardFlipView extends Activity implements CreateNdefMessageCallback,
 		if (cardViewMode.equals("contacts")) {
 			return;
 		}
+
 	}
 
 	@Override
@@ -155,6 +162,7 @@ public class CardFlipView extends Activity implements CreateNdefMessageCallback,
 		switch (resultCode) {
 		case Constants.STATUS_FINISHED: {
 			Log.e("Update Remote Server Worked", "yay!");
+			updateCardFlipView();
 			break;
 		}
 		case Constants.STATUS_ERROR: {

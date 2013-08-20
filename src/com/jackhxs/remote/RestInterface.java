@@ -33,7 +33,7 @@ public interface RestInterface {
   Boolean addCard(@Query("acccessToken") String accessToken, @Body SimpleCard newCard);
 
   @DELETE("/52116e117d92108b0034dd2e") // delete Card 
-  Boolean deleteCard(@Query("acccessToken") String accessToken, @Body String cardId);
+  Boolean deleteCard(@Query("acccessToken") String accessToken, @Body SimpleCard existingCard);
 
   /** Contacts */
   @GET("/521173867d9210870034dd31") // get contact cards
@@ -44,7 +44,7 @@ public interface RestInterface {
   Boolean addContact(@Query("acccessToken") String accessToken, @Body SimpleCard contactCard);
 
   @DELETE("/52116e117d92108b0034dd2e") // delete a contact
-  Boolean deleteContact(@Query("acccessToken") String accessToken, @Body String contactId);
+  Boolean deleteContact(@Query("acccessToken") String accessToken, @Body SimpleCard existingContact);
  
   /** Misc. */
   // Logging In
