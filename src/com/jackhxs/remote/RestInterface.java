@@ -17,7 +17,7 @@ import com.jackhxs.data.SimpleCard;
  */
 public interface RestInterface {
   /** Both */
-  @GET("/5212dc4dfcb7dec301723c7f") // get own cards and contacts
+  @GET("/521438f3cfaf853802b35c98") // get own cards and contacts
   ContactAndCards listContactAndCards(@Query("acccessToken") String accessToken);
  
   /** Cards */
