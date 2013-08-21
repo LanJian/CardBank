@@ -13,7 +13,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
 import android.util.Log;
+import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ViewSwitcher;
 
 import com.aphidmobile.flip.FlipViewController;
 import com.google.gson.Gson;
@@ -30,7 +32,6 @@ public class CardFlipView extends Activity implements CreateNdefMessageCallback,
 
 	protected FlipViewController myFlipView;
 
-	
 	private void updateCardFlipView() {
 		CardAdapter adapter;
 		if (cardViewMode.equals("contact")) {
@@ -43,6 +44,7 @@ public class CardFlipView extends Activity implements CreateNdefMessageCallback,
 		myFlipView = new FlipViewController(this);
 		myFlipView.setAdapter(adapter);
 		setContentView(myFlipView);
+		enterEditView();
 	}
 
 	/**
@@ -159,6 +161,7 @@ public class CardFlipView extends Activity implements CreateNdefMessageCallback,
 
 	@Override
 	public void onReceiveResult(int resultCode, Bundle resultData) {
+
 		switch (resultCode) {
 		case Constants.STATUS_FINISHED: {
 			Log.e("Update Remote Server Worked", "yay!");
@@ -171,5 +174,12 @@ public class CardFlipView extends Activity implements CreateNdefMessageCallback,
 		}
 		}
 
+	}
+
+	public void enterEditView() {
+		ViewSwitcher phoneSwitcher = (ViewSwitcher) findViewById(R.id.my_switcherPhone);
+	    phoneSwitcher.showNext();
+	    ViewSwitcher emailSwitcher = (ViewSwitcher) findViewById(R.id.my_switcherEmail);
+	    emailSwitcher.showNext();
 	}
 }
