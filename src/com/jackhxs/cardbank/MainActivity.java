@@ -1,66 +1,98 @@
 package com.jackhxs.cardbank;
 
-import java.nio.charset.Charset;
-
+import android.app.ActionBar;
+import android.app.ActionBar.Tab;
 import android.app.Activity;
-import android.nfc.NdefMessage;
-import android.nfc.NdefRecord;
-import android.nfc.NfcAdapter;
-import android.nfc.NfcAdapter.CreateNdefMessageCallback;
-import android.nfc.NfcEvent;
+import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
-import android.widget.EditText;
-import android.widget.Toast;
+import android.os.Handler;
+import android.os.Parcelable;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.Window;
 
-public class MainActivity extends Activity implements CreateNdefMessageCallback {
-  
-  // ----- Members -----
-  private NfcAdapter mNfcAdapter;
+import com.jackhxs.data.SimpleCard;
+import com.jackhxs.remote.Constants;
+import com.jackhxs.remote.Constants.Operation;
+import com.jackhxs.remote.JSONResultReceiver;
+import com.jackhxs.remote.RemoteService;
 
+public class MainActivity extends Activity implements
+		JSONResultReceiver.Receiver {
 
-  // ----- Methods -----
-  /** Called when the activity is first created. */
-  @Override
-  public void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    setContentView(R.layout.main);
+	public JSONResultReceiver mReceiver;
 
-    mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
-    if (mNfcAdapter == null) {
-      Toast.makeText(this, "NFC not available", Toast.LENGTH_LONG).show();
-      return;
-    }
+	// ----- Methods -----
+	/** Called when the activity is first created. */
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 
-    mNfcAdapter.setNdefPushMessageCallback(this, this);
-  }
+		getActionBar().setDisplayShowTitleEnabled(false);
+		getActionBar().setDisplayShowHomeEnabled(false);
 
+		// Notice that setContentView() is not used, because we use the root
+		// android.R.id.content as the container for each fragment
+		mReceiver = new JSONResultReceiver(new Handler());
+		mReceiver.setReceiver(this);
 
-  /**
-   * {@inheritDoc}
-   * @see NfcAdapter.CreateNdefMessageCallback#createNdefMessage(NfcEvent)
-   */
-  public NdefMessage createNdefMessage(NfcEvent event) {
-    EditText editText = (EditText) findViewById(R.id.edit_text);
-    String text = editText.getText().toString();
+		final Intent intent = new Intent(Intent.ACTION_SYNC, null, this,
+				RemoteService.class);
+		intent.putExtra("receiver", mReceiver);
+		intent.putExtra("operation",
+				(Parcelable) Operation.GET_BOTH_CONTACT_AND_CARD);
+		startService(intent);
 
-    NdefMessage msg = new NdefMessage(
-        new NdefRecord[] {
-          createMimeRecord("application/com.jackhxs.cardbank", text.getBytes()),
-          //NdefRecord.createApplicationRecord("com.jackhxs.cardbank")
-        });
-
-    return msg;
-  }
+	}
 
 
-  /**
-   * Creates a custom MIME type encapsulated in an NDEF record
-   */
-  public NdefRecord createMimeRecord(String mimeType, byte[] payload) {
-    byte[] mimeBytes = mimeType.getBytes(Charset.forName("US-ASCII"));
-    NdefRecord mimeRecord = new NdefRecord(
-        NdefRecord.TNF_MIME_MEDIA, mimeBytes, new byte[0], payload);
-    return mimeRecord;
-  }
+	@Override
+	public void onReceiveResult(int resultCode, Bundle resultData) {
+		Log.e("paul", String.valueOf(resultCode));
+
+		switch (resultCode) {
+		case Constants.STATUS_FINISHED: {
+			Log.i("ContactList", "received card");
+
+			SimpleCard[] contacts = (SimpleCard[]) resultData.getParcelableArray("contacts");
+			SimpleCard[] cards = (SimpleCard[]) resultData.getParcelableArray("cards");
+
+			// setting a global reference in app
+			((App) getApplication()).myContacts = contacts;
+			((App) getApplication()).myCards = cards;
+
+			// setup action bar for tabs
+			ActionBar actionBar = getActionBar();
+			actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+			actionBar.setDisplayShowTitleEnabled(false);
+
+			App app = (App) getApplication();
+			Fragment cardFragment = new CardFragment((app.myCards)[0]);
+			Tab tab = actionBar
+					.newTab()
+					.setText("My Card")
+					.setTabListener(
+							new TabListener<CardFragment>(this, "myCard",
+									cardFragment));
+			actionBar.addTab(tab);
+
+			Fragment listFragment = new CardListFragment();
+			tab = actionBar
+					.newTab()
+					.setText("My Contacts")
+					.setTabListener(
+							new TabListener<CardListFragment>(this, "myContacts",
+									listFragment));
+			actionBar.addTab(tab);
+
+			break;
+		}
+		case Constants.STATUS_ERROR: {
+			System.out.println("Error retrieving contacts and cards");
+		}
+		}
+	}
 
 }

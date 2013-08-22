@@ -14,6 +14,7 @@ import android.os.Handler;
 import android.os.Parcelable;
 import android.util.Log;
 import android.widget.TextView;
+import android.view.Window;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
