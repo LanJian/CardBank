@@ -47,7 +47,7 @@ public class CardFragment extends Fragment {
 
 		ImageView imgView = (ImageView) item
 				.findViewById(R.id.card_flip_view_image);
-		imgView.setImageResource(R.drawable.mock_card);
+		imgView.setImageResource(myCard.image);
 
 		return item;
 	}

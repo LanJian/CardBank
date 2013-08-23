@@ -25,3 +25,5 @@ local.properties
 *.swo
 
 project.properties
+
+.DS_Store

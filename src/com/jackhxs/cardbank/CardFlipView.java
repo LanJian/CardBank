@@ -55,6 +55,8 @@ public class CardFlipView extends Activity implements CreateNdefMessageCallback,
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
+		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+
 		cardViewMode = getIntent().getStringExtra("mode");
 
 		updateCardFlipView();
@@ -178,9 +180,9 @@ public class CardFlipView extends Activity implements CreateNdefMessageCallback,
 	}
 
 	public void enterEditView() {
-		ViewSwitcher phoneSwitcher = (ViewSwitcher) findViewById(R.id.my_switcherPhone);
-	    phoneSwitcher.showNext();
-	    ViewSwitcher emailSwitcher = (ViewSwitcher) findViewById(R.id.my_switcherEmail);
-	    emailSwitcher.showNext();
+//		ViewSwitcher phoneSwitcher = (ViewSwitcher) findViewById(R.id.my_switcherPhone);
+//	    phoneSwitcher.showNext();
+//	    ViewSwitcher emailSwitcher = (ViewSwitcher) findViewById(R.id.my_switcherEmail);
+//	    emailSwitcher.showNext();
 	}
 }

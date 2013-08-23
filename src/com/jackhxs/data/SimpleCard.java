@@ -9,6 +9,10 @@ public class SimpleCard implements Parcelable {
 	public String phoneNo;
 	public String email;
 	public String cardId;
+  public String imageUrl;
+
+  // temp
+  public int image;
 	
 	public SimpleCard() {};
 	

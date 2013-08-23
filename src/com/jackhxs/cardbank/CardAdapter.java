@@ -74,7 +74,7 @@ public class CardAdapter extends ArrayAdapter<SimpleCard> {
     txtView.setText(myData[position].email);
 
     ImageView imgView = (ImageView)item.findViewById(R.id.card_flip_view_image);
-    imgView.setImageResource(R.drawable.mock_card);
+    imgView.setImageResource(myData[position].image);
     
     return item;
   }
