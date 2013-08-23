@@ -13,10 +13,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
 import android.util.Log;
-import android.widget.TextView;
 import android.view.Window;
 import android.widget.Toast;
-import android.widget.ViewSwitcher;
 
 import com.aphidmobile.flip.FlipViewController;
 import com.google.gson.Gson;
@@ -34,7 +32,9 @@ public class CardFlipView extends Activity implements CreateNdefMessageCallback,
 	protected FlipViewController myFlipView;
 
 	private void updateCardFlipView() {
+
 		CardAdapter adapter;
+
 		if (cardViewMode.equals("contact")) {
 			adapter = new CardAdapter(this, R.layout.card_flip_view, ((App)getApplication()).myContacts);
 		}
@@ -44,6 +44,7 @@ public class CardFlipView extends Activity implements CreateNdefMessageCallback,
 
 		myFlipView = new FlipViewController(this);
 		myFlipView.setAdapter(adapter);
+
 		setContentView(myFlipView);
 		enterEditView();
 	}
@@ -120,7 +121,6 @@ public class CardFlipView extends Activity implements CreateNdefMessageCallback,
 		intent.putExtra("receiver", mReceiver);
 		intent.putExtra("operation", (Parcelable) Operation.POST_CONTACT);
 		intent.putExtra("newContactJSON", simpleCardJSON);
-
 		startService(serviceIntent);	
 	}
 

@@ -9,9 +9,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.Window;
+import android.view.MenuItem;
 
 import com.jackhxs.data.SimpleCard;
 import com.jackhxs.remote.Constants;
@@ -20,7 +18,7 @@ import com.jackhxs.remote.JSONResultReceiver;
 import com.jackhxs.remote.RemoteService;
 
 public class MainActivity extends Activity implements
-		JSONResultReceiver.Receiver {
+JSONResultReceiver.Receiver {
 
 	public JSONResultReceiver mReceiver;
 
@@ -47,6 +45,27 @@ public class MainActivity extends Activity implements
 
 	}
 
+	@Override
+	public void onResume() {
+		super.onResume();
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+	    // Handle presses on the action bar items
+	    switch (item.getItemId()) {
+	        case R.id.action_edit: {
+	    		Intent intent = new Intent(getApplicationContext(), CardEditActivity.class);
+	    		startActivity(intent);
+	            return true;
+	        }
+	        case R.id.action_delete: {
+	            return true;
+	        }
+	        default:
+	            return super.onOptionsItemSelected(item);
+	    }
+	}
 
 	@Override
 	public void onReceiveResult(int resultCode, Bundle resultData) {
@@ -56,26 +75,28 @@ public class MainActivity extends Activity implements
 		case Constants.STATUS_FINISHED: {
 			Log.i("ContactList", "received card");
 
+			App app = (App) getApplication();
+
 			SimpleCard[] contacts = (SimpleCard[]) resultData.getParcelableArray("contacts");
 			SimpleCard[] cards = (SimpleCard[]) resultData.getParcelableArray("cards");
 
 			// setting a global reference in app
-			((App) getApplication()).myContacts = contacts;
-			((App) getApplication()).myCards = cards;
+			app.myContacts = contacts;
+			app.myCards = cards;
 
-      // temp mock images
-      contacts[0].image = R.drawable.mock_card;
-      contacts[1].image = R.drawable.mock_card2;
-      
-      cards[0].image = R.drawable.mock_my_card;
+			// temp mock images
+			contacts[0].image = R.drawable.mock_card;
+			contacts[1].image = R.drawable.mock_card2;
+
+			cards[0].image = R.drawable.mock_my_card;
 
 			// setup action bar for tabs
 			ActionBar actionBar = getActionBar();
 			actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 			actionBar.setDisplayShowTitleEnabled(false);
 
-			App app = (App) getApplication();
 			Fragment cardFragment = new CardFragment((app.myCards)[0]);
+
 			Tab tab = actionBar
 					.newTab()
 					.setText("My Card")
@@ -100,5 +121,4 @@ public class MainActivity extends Activity implements
 		}
 		}
 	}
-
 }

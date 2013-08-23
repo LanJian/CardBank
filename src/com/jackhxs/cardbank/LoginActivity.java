@@ -40,7 +40,7 @@ public class LoginActivity extends Activity implements JSONResultReceiver.Receiv
 		App app = (App) getApplication();
 
 		if (app.accessToken != null && !app.accessToken.equals("")) {
-			Intent intent = new Intent(this, CardListFragment.class);
+			Intent intent = new Intent(this, MainActivity.class);
 			startActivity(intent);
 			this.finish();
 		}
