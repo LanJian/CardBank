@@ -13,6 +13,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.Window;
 import android.widget.Toast;
 
@@ -49,14 +51,19 @@ public class CardFlipView extends Activity implements CreateNdefMessageCallback,
 		enterEditView();
 	}
 
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+	    MenuInflater inflater=getMenuInflater();
+	    inflater.inflate(R.menu.card_flip_activity_actions, menu);
+	    return super.onCreateOptionsMenu(menu);
+	}
+
 	/**
 	 * Called when the activity is first created.
 	 */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
-		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
 		cardViewMode = getIntent().getStringExtra("mode");
 

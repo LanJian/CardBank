@@ -40,12 +40,13 @@
 
     <Button
         android:id="@+id/login_login_button"
-        android:layout_width="fill_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical|fill_vertical"
+        android:layout_gravity="center"
         android:layout_marginLeft="10dip"
         android:layout_marginRight="10dip"
         android:layout_marginTop="50dip"
+        android:width="250dip"
         android:onClick="login"
         android:text="@string/login_login_string" />
 

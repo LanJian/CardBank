@@ -15,26 +15,27 @@ import com.jackhxs.remote.Constants.Operation;
 import com.jackhxs.remote.JSONResultReceiver;
 import com.jackhxs.remote.RemoteService;
 
-public class LoginActivity extends Activity implements JSONResultReceiver.Receiver {
+public class LoginActivity extends Activity implements
+		JSONResultReceiver.Receiver {
 	private EditText emailField, passwordField;
 	public JSONResultReceiver mReceiver;
-	
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_login);
 
 		mReceiver = new JSONResultReceiver(new Handler());
 		mReceiver.setReceiver(this);
-		
+
 		emailField = (EditText) findViewById(R.id.login_email);
 		passwordField = (EditText) findViewById(R.id.login_password);
 	}
 
 	@Override
-    public void onResume() {
+	public void onResume() {
 		super.onResume();
 
 		App app = (App) getApplication();
@@ -44,34 +45,41 @@ public class LoginActivity extends Activity implements JSONResultReceiver.Receiv
 			startActivity(intent);
 			this.finish();
 		}
-    }
-	
+	}
+
 	public void login(View view) {
 		String email = emailField.getText().toString();
 		String password = passwordField.getText().toString();
 
-		final Intent intent = new Intent(Intent.ACTION_SYNC, null, this,
-				RemoteService.class);
-		
-		intent.putExtra("receiver", mReceiver);
-		intent.putExtra("operation", (Parcelable) Operation.POST_LOGIN);
-		intent.putExtra("email", email);
-		intent.putExtra("password", password);
-		
-		startService(intent);		
+		try {
+		Log.e("paul", "before intent");
+			final Intent intent = new Intent(Intent.ACTION_SYNC, null, this,
+					RemoteService.class);
+
+			intent.putExtra("receiver", mReceiver);
+			intent.putExtra("operation", (Parcelable) Operation.POST_LOGIN);
+			intent.putExtra("email", email);
+			intent.putExtra("password", password);
+
+			startService(intent);
+		Log.e("paul", "after intent");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
 	public void onReceiveResult(int resultCode, Bundle resultData) {
-		
+		Log.e("paul", "result");
+
 		App app = (App) getApplication();
-		
+
 		switch (resultCode) {
-		
+
 		case Constants.STATUS_FINISHED: {
 			app.accessToken = resultData.getString("accessToken");
 			Log.e("paul", app.accessToken);
-			
+
 			break;
 		}
 		case Constants.STATUS_ERROR: {
@@ -79,15 +87,14 @@ public class LoginActivity extends Activity implements JSONResultReceiver.Receiv
 			break;
 		}
 		}
-		
+
 		if (app.accessToken != null && !app.accessToken.equals("")) {
 			Log.e("Success", "logged in");
 			Intent intent = new Intent(this, MainActivity.class);
 			intent.putExtra("mode", "contact");
 			startActivity(intent);
 			this.finish();
-		}
-		else {
+		} else {
 			Log.e("Failed", "logged in");
 		}
 	}

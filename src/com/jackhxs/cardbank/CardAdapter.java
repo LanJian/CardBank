@@ -2,6 +2,7 @@ package com.jackhxs.cardbank;
 
 import android.app.Activity;
 import android.content.Context;
+import android.text.util.Linkify;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -69,9 +70,11 @@ public class CardAdapter extends ArrayAdapter<SimpleCard> {
 
     txtView = (TextView)item.findViewById(R.id.card_flip_view_phoneNo);
     txtView.setText(myData[position].phoneNo);
+    Linkify.addLinks(txtView, Linkify.PHONE_NUMBERS);
 
     txtView = (TextView)item.findViewById(R.id.card_flip_view_email);
     txtView.setText(myData[position].email);
+    Linkify.addLinks(txtView, Linkify.EMAIL_ADDRESSES);
 
     ImageView imgView = (ImageView)item.findViewById(R.id.card_flip_view_image);
     imgView.setImageResource(myData[position].image);
