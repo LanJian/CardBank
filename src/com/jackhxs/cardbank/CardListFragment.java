@@ -26,6 +26,7 @@ public class CardListFragment extends Fragment {
 	public void onListItemClick(AdapterView<?> l, View v, int position, long id) {
 		Intent intent = new Intent(getActivity(), CardFlipView.class);
 		intent.putExtra("mode", "contact");
+		intent.putExtra("position", position);
 		startActivity(intent);
 	}
 
@@ -39,16 +40,15 @@ public class CardListFragment extends Fragment {
 
 		myListView = (ListView) view.findViewById(R.id.list_view);
 		myAdapter = new CardAdapter(getActivity(), R.layout.list_view_row, app.myContacts);
+
 		myListView.setAdapter(myAdapter);
+
 		myListView.setOnItemClickListener(new OnItemClickListener() {
-			public void onItemClick(AdapterView<?> l, View v, int position,
-					long id) {
+			public void onItemClick(AdapterView<?> l, View v, int position, long id) {
 				onListItemClick(l, v, position, id);
 			}
 		});
 
 		return view;
 	}
-
-
 }

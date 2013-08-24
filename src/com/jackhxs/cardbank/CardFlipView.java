@@ -15,7 +15,6 @@ import android.os.Parcelable;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.Window;
 import android.widget.Toast;
 
 import com.aphidmobile.flip.FlipViewController;
@@ -27,14 +26,15 @@ import com.jackhxs.remote.RemoteService;
 
 public class CardFlipView extends Activity implements CreateNdefMessageCallback,  JSONResultReceiver.Receiver {
 	public JSONResultReceiver mReceiver;
-	public String cardViewMode;
 
 	private NfcAdapter mNfcAdapter;
-
 	protected FlipViewController myFlipView;
 
 	private void updateCardFlipView() {
+		updateCardFlipView("contact", 0);
+	}
 
+	private void updateCardFlipView(String cardViewMode, Integer position) {
 		CardAdapter adapter;
 
 		if (cardViewMode.equals("contact")) {
@@ -45,10 +45,9 @@ public class CardFlipView extends Activity implements CreateNdefMessageCallback,
 		}
 
 		myFlipView = new FlipViewController(this);
-		myFlipView.setAdapter(adapter);
-
+		myFlipView.setAdapter(adapter, position);
+		
 		setContentView(myFlipView);
-		enterEditView();
 	}
 
 	@Override
@@ -65,9 +64,10 @@ public class CardFlipView extends Activity implements CreateNdefMessageCallback,
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		cardViewMode = getIntent().getStringExtra("mode");
+		String cardViewMode = getIntent().getStringExtra("mode");
+		Integer initialPosition = getIntent().getIntExtra("position", 0);
 
-		updateCardFlipView();
+		updateCardFlipView(cardViewMode, initialPosition);
 
 		// update NFC related configs
 		mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
@@ -128,6 +128,7 @@ public class CardFlipView extends Activity implements CreateNdefMessageCallback,
 		intent.putExtra("receiver", mReceiver);
 		intent.putExtra("operation", (Parcelable) Operation.POST_CONTACT);
 		intent.putExtra("newContactJSON", simpleCardJSON);
+
 		startService(serviceIntent);	
 	}
 
@@ -162,16 +163,8 @@ public class CardFlipView extends Activity implements CreateNdefMessageCallback,
 		return mimeRecord;
 	}
 
-	public void saveCardEdit() {
-		if (cardViewMode.equals("contacts")) {
-			return;
-		}
-
-	}
-
 	@Override
 	public void onReceiveResult(int resultCode, Bundle resultData) {
-
 		switch (resultCode) {
 		case Constants.STATUS_FINISHED: {
 			Log.e("Update Remote Server Worked", "yay!");
@@ -184,12 +177,5 @@ public class CardFlipView extends Activity implements CreateNdefMessageCallback,
 		}
 		}
 
-	}
-
-	public void enterEditView() {
-//		ViewSwitcher phoneSwitcher = (ViewSwitcher) findViewById(R.id.my_switcherPhone);
-//	    phoneSwitcher.showNext();
-//	    ViewSwitcher emailSwitcher = (ViewSwitcher) findViewById(R.id.my_switcherEmail);
-//	    emailSwitcher.showNext();
 	}
 }
