@@ -34,16 +34,16 @@ JSONResultReceiver.Receiver {
 		// Notice that setContentView() is not used, because we use the root
 		// android.R.id.content as the container for each fragment
 		try {
-		mReceiver = new JSONResultReceiver(new Handler());
-		mReceiver.setReceiver(this);
+			mReceiver = new JSONResultReceiver(new Handler());
+			mReceiver.setReceiver(this);
 
-		final Intent intent = new Intent(Intent.ACTION_SYNC, null, this,
-				RemoteService.class);
-		Log.e("paul", "after intent");
-		intent.putExtra("receiver", mReceiver);
-		intent.putExtra("operation",
-				(Parcelable) Operation.GET_BOTH_CONTACT_AND_CARD);
-		startService(intent);
+			final Intent intent = new Intent(Intent.ACTION_SYNC, null, this,
+					RemoteService.class);
+			Log.e("paul", "after intent");
+			intent.putExtra("receiver", mReceiver);
+			intent.putExtra("operation",
+					(Parcelable) Operation.GET_BOTH_CONTACT_AND_CARD);
+			startService(intent);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -57,19 +57,19 @@ JSONResultReceiver.Receiver {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-	    // Handle presses on the action bar items
-	    switch (item.getItemId()) {
-	        case R.id.action_edit: {
-					//Intent intent = new Intent(getApplicationContext(), CardEditActivity.class);
-					//startActivity(intent);
-							//return true;
-	        }
-	        case R.id.action_delete: {
-	            return true;
-	        }
-	        default:
-	            return super.onOptionsItemSelected(item);
-	    }
+		// Handle presses on the action bar items
+		switch (item.getItemId()) {
+		case R.id.action_edit: {
+			Intent intent = new Intent(getApplicationContext(), CardEditActivity.class);
+			startActivity(intent);
+			return true;
+		}
+		case R.id.action_delete: {
+			return true;
+		}
+		default:
+			return super.onOptionsItemSelected(item);
+		}
 	}
 
 	@Override

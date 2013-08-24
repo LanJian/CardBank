@@ -77,7 +77,7 @@ public class CardEditActivity extends Activity implements JSONResultReceiver.Rec
 		intent.putExtra("accessToken", app.accessToken);
 		intent.putExtra("simpleCardJSON", new Gson().toJson(app.myCards[0]));
 
-		startService(intent);		
+		startService(intent);
 	}
 
 	public void cancelEdit() {
@@ -95,6 +95,7 @@ public class CardEditActivity extends Activity implements JSONResultReceiver.Rec
 		}
 		case R.id.action_cancel: {
 			cancelEdit();
+			this.finish();
 			return true;
 		}
 		default:
@@ -106,8 +107,7 @@ public class CardEditActivity extends Activity implements JSONResultReceiver.Rec
 	public void onReceiveResult(int resultCode, Bundle resultData) {
 		switch (resultCode) {
 		case Constants.STATUS_FINISHED: {
-			Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-			startActivity(intent);
+			this.finish();
 			break;
 		}
 		case Constants.STATUS_ERROR: {
