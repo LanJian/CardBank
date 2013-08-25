@@ -81,8 +81,6 @@ public class CardEditActivity extends Activity implements JSONResultReceiver.Rec
 	}
 
 	public void cancelEdit() {
-		Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-		startActivity(intent);
 	}
 
 	@Override

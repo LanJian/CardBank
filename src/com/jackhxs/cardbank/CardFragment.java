@@ -34,7 +34,6 @@ public class CardFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, 
 			Bundle savedInstanceState) {
-
 		// Inflate the layout for this fragment
 		Log.e("paul", "create fragment");
 		View item = inflater.inflate(R.layout.card_flip_view, container, false);
@@ -54,6 +53,25 @@ public class CardFragment extends Fragment {
 		imgView.setImageResource(myCard.image);
 
 		return item;
+	}
+	
+	@Override
+	public void onResume() {
+		super.onResume();
+		myCard = ((App) getActivity().getApplication()).myCards[0];
+		
+		TextView txtView = (TextView) getView().findViewById(R.id.card_flip_view_name);
+		txtView.setText(myCard.firstName + " " + myCard.lastName);
+
+		txtView = (TextView) getView().findViewById(R.id.card_flip_view_phoneNo);
+		txtView.setText(myCard.phoneNo);
+
+		txtView = (TextView) getView().findViewById(R.id.card_flip_view_email);
+		txtView.setText(myCard.email);
+
+		ImageView imgView = (ImageView) getView() .findViewById(R.id.card_flip_view_image);
+
+		imgView.setImageResource(myCard.image);
 	}
 
 }
