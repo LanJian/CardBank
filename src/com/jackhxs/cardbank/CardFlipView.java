@@ -1,6 +1,9 @@
 package com.jackhxs.cardbank;
 
 import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -34,7 +37,7 @@ public class CardFlipView extends Activity implements CreateNdefMessageCallback,
 	protected FlipViewController myFlipView;
 
 	private void updateCardFlipView() {
-		updateCardFlipView();
+		updateCardFlipView(0);
 	}
 
 	private void updateCardFlipView(Integer position) {
@@ -122,10 +125,11 @@ public class CardFlipView extends Activity implements CreateNdefMessageCallback,
 		String simpleCardJSON = (new String(msg.getRecords()[0].getPayload()));
 
 		App app = (App) getApplication();
-		Integer myContactLength = app.myContacts.length;
 
-		((App) getApplication()).myContacts[myContactLength] = 
-				(new Gson()).fromJson(simpleCardJSON, SimpleCard.class);
+		List<SimpleCard> cardList = new ArrayList<SimpleCard>(Arrays.asList(app.myContacts));
+		SimpleCard tmpCard = (new Gson()).fromJson(simpleCardJSON, SimpleCard.class);
+		cardList.add(tmpCard);
+		app.myContacts = cardList.toArray(new SimpleCard[cardList.size()]);
 
 		Log.e("NFC Data", simpleCardJSON);
 
@@ -133,9 +137,9 @@ public class CardFlipView extends Activity implements CreateNdefMessageCallback,
 		final Intent serviceIntent = new Intent(Intent.ACTION_SYNC, null, this,
 				RemoteService.class);
 
-		intent.putExtra("receiver", mReceiver);
-		intent.putExtra("operation", (Parcelable) Operation.POST_CONTACT);
-		intent.putExtra("newContactJSON", simpleCardJSON);
+		serviceIntent.putExtra("receiver", mReceiver);
+		serviceIntent.putExtra("operation", (Parcelable) Operation.POST_CONTACT);
+		serviceIntent.putExtra("newContactJSON", simpleCardJSON);
 
 		startService(serviceIntent);	
 	}

@@ -36,8 +36,10 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback,
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		getActionBar().setDisplayShowTitleEnabled(false);
-		getActionBar().setDisplayShowHomeEnabled(false);
+		if (!Util.isTablet(getApplicationContext())) {
+			getActionBar().setDisplayShowTitleEnabled(false);
+			getActionBar().setDisplayShowHomeEnabled(false);
+		}
 
 		// Notice that setContentView() is not used, because we use the root
 		// android.R.id.content as the container for each fragment
@@ -81,7 +83,8 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback,
 		// Handle presses on the action bar items
 		switch (item.getItemId()) {
 		case R.id.action_edit: {
-			Intent intent = new Intent(getApplicationContext(), CardEditActivity.class);
+			Intent intent = new Intent(getApplicationContext(),
+					CardEditActivity.class);
 			startActivity(intent);
 			return true;
 		}
@@ -108,7 +111,7 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback,
 		// temp mock images
 		contacts[0].image = R.drawable.mock_card;
 		contacts[1].image = R.drawable.mock_card2;
-
+    
 		cards[0].image = R.drawable.mock_my_card;
 
 		// setup action bar for tabs
