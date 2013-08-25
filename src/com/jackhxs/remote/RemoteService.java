@@ -55,20 +55,33 @@ public class RemoteService extends IntentService {
 		}
 		case GET_CARDS: {
 			SimpleCard[] contacts = service.listOwnCards(accessToken);
+
 			b.putParcelableArray("cards", contacts);
+			b.putString("action", "initialization");
+			b.putBoolean("result", true);
+
             receiver.send(Constants.STATUS_FINISHED, b);
 			break;
 		}
 		case GET_CONTACTS: {
 			SimpleCard[] contacts = service.listContacts(accessToken);
 			b.putParcelableArray("contacts", contacts);
+
+			b.putBoolean("result", true);
+			b.putString("action", "initialization");
+
             receiver.send(Constants.STATUS_FINISHED, b);
 			break;
 		}
 		case GET_BOTH_CONTACT_AND_CARD: {
 			ContactAndCards contactAndCards = service.listContactAndCards(accessToken);
+
 			b.putParcelableArray("contacts", contactAndCards.contacts);
 			b.putParcelableArray("cards", contactAndCards.cards);
+
+			b.putString("action", "initialization");
+			b.putBoolean("result", true);
+
             receiver.send(Constants.STATUS_FINISHED, b);
 			break;
 		}
@@ -79,7 +92,9 @@ public class RemoteService extends IntentService {
 			SimpleCard simpleCard = new Gson().fromJson(simpleCardJSON, SimpleCard.class);
 			Boolean result = service.addCard(accessToken, simpleCard);
 
+			b.putString("action", "updated");
 			b.putBoolean("result", result);
+
 			receiver.send(Constants.STATUS_FINISHED, b);
 			break;
 		}
@@ -89,21 +104,29 @@ public class RemoteService extends IntentService {
 			SimpleCard simpleCard = new Gson().fromJson(simpleCardJSON, SimpleCard.class);
 			Boolean result = service.addContact(accessToken, simpleCard);
 			
+			b.putString("action", "updated");
 			b.putBoolean("result", result);
+
 			receiver.send(Constants.STATUS_FINISHED, b);
 			break;
 		}
 		case DEL_CARD: {
 			SimpleCard existingCard = intent.getParcelableExtra("existingCard");
 			Boolean result = service.deleteCard(accessToken, existingCard);
+
+			b.putString("action", "updated");
 			b.putBoolean("result", result);
+
 			receiver.send(Constants.STATUS_FINISHED, b);
 			break;
 		}
 		case DEL_CONTACT: {
 			SimpleCard existingCard = intent.getParcelableExtra("existingCard");
 			Boolean result = service.deleteCard(accessToken, existingCard);
+
+			b.putString("action", "updated");
 			b.putBoolean("result", result);
+
 			receiver.send(Constants.STATUS_FINISHED, b);
 			break;
 		}

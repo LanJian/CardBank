@@ -19,25 +19,28 @@ import android.widget.Toast;
 
 import com.aphidmobile.flip.FlipViewController;
 import com.google.gson.Gson;
+import com.jackhxs.data.SimpleCard;
 import com.jackhxs.remote.Constants;
 import com.jackhxs.remote.Constants.Operation;
 import com.jackhxs.remote.JSONResultReceiver;
 import com.jackhxs.remote.RemoteService;
 
 public class CardFlipView extends Activity implements CreateNdefMessageCallback,  JSONResultReceiver.Receiver {
-	public JSONResultReceiver mReceiver;
-
 	private NfcAdapter mNfcAdapter;
+
+	public JSONResultReceiver mReceiver;
+	public String cardViewMode = null;
+
 	protected FlipViewController myFlipView;
 
 	private void updateCardFlipView() {
-		updateCardFlipView("contact", 0);
+		updateCardFlipView();
 	}
 
-	private void updateCardFlipView(String cardViewMode, Integer position) {
+	private void updateCardFlipView(Integer position) {
 		CardAdapter adapter;
 
-		if (cardViewMode.equals("contact")) {
+		if (cardViewMode == null || cardViewMode.equals("contact")) {
 			adapter = new CardAdapter(this, R.layout.card_flip_view, ((App)getApplication()).myContacts);
 		}
 		else {
@@ -46,15 +49,14 @@ public class CardFlipView extends Activity implements CreateNdefMessageCallback,
 
 		myFlipView = new FlipViewController(this);
 		myFlipView.setAdapter(adapter, position);
-		
 		setContentView(myFlipView);
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-	    MenuInflater inflater=getMenuInflater();
-	    inflater.inflate(R.menu.card_flip_activity_actions, menu);
-	    return super.onCreateOptionsMenu(menu);
+		MenuInflater inflater=getMenuInflater();
+		inflater.inflate(R.menu.card_flip_activity_actions, menu);
+		return super.onCreateOptionsMenu(menu);
 	}
 
 	/**
@@ -64,10 +66,10 @@ public class CardFlipView extends Activity implements CreateNdefMessageCallback,
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		String cardViewMode = getIntent().getStringExtra("mode");
+		cardViewMode = getIntent().getStringExtra("mode");
 		Integer initialPosition = getIntent().getIntExtra("position", 0);
 
-		updateCardFlipView(cardViewMode, initialPosition);
+		updateCardFlipView(initialPosition);
 
 		// update NFC related configs
 		mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
@@ -119,6 +121,12 @@ public class CardFlipView extends Activity implements CreateNdefMessageCallback,
 		// record 0 contains the MIME type, record 1 is the AAR, if present
 		String simpleCardJSON = (new String(msg.getRecords()[0].getPayload()));
 
+		App app = (App) getApplication();
+		Integer myContactLength = app.myContacts.length;
+
+		((App) getApplication()).myContacts[myContactLength] = 
+				(new Gson()).fromJson(simpleCardJSON, SimpleCard.class);
+
 		Log.e("NFC Data", simpleCardJSON);
 
 		// send the result back to server
@@ -139,9 +147,10 @@ public class CardFlipView extends Activity implements CreateNdefMessageCallback,
 	public NdefMessage createNdefMessage(NfcEvent event) {
 		App app = ((App) getApplication());
 
-		String serializedCard = (new Gson()).toJson(app.myCards[0]);
-		Log.e("Serialized JSON", serializedCard);
+		Integer positionIndex = myFlipView.getSelectedItemPosition();
+		String serializedCard = (new Gson()).toJson(app.myContacts[positionIndex]);
 
+		Log.e("Serialized JSON", serializedCard);
 		NdefMessage msg = new NdefMessage(
 				new NdefRecord[] {
 						createMimeRecord("application/com.jackhxs.cardbank", serializedCard.getBytes()),
