@@ -11,9 +11,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.jackhxs.data.SimpleCard;
+import com.xtremelabs.imageutils.ImageLoader;
 
 public class CardAdapter extends ArrayAdapter<SimpleCard> {
-
+	
   private static final int[] ICON_BG_COLORS = {
     0xff1b7c59, 0xffe76e66, 0xffdca46b, 0xff5699a9, 0xff695b8e, 0xff8c5e7a
   };
@@ -21,12 +22,14 @@ public class CardAdapter extends ArrayAdapter<SimpleCard> {
   private SimpleCard[] myData;
   private int myResourceId;
   private Context myContext;
+  private ImageLoader myImageLoader;
 
-  public CardAdapter(Context context, int resourceId, SimpleCard[] objects) {
+  public CardAdapter(Context context, int resourceId, SimpleCard[] objects, ImageLoader mImageLoader) {
     super(context, resourceId, objects);
     myData = objects;
     myResourceId = resourceId;
     myContext = context;
+    myImageLoader = mImageLoader;
   }
 
 
@@ -77,9 +80,8 @@ public class CardAdapter extends ArrayAdapter<SimpleCard> {
     Linkify.addLinks(txtView, Linkify.EMAIL_ADDRESSES);
 
     ImageView imgView = (ImageView)item.findViewById(R.id.card_flip_view_image);
-    imgView.setImageResource(myData[position].image);
+    myImageLoader.loadImage(imgView, myData[position].imageUrl);
     
     return item;
   }
-
 }

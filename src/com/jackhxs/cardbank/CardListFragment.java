@@ -11,11 +11,12 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
 import com.jackhxs.remote.JSONResultReceiver;
+import com.xtremelabs.imageutils.ImageLoader;
 
 public class CardListFragment extends Fragment {
 	private ListView myListView;
 	private CardAdapter myAdapter;
-
+    private ImageLoader mImageLoader;
 	public JSONResultReceiver mReceiver;
 
 	public void onCreate(Bundle bundle) {
@@ -35,11 +36,12 @@ public class CardListFragment extends Fragment {
 			Bundle savedInstanceState) {
 		// Inflate the layout for this fragment
 		View view = inflater.inflate(R.layout.activity_card_list, container, false);
+        mImageLoader = ImageLoader.buildImageLoaderForFragment(this);
 
 		App app = (App) getActivity().getApplication();
 
 		myListView = (ListView) view.findViewById(R.id.list_view);
-		myAdapter = new CardAdapter(getActivity(), R.layout.list_view_row, app.myContacts);
+		myAdapter = new CardAdapter(getActivity(), R.layout.list_view_row, app.myContacts, mImageLoader);
 
 		myListView.setAdapter(myAdapter);
 
@@ -51,4 +53,9 @@ public class CardListFragment extends Fragment {
 
 		return view;
 	}
+	
+	@Override
+    public void onDestroyView() {
+        mImageLoader.destroy();
+    }
 }

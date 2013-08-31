@@ -27,12 +27,14 @@ import com.jackhxs.remote.Constants;
 import com.jackhxs.remote.Constants.Operation;
 import com.jackhxs.remote.JSONResultReceiver;
 import com.jackhxs.remote.RemoteService;
+import com.xtremelabs.imageutils.ImageLoader;
 
 public class CardFlipView extends Activity implements CreateNdefMessageCallback,  JSONResultReceiver.Receiver {
 	private NfcAdapter mNfcAdapter;
 
 	public JSONResultReceiver mReceiver;
 	public String cardViewMode = null;
+	private ImageLoader mImageLoader;
 
 	protected FlipViewController myFlipView;
 
@@ -43,15 +45,18 @@ public class CardFlipView extends Activity implements CreateNdefMessageCallback,
 	private void updateCardFlipView(Integer position) {
 		CardAdapter adapter;
 
+        mImageLoader = ImageLoader.buildImageLoaderForActivity(this);
+
 		if (cardViewMode == null || cardViewMode.equals("contact")) {
-			adapter = new CardAdapter(this, R.layout.card_flip_view, ((App)getApplication()).myContacts);
+			adapter = new CardAdapter(this, R.layout.card_flip_view, ((App)getApplication()).myContacts, mImageLoader);
 		}
 		else {
-			adapter = new CardAdapter(this, R.layout.card_flip_view, ((App)getApplication()).myCards);
+			adapter = new CardAdapter(this, R.layout.card_flip_view, ((App)getApplication()).myCards, mImageLoader);
 		}
 
 		myFlipView = new FlipViewController(this);
 		myFlipView.setAdapter(adapter, position);
+
 		setContentView(myFlipView);
 	}
 
@@ -86,6 +91,8 @@ public class CardFlipView extends Activity implements CreateNdefMessageCallback,
 		// configure remote service callback
 		mReceiver = new JSONResultReceiver(new Handler());
 		mReceiver.setReceiver(this);
+		
+        mImageLoader = ImageLoader.buildImageLoaderForActivity(this);
 	}
 
 	@Override
@@ -191,4 +198,10 @@ public class CardFlipView extends Activity implements CreateNdefMessageCallback,
 		}
 
 	}
+	
+	@Override
+    public void onDestroy() {
+		super.onDestroy();
+        mImageLoader.destroy();
+    }
 }

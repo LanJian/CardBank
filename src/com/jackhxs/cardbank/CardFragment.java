@@ -13,10 +13,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.jackhxs.data.SimpleCard;
+import com.xtremelabs.imageutils.ImageLoader;
 
 @SuppressLint("ValidFragment")
 public class CardFragment extends Fragment {
 	private SimpleCard myCard;
+    private ImageLoader mImageLoader;
 
 	@SuppressLint("ValidFragment")
 	public CardFragment(SimpleCard card) {
@@ -50,8 +52,10 @@ public class CardFragment extends Fragment {
 
 		ImageView imgView = (ImageView) item
 				.findViewById(R.id.card_flip_view_image);
-		imgView.setImageResource(myCard.image);
-
+		
+		mImageLoader = ImageLoader.buildImageLoaderForFragment(this);
+		mImageLoader.loadImage(imgView, myCard.imageUrl);
+        
 		return item;
 	}
 	
@@ -70,8 +74,12 @@ public class CardFragment extends Fragment {
 		txtView.setText(myCard.email);
 
 		ImageView imgView = (ImageView) getView() .findViewById(R.id.card_flip_view_image);
-
 		imgView.setImageResource(myCard.image);
 	}
-
+	
+	@Override
+	public void onDestroyView() {
+		super.onDestroyView();
+		mImageLoader.destroy();
+	}
 }
