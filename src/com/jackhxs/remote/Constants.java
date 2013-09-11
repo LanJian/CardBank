@@ -11,15 +11,16 @@ public final class Constants {
 
 	/** REST Interface Constants */
 	public enum Operation implements Parcelable{
-		POST_LOGIN, // 0
-		GET_CARDS, // 1
-		GET_CONTACTS, // 2
+		POST_SIGNUP,
+		POST_LOGIN,
+		GET_CARDS,
+		GET_CONTACTS,
 		GET_BOTH_CONTACT_AND_CARD,
-		POST_CARD, // 3
-		PUT_CARD, // 4
-		POST_CONTACT, // 5
-		DEL_CONTACT, // 6
-		DEL_CARD; // 7
+		POST_CARD,
+		PUT_CARD,
+		POST_CONTACT,
+		DEL_CONTACT,
+		DEL_CARD;
 
 		@Override
 		public int describeContents() {

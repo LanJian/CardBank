@@ -17,11 +17,11 @@ import com.jackhxs.data.SimpleCard;
  */
 public interface RestInterface {
   /** Both */
-  @GET("/521c162138269a61009bbe04") // get own cards and contacts
+  @GET("/522fe844fd83b34c00fd8612") // get own cards and contacts
   ContactAndCards listContactAndCards(@Query("acccessToken") String accessToken);
  
   /** Cards */
-  @GET("/5215bcc7ebe32c0701321462") // get own cards
+  @GET("/522fe9acfd83b34e00fd8614") // get own cards
   SimpleCard[] listOwnCards(@Query("acccessToken") String accessToken);
   
   // update card
@@ -36,7 +36,7 @@ public interface RestInterface {
   Boolean deleteCard(@Query("acccessToken") String accessToken, @Body SimpleCard existingCard);
 
   /** Contacts */
-  @GET("/521173867d9210870034dd31") // get contact cards
+  @GET("/522fe9e3fd83b34e00fd8615") // get contact cards
   SimpleCard[] listContacts(@Query("acccessToken") String accessToken);
  
   // Add new Contact
@@ -47,6 +47,13 @@ public interface RestInterface {
   Boolean deleteContact(@Query("acccessToken") String accessToken, @Body SimpleCard existingContact);
  
   /** Misc. */
+//Logging In
+ @FormUrlEncoded
+ @POST("/5211492f7d9210460034dd2d")
+ String signup(
+		 @Field("username") String username, 
+		 @Field("password") String password);
+ 
   // Logging In
   @FormUrlEncoded
   @POST("/5211492f7d9210460034dd2d")

@@ -8,9 +8,10 @@ public class SimpleCard implements Parcelable {
 	public String lastName;
 	public String phoneNo;
 	public String email;
-	public String cardId;
 	public String imageUrl;
-
+	
+	public String cardId;
+	
 	// temp
 	public int image;
 	
@@ -30,6 +31,7 @@ public class SimpleCard implements Parcelable {
 		dst.writeString(lastName);
 		dst.writeString(phoneNo);
 		dst.writeString(email);
+		dst.writeString(imageUrl);
 		
 		dst.writeString(cardId);
 	}
@@ -39,6 +41,7 @@ public class SimpleCard implements Parcelable {
 		lastName = in.readString();
 		phoneNo = in.readString();
 		email = in.readString();
+		imageUrl = in.readString();
 		
 		cardId = in.readString();
 	}

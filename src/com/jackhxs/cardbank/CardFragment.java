@@ -74,7 +74,7 @@ public class CardFragment extends Fragment {
 		txtView.setText(myCard.email);
 
 		ImageView imgView = (ImageView) getView() .findViewById(R.id.card_flip_view_image);
-		imgView.setImageResource(myCard.image);
+        mImageLoader.loadImage(imgView, myCard.imageUrl);
 	}
 	
 	@Override

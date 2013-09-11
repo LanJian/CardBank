@@ -46,8 +46,20 @@
         android:layout_marginLeft="10dip"
         android:layout_marginRight="10dip"
         android:layout_marginTop="50dip"
-        android:width="250dip"
+        android:layout_marginBottom="0dip"
         android:onClick="login"
-        android:text="@string/login_login_string" />
+        android:text="@string/login_login_string"
+        android:width="250dip" />
+
+    <Button
+        android:id="@+id/sign_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginLeft="10dip"
+        android:layout_marginRight="10dip"
+        android:onClick="signup"
+        android:text="@string/signup_string"
+        android:width="250dip" />
 
 </LinearLayout>

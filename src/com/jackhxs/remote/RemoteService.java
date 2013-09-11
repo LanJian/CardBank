@@ -41,7 +41,16 @@ public class RemoteService extends IntentService {
 		Log.i("paul", command.toString());
 		receiver.send(Constants.STATUS_RUNNING, Bundle.EMPTY);
 		
-		switch (command) { 
+		switch (command) {
+		case POST_SIGNUP: {
+			String username = intent.getStringExtra("username");
+			String password = intent.getStringExtra("password");
+			String newAccessToken = service.signup(username, password);
+			b.putString("accessToken", newAccessToken);
+			receiver.send(Constants.STATUS_FINISHED, b);
+			Log.i("remoteService", newAccessToken);
+			break;
+		}
 		case POST_LOGIN: {
 			String username = intent.getStringExtra("username");
 			String password = intent.getStringExtra("password");

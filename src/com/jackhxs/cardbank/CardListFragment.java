@@ -56,6 +56,7 @@ public class CardListFragment extends Fragment {
 	
 	@Override
     public void onDestroyView() {
+		super.onDestroy();
         mImageLoader.destroy();
     }
 }
