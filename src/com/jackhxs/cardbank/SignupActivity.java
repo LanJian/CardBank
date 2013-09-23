@@ -15,9 +15,9 @@ import com.jackhxs.remote.Constants.Operation;
 import com.jackhxs.remote.JSONResultReceiver;
 import com.jackhxs.remote.RemoteService;
 
-public class LoginActivity extends Activity implements
-		JSONResultReceiver.Receiver {
-	private EditText emailField, passwordField;
+public class SignupActivity extends Activity implements
+JSONResultReceiver.Receiver {
+	private EditText emailField, passwordField, confirmField;
 	public JSONResultReceiver mReceiver;
 
 	@Override
@@ -25,55 +25,54 @@ public class LoginActivity extends Activity implements
 		super.onCreate(savedInstanceState);
 
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-		setContentView(R.layout.activity_login);
+		setContentView(R.layout.activity_signup);
 
 		mReceiver = new JSONResultReceiver(new Handler());
 		mReceiver.setReceiver(this);
 
 		emailField = (EditText) findViewById(R.id.login_email);
 		passwordField = (EditText) findViewById(R.id.login_password);
+		confirmField = (EditText) findViewById(R.id.login_password2);
 	}
 
 	@Override
 	public void onResume() {
 		super.onResume();
-
-		App app = (App) getApplication();
-
-		if (app.accessToken != null && !app.accessToken.equals("")) {
-			Intent intent = new Intent(this, MainActivity.class);
-			startActivity(intent);
-			this.finish();
-		}
 	}
 
-	public void login(View view) {
+	public void signup(View view) {
 		String email = emailField.getText().toString();
 		String password = passwordField.getText().toString();
+		String password2 = confirmField.getText().toString();
+		Boolean valid = true;
+		
+        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+        	emailField.setError("Email is invalid");
+        	valid = false;
+        }
+		
+		if (!password.equals(password2)) {
+			confirmField.setError( "Password does not match." );
+			valid = false;
+		}
+		
+		if (!valid) {
+			return;
+		}
 
 		try {
-		Log.e("paul", "before intent");
 			final Intent intent = new Intent(Intent.ACTION_SYNC, null, this,
 					RemoteService.class);
 
 			intent.putExtra("receiver", mReceiver);
-			intent.putExtra("operation", (Parcelable) Operation.POST_LOGIN);
+			intent.putExtra("operation", (Parcelable) Operation.POST_SIGNUP);
 			intent.putExtra("email", email);
 			intent.putExtra("password", password);
 
 			startService(intent);
-		Log.e("paul", "after intent");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}
-
-
-	public void signup(View view) {
-		Intent intent = new Intent(this, SignupActivity.class);
-		intent.putExtra("mode", "contact");
-		startActivity(intent);
-		this.finish();
 	}
 
 	@Override
@@ -87,7 +86,6 @@ public class LoginActivity extends Activity implements
 		case Constants.STATUS_FINISHED: {
 			app.accessToken = resultData.getString("accessToken");
 			Log.e("paul", app.accessToken);
-
 			break;
 		}
 		case Constants.STATUS_ERROR: {
