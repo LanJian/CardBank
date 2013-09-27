@@ -2,21 +2,21 @@ package com.jackhxs.cardbank;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Parcelable;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.EditText;
+import android.widget.ImageView;
 
-import com.google.gson.Gson;
 import com.jackhxs.data.SimpleCard;
 import com.jackhxs.remote.Constants;
-import com.jackhxs.remote.Constants.Operation;
 import com.jackhxs.remote.JSONResultReceiver;
 import com.jackhxs.remote.RemoteService;
+import com.jackhxs.util.ImageUtil;
 
 public class CardEditActivity extends Activity implements JSONResultReceiver.Receiver {
 	private EditText nameField, phoneField, emailField;
@@ -72,12 +72,21 @@ public class CardEditActivity extends Activity implements JSONResultReceiver.Rec
 		app.myCards[0].firstName = name.split(" ")[0];
 		app.myCards[0].lastName = name.split(" ")[1];
 
+		Bitmap bg = com.jackhxs.util.ImageUtil.getBitmapFromAsset(this, "template_gold");
+		
+		Bitmap newCard = ImageUtil.GenerateCardImage(bg, name, email, phone);
+		
+		ImageView imgView = (ImageView) findViewById(R.id.card_flip_view_image);
+		imgView.setImageBitmap(newCard);
+		
+		/*
 		intent.putExtra("receiver", mReceiver);
 		intent.putExtra("operation", (Parcelable) Operation.POST_CARD);
 		intent.putExtra("accessToken", app.accessToken);
 		intent.putExtra("simpleCardJSON", new Gson().toJson(app.myCards[0]));
 
 		startService(intent);
+		*/
 	}
 
 	public void cancelEdit() {

@@ -16,7 +16,7 @@ import com.jackhxs.remote.JSONResultReceiver;
 import com.jackhxs.remote.RemoteService;
 
 public class LoginActivity extends Activity implements
-		JSONResultReceiver.Receiver {
+JSONResultReceiver.Receiver {
 	private EditText emailField, passwordField;
 	public JSONResultReceiver mReceiver;
 
@@ -52,7 +52,7 @@ public class LoginActivity extends Activity implements
 		String password = passwordField.getText().toString();
 
 		try {
-		Log.e("paul", "before intent");
+			Log.e("paul", "before intent");
 			final Intent intent = new Intent(Intent.ACTION_SYNC, null, this,
 					RemoteService.class);
 
@@ -62,7 +62,7 @@ public class LoginActivity extends Activity implements
 			intent.putExtra("password", password);
 
 			startService(intent);
-		Log.e("paul", "after intent");
+			Log.e("paul", "after intent");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

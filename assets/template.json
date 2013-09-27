@@ -1,0 +1,38 @@
+[
+	{
+		"url": "template_gold",
+		"name": {
+			"color": "white",
+			"left": 12,
+			"top": 20
+		},
+		"phone": {
+			"color": "white",
+			"left": 12,
+			"top": 20
+		},
+		"email": {
+			"color": "white",
+			"left": 12,
+			"top": 20
+		},
+	},
+	{
+		"url": "template_silver",
+		"name": {
+			"color": "black",
+			"left": 12,
+			"top": 20
+		},
+		"phone": {
+			"color": "black",
+			"left": 12,
+			"top": 20
+		},
+		"email": {
+			"color": "black",
+			"left": 12,
+			"top": 20
+		},
+	}
+]
