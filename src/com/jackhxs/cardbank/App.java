@@ -5,23 +5,27 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Application;
 import android.content.res.AssetManager;
 import android.content.res.Configuration;
+import android.util.Log;
 
+import com.google.gson.Gson;
 import com.jackhxs.data.SimpleCard;
+import com.jackhxs.data.TemplateConfig;
 
 public class App extends Application {
-	public String accessToken;
-	public String username;
+	public static String accessToken;
+	public static String username;
 
-	public SimpleCard[] myCards;
-	public SimpleCard[] myContacts;
+	public static SimpleCard[] myCards;
+	public static SimpleCard[] myContacts;
 
-	public static JSONObject templateConfig;
+	public static TemplateConfig[] templateConfig;
 
 	public Boolean addContact() {
 		return null;
@@ -57,11 +61,9 @@ public class App extends Application {
 		    {
 		        sb.append(line + "\n");
 		    }
-		    templateConfig = new JSONObject(sb.toString());
+		    templateConfig = new Gson().fromJson(sb.toString(), TemplateConfig[].class);
 		    
 		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (JSONException e) {
 			e.printStackTrace();
 		}
 	}

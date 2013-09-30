@@ -56,7 +56,6 @@ public class CardFlipView extends Activity implements CreateNdefMessageCallback,
 
 		myFlipView = new FlipViewController(this);
 		myFlipView.setAdapter(adapter, position);
-
 		setContentView(myFlipView);
 	}
 

@@ -12,9 +12,6 @@ public class SimpleCard implements Parcelable {
 	
 	public String cardId;
 	
-	// temp
-	public int image;
-	
 	public SimpleCard() {};
 	
 	public SimpleCard(Parcel in) {

@@ -108,12 +108,6 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback,
 		app.myContacts = contacts;
 		app.myCards = cards;
 
-		// temp mock images
-		contacts[0].image = R.drawable.mock_card;
-		contacts[1].image = R.drawable.mock_card2;
-    
-		cards[0].image = R.drawable.mock_my_card;
-
 		// setup action bar for tabs
 		ActionBar actionBar = getActionBar();
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);

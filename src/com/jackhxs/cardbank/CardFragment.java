@@ -2,6 +2,7 @@ package com.jackhxs.cardbank;
 
 import android.annotation.SuppressLint;
 import android.app.Fragment;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.jackhxs.data.SimpleCard;
+import com.jackhxs.util.ImageUtil;
 import com.xtremelabs.imageutils.ImageLoader;
 
 @SuppressLint("ValidFragment")
@@ -36,6 +38,8 @@ public class CardFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, 
 			Bundle savedInstanceState) {
+		String name, phone, email;
+		
 		// Inflate the layout for this fragment
 		Log.e("paul", "create fragment");
 		View item = inflater.inflate(R.layout.card_flip_view, container, false);
@@ -43,19 +47,26 @@ public class CardFragment extends Fragment {
 		TextView txtView = (TextView) item
 				.findViewById(R.id.card_flip_view_name);
 		txtView.setText(myCard.firstName + " " + myCard.lastName);
-
+		name = txtView.getText().toString();
+		
 		txtView = (TextView) item.findViewById(R.id.card_flip_view_phoneNo);
 		txtView.setText(myCard.phoneNo);
+		phone = txtView.getText().toString();
 
 		txtView = (TextView) item.findViewById(R.id.card_flip_view_email);
 		txtView.setText(myCard.email);
-
+		email = txtView.getText().toString();
+		
 		ImageView imgView = (ImageView) item
 				.findViewById(R.id.card_flip_view_image);
 		
-		mImageLoader = ImageLoader.buildImageLoaderForFragment(this);
-		mImageLoader.loadImage(imgView, myCard.imageUrl);
-        
+//		mImageLoader = ImageLoader.buildImageLoaderForFragment(this);
+//		mImageLoader.loadImage(imgView, myCard.imageUrl);
+
+		int index = Integer.parseInt(myCard.imageUrl);
+		Bitmap newCard = ImageUtil.GenerateCardImage(getActivity(), App.templateConfig[index], name, email, phone);
+		imgView.setImageBitmap(newCard);
+
 		return item;
 	}
 	
@@ -74,12 +85,12 @@ public class CardFragment extends Fragment {
 		txtView.setText(myCard.email);
 
 		ImageView imgView = (ImageView) getView() .findViewById(R.id.card_flip_view_image);
-        mImageLoader.loadImage(imgView, myCard.imageUrl);
+        //mImageLoader.loadImage(imgView, myCard.imageUrl);
 	}
 	
 	@Override
 	public void onDestroyView() {
 		super.onDestroyView();
-		mImageLoader.destroy();
+		//mImageLoader.destroy();
 	}
 }

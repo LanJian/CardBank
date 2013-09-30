@@ -2,6 +2,7 @@ package com.jackhxs.cardbank;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.text.util.Linkify;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.jackhxs.data.SimpleCard;
+import com.jackhxs.util.ImageUtil;
 import com.xtremelabs.imageutils.ImageLoader;
 
 public class CardAdapter extends ArrayAdapter<SimpleCard> {
@@ -64,23 +66,30 @@ public class CardAdapter extends ArrayAdapter<SimpleCard> {
 
   public View getFlipItemView(int position, View convertView, ViewGroup parent) {
     View item = convertView;
-
+    String name, phone, email;
+    
     LayoutInflater inflater = ((Activity)myContext).getLayoutInflater();
     item = inflater.inflate(myResourceId, parent, false);
 
     TextView txtView = (TextView)item.findViewById(R.id.card_flip_view_name);
     txtView.setText(myData[position].firstName + " " + myData[position].lastName);
+    name = txtView.getText().toString();
 
     txtView = (TextView)item.findViewById(R.id.card_flip_view_phoneNo);
     txtView.setText(myData[position].phoneNo);
+    phone = txtView.getText().toString();
     Linkify.addLinks(txtView, Linkify.PHONE_NUMBERS);
 
     txtView = (TextView)item.findViewById(R.id.card_flip_view_email);
     txtView.setText(myData[position].email);
+    email = txtView.getText().toString();
     Linkify.addLinks(txtView, Linkify.EMAIL_ADDRESSES);
 
     ImageView imgView = (ImageView)item.findViewById(R.id.card_flip_view_image);
-    myImageLoader.loadImage(imgView, myData[position].imageUrl);
+    //myImageLoader.loadImage(imgView, myData[position].imageUrl);
+    int index = Integer.parseInt(myData[position].imageUrl);
+    Bitmap newCard = ImageUtil.GenerateCardImage((Activity) myContext, App.templateConfig[index], name, email, phone);
+	imgView.setImageBitmap(newCard);
     
     return item;
   }
