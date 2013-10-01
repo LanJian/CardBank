@@ -84,7 +84,7 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback,
 		switch (item.getItemId()) {
 		case R.id.action_edit: {
 			Intent intent = new Intent(getApplicationContext(),
-					CardEditActivity.class);
+					TemplateGallery.class); // CardEdit
 			startActivity(intent);
 			return true;
 		}

@@ -116,7 +116,7 @@ public class CardEditActivity extends Activity implements JSONResultReceiver.Rec
 
 		cardImage.setOnClickListener(this);
 		cardImage.setOnTouchListener(gestureListener);
-		templateIndex = Integer.parseInt(myCard.imageUrl);
+		templateIndex = getIntent().getIntExtra("templateIndex", Integer.parseInt(myCard.imageUrl));
 		
 		updateCardImage(templateIndex);
 	}

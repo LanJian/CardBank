@@ -73,19 +73,26 @@ public class CardFragment extends Fragment {
 	@Override
 	public void onResume() {
 		super.onResume();
+		String name, phone, email;
 		myCard = ((App) getActivity().getApplication()).myCards[0];
 		
 		TextView txtView = (TextView) getView().findViewById(R.id.card_flip_view_name);
 		txtView.setText(myCard.firstName + " " + myCard.lastName);
-
+		name = txtView.getText().toString();
+		
 		txtView = (TextView) getView().findViewById(R.id.card_flip_view_phoneNo);
 		txtView.setText(myCard.phoneNo);
-
+		phone = txtView.getText().toString();
+		
 		txtView = (TextView) getView().findViewById(R.id.card_flip_view_email);
 		txtView.setText(myCard.email);
-
+		email = txtView.getText().toString();
+		
 		ImageView imgView = (ImageView) getView() .findViewById(R.id.card_flip_view_image);
-        //mImageLoader.loadImage(imgView, myCard.imageUrl);
+		int index = Integer.parseInt(myCard.imageUrl);
+		Bitmap newCard = ImageUtil.GenerateCardImage(getActivity(), App.templateConfig[index], name, email, phone);
+		imgView.setImageBitmap(newCard);
+
 	}
 	
 	@Override
