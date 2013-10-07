@@ -49,10 +49,14 @@ public class CardFlipView extends Activity implements CreateNdefMessageCallback,
         mImageLoader = ImageLoader.buildImageLoaderForActivity(this);
 
 		if (cardViewMode == null || cardViewMode.equals("contact")) {
-			adapter = new CardAdapter(this, R.layout.card_flip_view, ((App)getApplication()).myContacts, mImageLoader);
+            ArrayList<SimpleCard> list = new ArrayList<SimpleCard>();
+            list.addAll(Arrays.asList(App.myContacts));
+			adapter = new CardAdapter(this, R.layout.card_flip_view, list, mImageLoader);
 		}
 		else {
-			adapter = new CardAdapter(this, R.layout.card_flip_view, ((App)getApplication()).myCards, mImageLoader);
+            ArrayList<SimpleCard> list = new ArrayList<SimpleCard>();
+            list.addAll(Arrays.asList(App.myCards));
+			adapter = new CardAdapter(this, R.layout.card_flip_view, list, mImageLoader);
 		}
 
 		myFlipView = new FlipViewController(this);

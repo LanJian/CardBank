@@ -5,14 +5,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.app.Application;
 import android.content.res.AssetManager;
 import android.content.res.Configuration;
-import android.util.Log;
 
 import com.google.gson.Gson;
 import com.jackhxs.data.SimpleCard;

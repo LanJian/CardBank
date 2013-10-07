@@ -1,5 +1,8 @@
 package com.jackhxs.cardbank;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,8 +14,8 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
+import com.jackhxs.data.SimpleCard;
 import com.jackhxs.remote.Constants.Operation;
-import com.jackhxs.remote.JSONResultReceiver;
 import com.jackhxs.remote.RemoteService;
 import com.xtremelabs.imageutils.ImageLoader;
 
@@ -59,10 +62,10 @@ public class CardListFragment extends Fragment {
 		View view = inflater.inflate(R.layout.activity_card_list, container, false);
         mImageLoader = ImageLoader.buildImageLoaderForFragment(this);
 
-		App app = (App) getActivity().getApplication();
-
 		myListView = (ListView) view.findViewById(R.id.list_view);
-		myAdapter = new CardAdapter(getActivity(), R.layout.list_view_row, app.myContacts, mImageLoader);
+        ArrayList<SimpleCard> list = new ArrayList<SimpleCard>();
+        list.addAll(Arrays.asList(App.myContacts));
+		myAdapter = new CardAdapter(getActivity(), R.layout.list_view_row, list, mImageLoader);
 
 		myListView.setAdapter(myAdapter);
 
