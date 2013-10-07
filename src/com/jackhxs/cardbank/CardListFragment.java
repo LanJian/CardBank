@@ -3,6 +3,7 @@ package com.jackhxs.cardbank;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,25 +11,45 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
+import com.jackhxs.remote.Constants.Operation;
 import com.jackhxs.remote.JSONResultReceiver;
+import com.jackhxs.remote.RemoteService;
 import com.xtremelabs.imageutils.ImageLoader;
 
+// Fragment with a list view of the contacts
 public class CardListFragment extends Fragment {
 	private ListView myListView;
 	private CardAdapter myAdapter;
     private ImageLoader mImageLoader;
-	public JSONResultReceiver mReceiver;
+    private boolean mIsRefer;
 
 	public void onCreate(Bundle bundle) {
 		super.onCreate(bundle);
+        mIsRefer = false;
+        Bundle args = getArguments();
+        if (args != null) {
+            mIsRefer = getArguments().getBoolean("isRefer", false);
+        }
 	}
 
 
 	public void onListItemClick(AdapterView<?> l, View v, int position, long id) {
-		Intent intent = new Intent(getActivity(), CardFlipView.class);
-		intent.putExtra("mode", "contact");
-		intent.putExtra("position", position);
-		startActivity(intent);
+        if (mIsRefer) {
+            // refer the card
+
+            final Intent serviceIntent = new Intent(Intent.ACTION_SYNC, null, getActivity(),
+                    RemoteService.class);
+
+            serviceIntent.putExtra("operation", (Parcelable) Operation.REFER);
+            serviceIntent.putExtra("referredTo", App.myContacts[position].firstName);
+
+            getActivity().startService(serviceIntent);
+        } else {
+            Intent intent = new Intent(getActivity(), CardFlipView.class);
+            intent.putExtra("mode", "contact");
+            intent.putExtra("position", position);
+            startActivity(intent);
+        }
 	}
 
 	@Override

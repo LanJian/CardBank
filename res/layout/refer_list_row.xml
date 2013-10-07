@@ -1,0 +1,57 @@
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/drop_shadow" >
+
+  <ImageView android:id="@+id/refer_list_row_image"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentTop="true"
+    android:adjustViewBounds="true"
+    android:scaleType="centerCrop"
+    android:background="#33AF64" />
+
+    <View
+            android:id="@+id/refer_list_row_horizontal_divider"
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="4dp"
+            android:background="?android:attr/dividerVertical"
+            android:layout_below="@id/refer_list_row_image"/>
+
+<LinearLayout
+    android:orientation="horizontal"
+    android:layout_below="@id/refer_list_row_horizontal_divider"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content" >
+
+  <Button android:id="@+id/refer_list_row_button_add"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_weight="1"
+      android:textSize="20dp"
+      android:textColor="#333"
+      android:text="Add"
+      style="?android:attr/borderlessButtonStyle" />
+
+      <View
+              android:layout_width="1dp"
+              android:layout_height="fill_parent"
+              android:layout_marginBottom="4dp"
+              android:layout_marginTop="4dp"
+              android:background="?android:attr/dividerVertical"
+              android:layout_centerHorizontal="true"/>
+
+  <Button android:id="@+id/refer_list_row_button_ignore"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_weight="1"
+      android:textSize="20dp"
+      android:textColor="#333"
+      android:text="Ignore"
+      style="?android:attr/borderlessButtonStyle" />
+</LinearLayout>
+
+</RelativeLayout>

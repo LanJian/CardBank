@@ -56,6 +56,11 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:screenOrientation="portrait"
+            android:name="ReferToListView">
+        </activity>
+
         <service android:name="com.jackhxs.remote.RemoteService" >
         </service>
     </application>

@@ -131,6 +131,15 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback,
 						new TabListener<CardListFragment>(this, "myContacts",
 								listFragment));
 		actionBar.addTab(tab);
+
+		Fragment fragment = new ReferralsListFragment();
+		tab = actionBar
+				.newTab()
+				.setText("Referrals")
+				.setTabListener(
+						new TabListener<CardListFragment>(this, "referrals",
+								fragment));
+		actionBar.addTab(tab);
 	}
 
 	private void dataUpdated(Bundle resultData) {
@@ -180,9 +189,9 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback,
 		final Intent serviceIntent = new Intent(Intent.ACTION_SYNC, null, this,
 				RemoteService.class);
 		
-		intent.putExtra("receiver", mReceiver);
-		intent.putExtra("operation", (Parcelable) Operation.POST_CONTACT);
-		intent.putExtra("newContactJSON", simpleCardJSON);
+		serviceIntent.putExtra("receiver", mReceiver);
+		serviceIntent.putExtra("operation", (Parcelable) Operation.POST_CONTACT);
+		serviceIntent.putExtra("newContactJSON", simpleCardJSON);
 
 		startService(serviceIntent);	
 	}

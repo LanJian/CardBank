@@ -20,7 +20,9 @@ public final class Constants {
 		PUT_CARD,
 		POST_CONTACT,
 		DEL_CONTACT,
-		DEL_CARD;
+		DEL_CARD,
+        REFER,
+        LIST_REFERRALS;
 
 		@Override
 		public int describeContents() {

@@ -46,6 +46,15 @@ public interface RestInterface {
 	@DELETE("/52116e117d92108b0034dd2e") // delete a contact
 	Boolean deleteContact(@Query("acccessToken") String accessToken, @Body SimpleCard existingContact);
 
+    // Referrals
+    @FormUrlEncoded
+	@POST("/52116e117d92108b0034dd2e") // refer a card
+	Boolean refer(@Query("acccessToken") String accessToken,
+            @Field("referredTo") String referredTo, @Field("cardId") String cardId);
+
+	@GET("/52116e117d92108b0034dd2e") // get list of cards referred to me
+	SimpleCard[] listReferrals(@Query("acccessToken") String accessToken);
+
 	/** Misc. */
 	//Signing up
 	@FormUrlEncoded
