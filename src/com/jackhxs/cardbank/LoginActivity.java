@@ -38,9 +38,7 @@ JSONResultReceiver.Receiver {
 	public void onResume() {
 		super.onResume();
 
-		App app = (App) getApplication();
-
-		if (app.accessToken != null && !app.accessToken.equals("")) {
+		if (App.accessToken != null && !App.accessToken.equals("")) {
 			Intent intent = new Intent(this, MainActivity.class);
 			startActivity(intent);
 			this.finish();
@@ -50,7 +48,17 @@ JSONResultReceiver.Receiver {
 	public void login(View view) {
 		String email = emailField.getText().toString();
 		String password = passwordField.getText().toString();
-
+		Boolean valid = true;
+		
+		if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+			emailField.setError("Email is invalid");
+			valid = false;
+		}
+		
+		if (!valid) {
+			return;
+		}
+		
 		try {
 			Log.e("paul", "before intent");
 			final Intent intent = new Intent(Intent.ACTION_SYNC, null, this,
@@ -68,25 +76,30 @@ JSONResultReceiver.Receiver {
 		}
 	}
 
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent intent)
+	{
+		super.onActivityResult(requestCode, resultCode, intent);
+		if (requestCode == 0) {
+			finish();	
+		}
+	}
 
 	public void signup(View view) {
 		Intent intent = new Intent(this, SignupActivity.class);
 		intent.putExtra("mode", "contact");
-		startActivity(intent);
-		this.finish();
+		startActivityForResult(intent, 1);
 	}
 
 	@Override
 	public void onReceiveResult(int resultCode, Bundle resultData) {
 		Log.e("paul", "result");
 
-		App app = (App) getApplication();
-
 		switch (resultCode) {
 
 		case Constants.STATUS_FINISHED: {
-			app.accessToken = resultData.getString("accessToken");
-			Log.e("paul", app.accessToken);
+			App.accessToken = resultData.getString("accessToken");
+			Log.e("paul", App.accessToken);
 
 			break;
 		}
@@ -96,7 +109,7 @@ JSONResultReceiver.Receiver {
 		}
 		}
 
-		if (app.accessToken != null && !app.accessToken.equals("")) {
+		if (App.accessToken != null && !App.accessToken.equals("")) {
 			Log.e("Success", "logged in");
 			Intent intent = new Intent(this, MainActivity.class);
 			intent.putExtra("mode", "contact");

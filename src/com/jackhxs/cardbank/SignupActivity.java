@@ -45,17 +45,17 @@ JSONResultReceiver.Receiver {
 		String password = passwordField.getText().toString();
 		String password2 = confirmField.getText().toString();
 		Boolean valid = true;
-		
-        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-        	emailField.setError("Email is invalid");
-        	valid = false;
-        }
-		
+
+		if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+			emailField.setError("Email is invalid");
+			valid = false;
+		}
+
 		if (!password.equals(password2)) {
 			confirmField.setError( "Password does not match." );
 			valid = false;
 		}
-		
+
 		if (!valid) {
 			return;
 		}
@@ -79,13 +79,11 @@ JSONResultReceiver.Receiver {
 	public void onReceiveResult(int resultCode, Bundle resultData) {
 		Log.e("paul", "result");
 
-		App app = (App) getApplication();
-
 		switch (resultCode) {
 
 		case Constants.STATUS_FINISHED: {
-			app.accessToken = resultData.getString("accessToken");
-			Log.e("paul", app.accessToken);
+			App.accessToken = resultData.getString("accessToken");
+			Log.e("paul", App.accessToken);
 			break;
 		}
 		case Constants.STATUS_ERROR: {
@@ -94,11 +92,12 @@ JSONResultReceiver.Receiver {
 		}
 		}
 
-		if (app.accessToken != null && !app.accessToken.equals("")) {
+		if (App.accessToken != null && !App.accessToken.equals("")) {
 			Log.e("Success", "logged in");
 			Intent intent = new Intent(this, MainActivity.class);
 			intent.putExtra("mode", "contact");
 			startActivity(intent);
+			finishActivity(0);
 			this.finish();
 		} else {
 			Log.e("Failed", "logged in");

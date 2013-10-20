@@ -6,7 +6,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;

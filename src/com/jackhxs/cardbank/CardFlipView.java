@@ -148,12 +148,10 @@ public class CardFlipView extends Activity implements CreateNdefMessageCallback,
 		// record 0 contains the MIME type, record 1 is the AAR, if present
 		String simpleCardJSON = (new String(msg.getRecords()[0].getPayload()));
 
-		App app = (App) getApplication();
-
-		List<SimpleCard> cardList = new ArrayList<SimpleCard>(Arrays.asList(app.myContacts));
+		List<SimpleCard> cardList = new ArrayList<SimpleCard>(Arrays.asList(App.myContacts));
 		SimpleCard tmpCard = (new Gson()).fromJson(simpleCardJSON, SimpleCard.class);
 		cardList.add(tmpCard);
-		app.myContacts = cardList.toArray(new SimpleCard[cardList.size()]);
+		App.myContacts = cardList.toArray(new SimpleCard[cardList.size()]);
 
 		Log.e("NFC Data", simpleCardJSON);
 
@@ -173,10 +171,8 @@ public class CardFlipView extends Activity implements CreateNdefMessageCallback,
 	 * @see NfcAdapter.CreateNdefMessageCallback#createNdefMessage(NfcEvent)
 	 */
 	public NdefMessage createNdefMessage(NfcEvent event) {
-		App app = ((App) getApplication());
-
 		Integer positionIndex = myFlipView.getSelectedItemPosition();
-		String serializedCard = (new Gson()).toJson(app.myContacts[positionIndex]);
+		String serializedCard = (new Gson()).toJson(App.myContacts[positionIndex]);
 
 		Log.e("Serialized JSON", serializedCard);
 		NdefMessage msg = new NdefMessage(

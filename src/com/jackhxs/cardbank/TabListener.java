@@ -8,7 +8,6 @@ import android.app.FragmentTransaction;
 
 public class TabListener<T extends Fragment> implements ActionBar.TabListener {
 	private Fragment mFragment;
-	private final Activity mActivity;
 	private final String mTag;
 	private boolean mAdded;
 
@@ -23,7 +22,6 @@ public class TabListener<T extends Fragment> implements ActionBar.TabListener {
 	 *            The fragment's Class, used to instantiate the fragment
 	 */
 	public TabListener(Activity activity, String tag, Fragment fragment) {
-		mActivity = activity;
 		mTag = tag;
 		mFragment = fragment;
 		mAdded = false;

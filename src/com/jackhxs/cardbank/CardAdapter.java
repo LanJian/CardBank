@@ -1,6 +1,7 @@
 package com.jackhxs.cardbank;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 import android.app.Activity;
 import android.content.Context;
@@ -35,15 +36,13 @@ public class CardAdapter extends ArrayAdapter<SimpleCard> {
     private ArrayList<SimpleCard> myData;
     private int myResourceId;
     private Context myContext;
-    private ImageLoader myImageLoader;
-
+    
     public CardAdapter(Context context, int resourceId,
             ArrayList<SimpleCard> objects, ImageLoader mImageLoader) {
         super(context, resourceId, objects);
         myData = objects;
         myResourceId = resourceId;
         myContext = context;
-        myImageLoader = mImageLoader;
     }
 
     @Override
@@ -71,8 +70,7 @@ public class CardAdapter extends ArrayAdapter<SimpleCard> {
                 + myData.get(position).lastName);
 
         txtView = (TextView) row.findViewById(R.id.imgIcon);
-        txtView.setText(myData.get(position).lastName.substring(0, 1)
-                .toUpperCase());
+        txtView.setText(myData.get(position).lastName.substring(0, 1).toUpperCase(Locale.US));
         int rand = (int) (Math.random() * ICON_BG_COLORS.length);
         txtView.setBackgroundColor(ICON_BG_COLORS[rand]);
 

@@ -7,8 +7,6 @@ import android.os.Bundle;
 import android.os.ResultReceiver;
 import android.util.Log;
 
-import android.widget.Toast;
-
 import com.google.gson.Gson;
 import com.jackhxs.cardbank.App;
 import com.jackhxs.data.ContactAndCards;
@@ -40,7 +38,7 @@ public class RemoteService extends IntentService {
         Bundle b = new Bundle();
 
         Operation command = intent.getParcelableExtra("operation");
-        String accessToken = ((App) getApplication()).accessToken;
+        String accessToken = App.accessToken;
 
         Log.i("paul", command.toString());
         //receiver.send(Constants.STATUS_RUNNING, Bundle.EMPTY);

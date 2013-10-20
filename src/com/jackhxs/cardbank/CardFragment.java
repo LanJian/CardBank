@@ -15,14 +15,11 @@ import android.widget.TextView;
 
 import com.jackhxs.data.SimpleCard;
 import com.jackhxs.util.ImageUtil;
-import com.xtremelabs.imageutils.ImageLoader;
 
 @SuppressLint("ValidFragment")
 public class CardFragment extends Fragment {
 	private SimpleCard myCard;
-    private ImageLoader mImageLoader;
-
-	@SuppressLint("ValidFragment")
+    @SuppressLint("ValidFragment")
 	public CardFragment(SimpleCard card) {
 		myCard = card;
 		this.setHasOptionsMenu(true);
@@ -74,7 +71,7 @@ public class CardFragment extends Fragment {
 	public void onResume() {
 		super.onResume();
 		String name, phone, email;
-		myCard = ((App) getActivity().getApplication()).myCards[0];
+		myCard = App.myCards[0];
 		
 		TextView txtView = (TextView) getView().findViewById(R.id.card_flip_view_name);
 		txtView.setText(myCard.firstName + " " + myCard.lastName);
