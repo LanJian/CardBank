@@ -1,8 +1,11 @@
 package com.jackhxs.cardbank;
 
+import com.jackhxs.util.ImageUtil;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -14,7 +17,15 @@ import android.widget.GridView;
 import android.widget.ImageView;
 
 public class TemplateGallery extends Activity {
+	public static int getStringIdentifier(Context context, String name) {
+	    return context.getResources().getIdentifier(name, "string", context.getPackageName());
+	}
+
 	public class ImageAdapter extends BaseAdapter {
+		private final String sampleName = getString(R.string.your_name);
+		private final String sampleEmail = getString(R.string.your_email);
+		private final String sampleNumber = getString(R.string.your_number);
+		
 		private Context mContext;
 
 		public ImageAdapter(Context c) {
@@ -36,6 +47,7 @@ public class TemplateGallery extends Activity {
 		// create a new ImageView for each item referenced by the Adapter
 		public View getView(int position, View convertView, ViewGroup parent) {
 			ImageView imageView;
+			
 			if (convertView == null) {  // if it's not recycled, initialize some attributes
 				imageView = new ImageView(mContext);
 				imageView.setLayoutParams(new GridView.LayoutParams(768, 416));
@@ -46,6 +58,9 @@ public class TemplateGallery extends Activity {
 			}
 
 			imageView.setImageResource(mThumbIds[position]);
+			Bitmap newCard = ImageUtil.GenerateCardImage((Activity) mContext, App.templateConfig[position], sampleName, sampleEmail, sampleNumber);
+			imageView.setImageBitmap(newCard);
+
 			return imageView;
 		}
 

@@ -57,9 +57,6 @@ public class CardFragment extends Fragment {
 		ImageView imgView = (ImageView) item
 				.findViewById(R.id.card_flip_view_image);
 		
-//		mImageLoader = ImageLoader.buildImageLoaderForFragment(this);
-//		mImageLoader.loadImage(imgView, myCard.imageUrl);
-
 		int index = Integer.parseInt(myCard.imageUrl);
 		Bitmap newCard = ImageUtil.GenerateCardImage(getActivity(), App.templateConfig[index], name, email, phone);
 		imgView.setImageBitmap(newCard);
