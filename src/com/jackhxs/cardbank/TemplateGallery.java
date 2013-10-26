@@ -1,7 +1,5 @@
 package com.jackhxs.cardbank;
 
-import com.jackhxs.util.ImageUtil;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -15,6 +13,8 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
+
+import com.jackhxs.util.ImageUtil;
 
 public class TemplateGallery extends Activity {
 	public static int getStringIdentifier(Context context, String name) {

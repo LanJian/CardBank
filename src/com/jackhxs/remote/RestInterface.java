@@ -1,5 +1,7 @@
 package com.jackhxs.remote;
 
+import org.json.JSONObject;
+
 import retrofit.http.Body;
 import retrofit.http.DELETE;
 import retrofit.http.Field;
@@ -9,6 +11,7 @@ import retrofit.http.POST;
 import retrofit.http.PUT;
 import retrofit.http.Query;
 
+import com.google.gson.JsonArray;
 import com.jackhxs.data.ContactAndCards;
 import com.jackhxs.data.SimpleCard;
 
@@ -61,8 +64,9 @@ public interface RestInterface {
 	@POST("/5211492f7d9210460034dd2d")
 	String signup(@Field("username") String username, @Field("password") String password);
 
+	
 	// Logging In
 	@FormUrlEncoded
-	@POST("/5211492f7d9210460034dd2d")
-	String login(@Field("username") String username, @Field("password") String password);
+	@POST("/526b1abb56f61f5100381d77")
+	JSONObject login(@Field("username") String username, @Field("password") String password);
 }

@@ -1,5 +1,7 @@
 package com.jackhxs.remote;
 
+import org.json.JSONObject;
+
 import retrofit.RestAdapter;
 import android.app.IntentService;
 import android.content.Intent;
@@ -8,6 +10,7 @@ import android.os.ResultReceiver;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.jackhxs.cardbank.App;
 import com.jackhxs.data.ContactAndCards;
 import com.jackhxs.data.SimpleCard;
@@ -56,12 +59,15 @@ public class RemoteService extends IntentService {
         case POST_LOGIN: {
             String username = intent.getStringExtra("username");
             String password = intent.getStringExtra("password");
-            String newAccessToken = service.login(username, password);
+            
+            Gson g = new Gson();
+            JSONObject tmp = service.login(username, password);
+            
 
-            b.putString("accessToken", newAccessToken);
+            b.putString("accessToken", tmp.toString());
 
             receiver.send(Constants.STATUS_FINISHED, b);
-            Log.i("remoteService", newAccessToken);
+            Log.i("remoteService", tmp.toString());
             break;
         }
         case GET_CARDS: {

@@ -21,13 +21,14 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.aphidmobile.flip.FlipViewController;
 import com.google.gson.Gson;
 import com.jackhxs.data.SimpleCard;
 import com.jackhxs.remote.Constants;
 import com.jackhxs.remote.Constants.Operation;
 import com.jackhxs.remote.JSONResultReceiver;
 import com.jackhxs.remote.RemoteService;
+
+import com.aphidmobile.flip.FlipViewController;
 import com.xtremelabs.imageutils.ImageLoader;
 
 public class CardFlipView extends Activity implements CreateNdefMessageCallback,  JSONResultReceiver.Receiver {
