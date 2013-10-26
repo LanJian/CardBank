@@ -15,7 +15,9 @@ import com.jackhxs.remote.Constants.Operation;
 
 public class RemoteService extends IntentService {
     private final RestAdapter restAdapter = new RestAdapter.Builder()
-    .setServer("http://www.mocky.io/v2")
+    //.setServer("http://cardbeam-server.herokuapp.com")
+    //.setServer("http://172.19.92.214:3000")
+    .setServer("http://10.8.104.10:3000")
     .build();
 
     private final RestInterface service;
@@ -45,18 +47,18 @@ public class RemoteService extends IntentService {
 
         switch (command) {
         case POST_SIGNUP: {
-            String username = intent.getStringExtra("username");
+            String email = intent.getStringExtra("email");
             String password = intent.getStringExtra("password");
-            String newAccessToken = service.signup(username, password);
+            String newAccessToken = service.signup(email, password);
             b.putString("accessToken", newAccessToken);
             receiver.send(Constants.STATUS_FINISHED, b);
             Log.i("remoteService", newAccessToken);
             break;
         }
         case POST_LOGIN: {
-            String username = intent.getStringExtra("username");
+            String email = intent.getStringExtra("email");
             String password = intent.getStringExtra("password");
-            String newAccessToken = service.login(username, password);
+            String newAccessToken = service.login(email, password);
 
             b.putString("accessToken", newAccessToken);
 
@@ -65,7 +67,7 @@ public class RemoteService extends IntentService {
             break;
         }
         case GET_CARDS: {
-            SimpleCard[] contacts = service.listOwnCards(accessToken);
+            SimpleCard[] contacts = service.listOwnCards();
 
             b.putParcelableArray("cards", contacts);
             b.putString("action", "initialization");

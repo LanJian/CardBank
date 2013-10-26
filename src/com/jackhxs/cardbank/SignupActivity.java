@@ -8,6 +8,7 @@ import android.os.Parcelable;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
+import android.widget.Button;
 import android.widget.EditText;
 
 import com.jackhxs.remote.Constants;
@@ -33,6 +34,7 @@ JSONResultReceiver.Receiver {
 		emailField = (EditText) findViewById(R.id.login_email);
 		passwordField = (EditText) findViewById(R.id.login_password);
 		confirmField = (EditText) findViewById(R.id.login_password2);
+
 	}
 
 	@Override
