@@ -28,13 +28,16 @@ public class CardListFragment extends Fragment {
 	private CardAdapter myAdapter;
 	private ImageLoader mImageLoader;
 	private boolean mIsRefer;
+	private Integer toRefer;
 
 	public void onCreate(Bundle bundle) {
 		super.onCreate(bundle);
+		
 		mIsRefer = false;
 		Bundle args = getArguments();
 		if (args != null) {
-			mIsRefer = getArguments().getBoolean("isRefer", false);
+			mIsRefer = args.getBoolean("isRefer", false);
+			toRefer = args.getInt("toRefer", 0);
 		}
 	}
 
@@ -46,12 +49,12 @@ public class CardListFragment extends Fragment {
 					RemoteService.class);
 
 			serviceIntent.putExtra("operation", (Parcelable) Operation.REFER);
-			serviceIntent.putExtra("referredTo", App.myContacts[position].firstName);
+			serviceIntent.putExtra("referredTo", App.myContacts[position].userId); 
+			serviceIntent.putExtra("cardId", App.myContacts[toRefer]._id);
 			
 			getActivity().startService(serviceIntent);
 
 		} else {
-			
 			Intent intent = new Intent(getActivity(), CardFlipView.class);
 			intent.putExtra("mode", "contact");
 			intent.putExtra("position", position);

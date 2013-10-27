@@ -6,6 +6,7 @@ import android.app.ActionBar;
 import android.app.ActionBar.Tab;
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.Context;
 import android.content.Intent;
 import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
@@ -28,14 +29,15 @@ import com.jackhxs.remote.RemoteService;
 
 public class MainActivity extends Activity implements CreateNdefMessageCallback, JSONResultReceiver.Receiver {
 	private NfcAdapter mNfcAdapter;
-	
-	public JSONResultReceiver mReceiver;
+	private Boolean editCardImmediately;
+    public JSONResultReceiver mReceiver;
 
 	// ----- Methods -----
 	/** Called when the activity is first created. */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		editCardImmediately = getIntent().getExtras().getString("mode", "oldAccount").equals("newAccount");
 	    
 		if (!Util.isTablet(getApplicationContext())) {
 			getActionBar().setDisplayShowTitleEnabled(false);
@@ -48,26 +50,13 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback,
 			mReceiver = new JSONResultReceiver(new Handler());
 			mReceiver.setReceiver(this);
 			
-			final Intent intentContacts = new Intent(Intent.ACTION_SYNC, null, this,
-					RemoteService.class);
 			final Intent intentCards = new Intent(Intent.ACTION_SYNC, null, this,
 					RemoteService.class);
-			final Intent intentReferrals = new Intent(Intent.ACTION_SYNC, null, this,
-					RemoteService.class);
-			
-			intentContacts.putExtra("receiver", mReceiver);
-			intentContacts.putExtra("operation",(Parcelable) Operation.GET_CONTACTS);
 			
 			intentCards.putExtra("receiver", mReceiver);
 			intentCards.putExtra("operation",(Parcelable) Operation.GET_CARDS);
 			
-			intentReferrals.putExtra("receiver", mReceiver);
-			intentReferrals.putExtra("operation",(Parcelable) Operation.LIST_REFERRALS);
-			
 			startService(intentCards);
-			startService(intentContacts);
-			startService(intentReferrals);
-			
 			dataInitialization();
 			
 		} catch (Exception e) {
@@ -81,6 +70,7 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback,
 			Toast.makeText(this, "NFC not available", Toast.LENGTH_LONG).show();
 			return;
 		}
+		
 		mNfcAdapter.setNdefPushMessageCallback(this, this);
 	}
 
@@ -141,18 +131,48 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback,
 			
 			Fragment cardFragment = new CardFragment(App.myCards[0]);
 			addTab("My Card", cardFragment, "myCard");
+			
+			final Intent intentContacts = new Intent(Intent.ACTION_SYNC, null, this,
+					RemoteService.class);
+			intentContacts.putExtra("receiver", mReceiver);
+			intentContacts.putExtra("operation",(Parcelable) Operation.GET_CONTACTS);
+			
+			startService(intentContacts);
 		}
 		else if (dataType.equals("contacts")) {
 			App.myContacts = data;
 			
 			Fragment listFragment = new CardListFragment();
 			addTab("Contact", listFragment, "myContact");
+			
+			final Intent intentReferrals = new Intent(Intent.ACTION_SYNC, null, this,
+					RemoteService.class);
+			intentReferrals.putExtra("receiver", mReceiver);
+			intentReferrals.putExtra("operation",(Parcelable) Operation.LIST_REFERRALS);
+			startService(intentReferrals);
 		}
-		else { //referalls
+		else if (dataType.equals("referrals")){ //referalls
 			App.myReferrals = data;
 			
 			Fragment fragment = new ReferralsListFragment();
 			addTab("Referrals", fragment, "referrals");
+			
+			// this is always the last call
+			if (editCardImmediately) {
+				Intent intent = new Intent(
+					getApplicationContext(),
+					TemplateGallery.class);
+				startActivity(intent);
+			}
+		}
+		else if (dataType.equals("postCard")) {
+
+			final Intent intentContacts = new Intent(Intent.ACTION_SYNC, null, this,
+					RemoteService.class);
+			intentContacts.putExtra("receiver", mReceiver);
+			intentContacts.putExtra("operation",(Parcelable) Operation.GET_CONTACTS);
+			
+			startService(intentContacts);
 		}
 	}
 
@@ -166,6 +186,8 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback,
 			break;
 		}
 		case Constants.STATUS_ERROR: {
+			Context context = getApplicationContext();
+			Util.showWifiErrorToast(context);
 			System.out.println("Error retrieving contacts and cards");
 		}
 		}
@@ -197,7 +219,6 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback,
 		serviceIntent.putExtra("receiver", mReceiver);
 		serviceIntent.putExtra("operation", (Parcelable) Operation.POST_CONTACT);
 		serviceIntent.putExtra("newContactJSON", simpleCardJSON);
-
 		startService(serviceIntent);	
 	}
 

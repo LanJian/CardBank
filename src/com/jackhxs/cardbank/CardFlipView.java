@@ -36,7 +36,7 @@ public class CardFlipView extends Activity implements CreateNdefMessageCallback,
 	public JSONResultReceiver mReceiver;
 	public String cardViewMode = null;
 	private ImageLoader mImageLoader;
-
+	
 	protected FlipViewController myFlipView;
 
 	private void updateCardFlipView() {
@@ -77,6 +77,7 @@ public class CardFlipView extends Activity implements CreateNdefMessageCallback,
         switch (item.getItemId()) {
             case R.id.action_refer:
                 Intent intent = new Intent(this, ReferToListView.class);
+                intent.putExtra("toRefer", myFlipView.getSelectedItemPosition());
                 startActivity(intent);
                 return true;
             default:
@@ -93,7 +94,7 @@ public class CardFlipView extends Activity implements CreateNdefMessageCallback,
 
 		cardViewMode = getIntent().getStringExtra("mode");
 		Integer initialPosition = getIntent().getIntExtra("position", 0);
-
+		
 		updateCardFlipView(initialPosition);
 
 		// update NFC related configs

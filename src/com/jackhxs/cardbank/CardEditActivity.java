@@ -143,6 +143,12 @@ public class CardEditActivity extends Activity implements JSONResultReceiver.Rec
 
 	public void saveEdit() {
 		String name = nameField.getText().toString();
+		
+		if (name.split(" ").length < 2) {
+			nameField.setError("Please enter only first name and last name, separated by a space");
+			return;
+		}
+		
 		String phone = phoneField.getText().toString();
 		String email = emailField.getText().toString();
 

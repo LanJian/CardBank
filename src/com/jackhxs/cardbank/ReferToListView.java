@@ -13,7 +13,10 @@ public class ReferToListView extends Activity {
         if (savedInstanceState == null) {
             Fragment fragment = new CardListFragment();
             Bundle args = new Bundle();
+            
+            args.putInt("toRefer", getIntent().getIntExtra("toRefer", 0));
             args.putBoolean("isRefer", true);
+            
             fragment.setArguments(args);
             FragmentTransaction ft = getFragmentManager().beginTransaction();
             ft.add(android.R.id.content, fragment).commit();

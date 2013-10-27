@@ -37,13 +37,12 @@ public class ReferralsListFragment extends Fragment {
 		
 		emptyMsg = (TextView) view.findViewById(R.id.empty_message);
 		
-		if (App.myContacts.length > 0) {
+		if (App.myReferrals.length > 0) {
 			emptyMsg.setVisibility(View.GONE);
 		}
 		
-		
-        ArrayList<SimpleCard> list = new ArrayList<SimpleCard>();
-        list.addAll(Arrays.asList(App.myContacts));
+		ArrayList<SimpleCard> list = new ArrayList<SimpleCard>();
+        list.addAll(Arrays.asList(App.myReferrals));
 		myAdapter = new CardAdapter(getActivity(), R.layout.refer_list_row, list, mImageLoader);
 		myListView.setAdapter(myAdapter);
         myListView.setDivider(null);

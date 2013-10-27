@@ -1,6 +1,8 @@
 package com.jackhxs.cardbank;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -19,6 +21,7 @@ public class SignupActivity extends Activity implements
 JSONResultReceiver.Receiver {
 	private EditText emailField, passwordField, confirmField;
 	public JSONResultReceiver mReceiver;
+	private ProgressDialog progress;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -41,6 +44,7 @@ JSONResultReceiver.Receiver {
 	}
 
 	public void signup(View view) {
+		
 		String email = emailField.getText().toString();
 		String password = passwordField.getText().toString();
 		String password2 = confirmField.getText().toString();
@@ -61,6 +65,11 @@ JSONResultReceiver.Receiver {
 		}
 
 		try {
+			progress = new ProgressDialog(this);
+			progress.setCancelable(false);
+			progress.setMessage("Creating your account...");
+	        progress.show();
+	        
 			final Intent intent = new Intent(Intent.ACTION_SYNC, null, this,
 					RemoteService.class);
 
@@ -78,15 +87,26 @@ JSONResultReceiver.Receiver {
 	@Override
 	public void onReceiveResult(int resultCode, Bundle resultData) {
 		Log.e("paul", "result");
+		
+		progress.dismiss();
 
 		switch (resultCode) {
 
 		case Constants.STATUS_FINISHED: {
+			String errorMsg = resultData.getString("error", null);
+			
+			if (errorMsg != null) {
+				Util.showErrorToast(getApplicationContext(), errorMsg);
+				return;
+			}
+			
 			App.userId = resultData.getString("userId");
 			App.sessionId = resultData.getString("sessionId");
 			break;
 		}
 		case Constants.STATUS_ERROR: {
+			Context context = getApplicationContext();
+			Util.showWifiErrorToast(context);
 			Log.e("Network Error", "Error retrieving contacts");
 			break;
 		}
@@ -98,10 +118,11 @@ JSONResultReceiver.Receiver {
 			Log.e("Success", "logged in");
 			
 			Intent intent = new Intent(this, MainActivity.class);
-			intent.putExtra("mode", "contact");
+			intent.putExtra("mode", "newAccount");
 			startActivity(intent);
 			finishActivity(0);
 			this.finish();
+			
 		} else {
 			Log.e("Failed", "logged in");
 		}

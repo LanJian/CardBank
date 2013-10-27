@@ -1,6 +1,8 @@
 package com.jackhxs.cardbank;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -19,7 +21,8 @@ public class LoginActivity extends Activity implements
 JSONResultReceiver.Receiver {
 	private EditText emailField, passwordField;
 	public JSONResultReceiver mReceiver;
-
+	private ProgressDialog progress;
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -61,7 +64,12 @@ JSONResultReceiver.Receiver {
 		
 		try {
 			Log.e("paul", "before intent");
-			final Intent intent = new Intent(Intent.ACTION_SYNC, null, this,
+			progress = new ProgressDialog(this);
+			progress.setCancelable(false);
+			progress.setMessage("Logging in...");
+	        progress.show();
+
+	        final Intent intent = new Intent(Intent.ACTION_SYNC, null, this,
 					RemoteService.class);
 
 			intent.putExtra("receiver", mReceiver);
@@ -95,25 +103,37 @@ JSONResultReceiver.Receiver {
 	public void onReceiveResult(int resultCode, Bundle resultData) {
 		Log.e("paul", "result");
 
+		progress.dismiss();
 		switch (resultCode) {
 
 		case Constants.STATUS_FINISHED: {
+			String errorMsg = resultData.getString("error", null);
+			
+			if (errorMsg != null) {
+				Util.showErrorToast(getApplicationContext(), errorMsg);
+				return;
+			}
+			
 			App.sessionId = resultData.getString("sessionId");
 			App.userId = resultData.getString("userId");
 			break;
 		}
 		case Constants.STATUS_ERROR: {
-			Log.e("Network Error", "Error retrieving contacts");
+			Context context = getApplicationContext();
+			Util.showWifiErrorToast(context);
+			Log.e("Network Error", "Error logging in");
 			break;
 		}
 		}
 
 		if (App.userId != null && !App.userId.equals("") &&
 				App.sessionId != null && !App.sessionId.equals("")) {
-				
+			
 			Log.e("Success", "logged in");
+			
 			Intent intent = new Intent(this, MainActivity.class);
-			intent.putExtra("mode", "contact");
+			intent.putExtra("mode", "oldAccount");
+			
 			startActivity(intent);
 			
 			this.finish();

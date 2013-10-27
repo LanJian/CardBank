@@ -31,6 +31,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:layout_marginBottom="25dp"
         android:gravity="top"
         android:hint="@string/login_password"
         android:inputType="textPassword"
@@ -40,6 +41,7 @@
 
     <Button
         android:id="@+id/login_login_button"
+        android:background="@drawable/styled_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -49,17 +51,20 @@
         android:layout_marginBottom="0dip"
         android:onClick="login"
         android:text="@string/login_login_string"
+        style="@style/button_text"
         android:width="250dip" />
 
     <Button
         android:id="@+id/sign_button"
+        android:background="@drawable/styled_btn"
+        style="@style/button_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginLeft="10dip"
         android:layout_marginRight="10dip"
         android:onClick="signup"
-        android:text="@string/signup_string"
+        android:text="@string/newAccount_string"
         android:width="250dip" />
 
 </LinearLayout>

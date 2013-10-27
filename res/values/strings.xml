@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 		<string name="your_name"> Your Name</string>
-		<string name="your_number"> 000-0000</string>
+		<string name="your_number"> 000&#8211;0000</string>
 		<string name="your_email">sample@email.com</string>
 		
     <string name="app_name">CardBeam</string>
@@ -19,6 +19,7 @@
     <string name="login_password">Password</string>
     <string name="login_passwordConfirm">Confirm Password</string>
 
+    <string name="newAccount_string">New Account</string>
     <string name="signup_string">Sign Up</string>
     <string name="SelectCardTemplate"> Choose a card template</string>
     

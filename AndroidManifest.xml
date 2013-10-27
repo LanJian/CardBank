@@ -63,5 +63,6 @@
 
         <service android:name="com.jackhxs.remote.RemoteService" >
         </service>
+        
     </application>
 </manifest>

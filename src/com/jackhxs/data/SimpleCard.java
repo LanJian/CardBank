@@ -10,10 +10,18 @@ public class SimpleCard implements Parcelable {
 	public String email;
 	public String imageUrl;
 	
+	public String userId;
 	public String _id;
 	
 	public SimpleCard() {
-		firstName = lastName = phoneNo = email = imageUrl = _id = "null";
+		firstName = "Your"; 
+		lastName = "Name";
+		phoneNo = "000-0000";
+		email = "your@email.com";
+		imageUrl = "0"; 
+		
+		userId = "";
+		_id = "null";
 	};
 	
 	public SimpleCard(Parcel in) {
