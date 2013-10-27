@@ -15,7 +15,6 @@ public final class Constants {
 		POST_LOGIN,
 		GET_CARDS,
 		GET_CONTACTS,
-		GET_BOTH_CONTACT_AND_CARD,
 		POST_CARD,
 		PUT_CARD,
 		POST_CONTACT,

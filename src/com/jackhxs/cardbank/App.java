@@ -14,12 +14,13 @@ import com.jackhxs.data.SimpleCard;
 import com.jackhxs.data.TemplateConfig;
 
 public class App extends Application {
-	public static String accessToken;
-	public static String username;
+	public static String sessionId;
+	public static String userId;
 
 	public static SimpleCard[] myCards;
 	public static SimpleCard[] myContacts;
-
+	public static SimpleCard[] myReferrals;
+	
 	public static TemplateConfig[] templateConfig;
 
 	public Boolean addContact() {
@@ -40,8 +41,8 @@ public class App extends Application {
 		super.onCreate();
 		myContacts = null;
 		myCards = null;
-		username = null;
-		accessToken = null;
+		userId = null;
+		sessionId = null;
 
 		AssetManager assetManager = getResources().getAssets();
 		InputStream inputStream = null;
@@ -52,6 +53,7 @@ public class App extends Application {
 		    StringBuilder sb = new StringBuilder();
 
 		    String line = null;
+		    
 		    while ((line = reader.readLine()) != null)
 		    {
 		        sb.append(line + "\n");

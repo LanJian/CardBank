@@ -116,7 +116,16 @@ public class CardEditActivity extends Activity implements JSONResultReceiver.Rec
 
 		cardImage.setOnClickListener(this);
 		cardImage.setOnTouchListener(gestureListener);
-		templateIndex = getIntent().getIntExtra("templateIndex", Integer.parseInt(myCard.imageUrl));
+		
+		int index = 0;
+		try {
+			index= Integer.parseInt(myCard.imageUrl);
+		}
+		catch(NumberFormatException nfe)  {  
+			index = 0;
+		}  
+		
+		templateIndex = getIntent().getIntExtra("templateIndex", index);
 		
 		updateCardImage(templateIndex);
 	}
@@ -148,7 +157,7 @@ public class CardEditActivity extends Activity implements JSONResultReceiver.Rec
 
 		intent.putExtra("receiver", mReceiver);
 		intent.putExtra("operation", (Parcelable) Operation.POST_CARD);
-		intent.putExtra("accessToken", App.accessToken);
+		intent.putExtra("accessToken", App.sessionId);
 		intent.putExtra("simpleCardJSON", new Gson().toJson(App.myCards[0]));
 
 		startService(intent);

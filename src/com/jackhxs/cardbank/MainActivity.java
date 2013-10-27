@@ -28,6 +28,7 @@ import com.jackhxs.remote.RemoteService;
 
 public class MainActivity extends Activity implements CreateNdefMessageCallback, JSONResultReceiver.Receiver {
 	private NfcAdapter mNfcAdapter;
+	
 	public JSONResultReceiver mReceiver;
 
 	// ----- Methods -----
@@ -35,7 +36,7 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback,
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
+	    
 		if (!Util.isTablet(getApplicationContext())) {
 			getActionBar().setDisplayShowTitleEnabled(false);
 			getActionBar().setDisplayShowHomeEnabled(false);
@@ -46,14 +47,29 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback,
 		try {
 			mReceiver = new JSONResultReceiver(new Handler());
 			mReceiver.setReceiver(this);
-
-			final Intent intent = new Intent(Intent.ACTION_SYNC, null, this,
+			
+			final Intent intentContacts = new Intent(Intent.ACTION_SYNC, null, this,
 					RemoteService.class);
-			Log.e("paul", "after intent");
-			intent.putExtra("receiver", mReceiver);
-			intent.putExtra("operation",
-					(Parcelable) Operation.GET_BOTH_CONTACT_AND_CARD);
-			startService(intent);
+			final Intent intentCards = new Intent(Intent.ACTION_SYNC, null, this,
+					RemoteService.class);
+			final Intent intentReferrals = new Intent(Intent.ACTION_SYNC, null, this,
+					RemoteService.class);
+			
+			intentContacts.putExtra("receiver", mReceiver);
+			intentContacts.putExtra("operation",(Parcelable) Operation.GET_CONTACTS);
+			
+			intentCards.putExtra("receiver", mReceiver);
+			intentCards.putExtra("operation",(Parcelable) Operation.GET_CARDS);
+			
+			intentReferrals.putExtra("receiver", mReceiver);
+			intentReferrals.putExtra("operation",(Parcelable) Operation.LIST_REFERRALS);
+			
+			startService(intentCards);
+			startService(intentContacts);
+			//startService(intentReferrals);
+			
+			dataInitialization();
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -83,66 +99,69 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback,
 		// Handle presses on the action bar items
 		switch (item.getItemId()) {
 		case R.id.action_edit: {
-			Intent intent = new Intent(getApplicationContext(),
-					TemplateGallery.class); // CardEdit
+			Intent intent = new Intent(
+				getApplicationContext(),
+				TemplateGallery.class);
 			startActivity(intent);
 			return true;
 		}
-		case R.id.action_delete: {
+		/*case R.id.action_delete: {
 			return true;
-		}
+		}*/
 		default:
 			return super.onOptionsItemSelected(item);
 		}
 	}
 
-	private void dataInitialization(Bundle resultData) {
-		Log.i("ContactList", "received card");
-
-		App app = (App) getApplication();
-
-		SimpleCard[] contacts = (SimpleCard[]) resultData.getParcelableArray("contacts");
-		SimpleCard[] cards = (SimpleCard[]) resultData.getParcelableArray("cards");
-
-		// setting a global reference in app
-		app.myContacts = contacts;
-		app.myCards = cards;
-
+	private void dataInitialization() {
+		Log.i("info", "starting...");
 		// setup action bar for tabs
 		ActionBar actionBar = getActionBar();
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 		actionBar.setDisplayShowTitleEnabled(false);
-
-		Fragment cardFragment = new CardFragment((app.myCards)[0]);
-
-		Tab tab = actionBar
-				.newTab()
-				.setText("My Card")
-				.setTabListener(
-						new TabListener<CardFragment>(this, "myCard",
-								cardFragment));
-		actionBar.addTab(tab);
-
-		Fragment listFragment = new CardListFragment();
-		tab = actionBar
-				.newTab()
-				.setText("My Contacts")
-				.setTabListener(
-						new TabListener<CardListFragment>(this, "myContacts",
-								listFragment));
-		actionBar.addTab(tab);
-
-		Fragment fragment = new ReferralsListFragment();
-		tab = actionBar
-				.newTab()
-				.setText("Referrals")
-				.setTabListener(
-						new TabListener<CardListFragment>(this, "referrals",
-								fragment));
-		actionBar.addTab(tab);
 	}
 
 	private void dataUpdated(Bundle resultData) {
+		String dataType = resultData.getString("dataType");
+		SimpleCard[] data = (SimpleCard[]) resultData.getParcelableArray(dataType);
+		ActionBar actionBar = getActionBar();
+		
+		if (dataType.equals("cards")) {
+			App.myCards = data;
+			
+			Fragment cardFragment = new CardFragment(App.myCards[0]);
+			Tab tab = actionBar
+					.newTab()
+					.setText("My Card")
+					.setTabListener(
+							new TabListener<CardFragment>(this, "myCard",
+									cardFragment));
+			actionBar.addTab(tab);
+		}
+		else if (dataType.equals("contacts")) {
+			App.myContacts = data;
+			
+			Fragment listFragment = new CardListFragment();
+			Tab tab = actionBar
+					.newTab()
+					.setText("My Contacts")
+					.setTabListener(
+							new TabListener<CardListFragment>(this, "myContacts",
+									listFragment));
+			actionBar.addTab(tab);
+		}
+		else { //referalls
+			App.myReferrals = data;
+			
+			Fragment fragment = new ReferralsListFragment();
+			Tab tab = actionBar
+					.newTab()
+					.setText("Referrals")
+					.setTabListener(
+							new TabListener<CardListFragment>(this, "referrals",
+									fragment));
+			actionBar.addTab(tab);
+		}
 	}
 
 	@Override
@@ -151,12 +170,7 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback,
 
 		switch (resultCode) {
 		case Constants.STATUS_FINISHED: {
-			if (resultData.getString("action").equals("initialization")) {
-				dataInitialization(resultData);
-			} else if (resultData.getString("action").equals("update")) {
-				dataUpdated(resultData);
-			}
-
+			dataUpdated(resultData);
 			break;
 		}
 		case Constants.STATUS_ERROR: {
@@ -177,10 +191,9 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback,
 
 		// record 0 contains the MIME type, record 1 is the AAR, if present
 		String simpleCardJSON = (new String(msg.getRecords()[0].getPayload()));
-		App app = (App) getApplication();
-		Integer myContactLength = app.myContacts.length;
+		Integer myContactLength = App.myContacts.length;
 
-		((App) getApplication()).myContacts[myContactLength] = 
+		App.myContacts[myContactLength] = 
 				(new Gson()).fromJson(simpleCardJSON, SimpleCard.class);
 		
 		Log.e("NFC Data", simpleCardJSON);
@@ -210,9 +223,7 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback,
 
 	@Override
 	public NdefMessage createNdefMessage(NfcEvent event) {
-		App app = ((App) getApplication());
-
-		String serializedCard = (new Gson()).toJson(app.myCards[0]);
+		String serializedCard = (new Gson()).toJson(App.myCards[0]);
 
 		Log.e("Serialized JSON", serializedCard);
 		NdefMessage msg = new NdefMessage(

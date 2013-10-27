@@ -12,7 +12,9 @@ public class SimpleCard implements Parcelable {
 	
 	public String cardId;
 	
-	public SimpleCard() {};
+	public SimpleCard() {
+		firstName = lastName = phoneNo = email = imageUrl = cardId = "null";
+	};
 	
 	public SimpleCard(Parcel in) {
 		readFromParcel(in);

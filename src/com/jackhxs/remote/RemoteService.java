@@ -1,8 +1,18 @@
 package com.jackhxs.remote;
 
-import org.json.JSONObject;
+import java.io.IOException;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.client.CookieStore;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.client.protocol.ClientContext;
+import org.apache.http.impl.client.BasicCookieStore;
+import org.apache.http.protocol.BasicHttpContext;
 
 import retrofit.RestAdapter;
+import retrofit.client.ApacheClient;
+import retrofit.client.Client;
 import android.app.IntentService;
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,16 +20,29 @@ import android.os.ResultReceiver;
 import android.util.Log;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import com.jackhxs.cardbank.App;
-import com.jackhxs.data.ContactAndCards;
+import com.jackhxs.data.APIResult;
 import com.jackhxs.data.SimpleCard;
 import com.jackhxs.remote.Constants.Operation;
 
 public class RemoteService extends IntentService {
+	Client client = new ApacheClient() {
+	    final CookieStore cookieStore = new BasicCookieStore();
+	    @Override
+	    protected HttpResponse execute(HttpClient client, HttpUriRequest request) throws IOException {
+	        // BasicHttpContext is not thread safe 
+	        // CookieStore is thread safe
+	        BasicHttpContext httpContext = new BasicHttpContext();
+	        httpContext.setAttribute(ClientContext.COOKIE_STORE, cookieStore);
+	        return client.execute(request, httpContext);
+	    }
+	};
+	
     private final RestAdapter restAdapter = new RestAdapter.Builder()
-    .setServer("http://www.mocky.io/v2")
-    .build();
+    	.setServer("http://192.168.1.131:3000")
+    	.setClient(client)
+    	.build();
 
     private final RestInterface service;
 
@@ -41,63 +64,59 @@ public class RemoteService extends IntentService {
         Bundle b = new Bundle();
 
         Operation command = intent.getParcelableExtra("operation");
-        String accessToken = App.accessToken;
+        
+        String sessionId = App.sessionId;
+        String userId = App.userId;
 
         Log.i("paul", command.toString());
-        //receiver.send(Constants.STATUS_RUNNING, Bundle.EMPTY);
-
+        
         switch (command) {
-        case POST_SIGNUP: {
-            String username = intent.getStringExtra("username");
-            String password = intent.getStringExtra("password");
-            String newAccessToken = service.signup(username, password);
-            b.putString("accessToken", newAccessToken);
-            receiver.send(Constants.STATUS_FINISHED, b);
-            Log.i("remoteService", newAccessToken);
-            break;
-        }
+        case POST_SIGNUP:
         case POST_LOGIN: {
-            String username = intent.getStringExtra("username");
+            String email = intent.getStringExtra("email");
             String password = intent.getStringExtra("password");
             
-            Gson g = new Gson();
-            JSONObject tmp = service.login(username, password);
+            JsonObject res;
+            if (command.equals(Operation.POST_SIGNUP)) {
+            	res = service.signup(email, password);
+            }
+            else {
+            	res = service.login(email, password);
+            }
             
-
-            b.putString("accessToken", tmp.toString());
+            String newUserId = res.get("userId").getAsString();
+            String newSessionId = res.get("sessionId").getAsString();
+            
+        	b.putString("sessionId", newSessionId);
+        	b.putString("userId", newUserId);
 
             receiver.send(Constants.STATUS_FINISHED, b);
-            Log.i("remoteService", tmp.toString());
+            
+            Log.i("Logged In UserId", newUserId);
+            Log.i("Logged In sessionId", newSessionId);
             break;
         }
         case GET_CARDS: {
-            SimpleCard[] contacts = service.listOwnCards(accessToken);
+            APIResult result = service.listOwnCards(userId, sessionId);
 
-            b.putParcelableArray("cards", contacts);
-            b.putString("action", "initialization");
+            b.putParcelableArray("cards", result.cards);
+            
+            b.putString("dataType", "cards");
+            b.putString("action", Operation.GET_CARDS.toString());
             b.putBoolean("result", true);
 
             receiver.send(Constants.STATUS_FINISHED, b);
             break;
         }
         case GET_CONTACTS: {
-            SimpleCard[] contacts = service.listContacts(accessToken);
+        	APIResult result = service.listContacts(userId, sessionId);
+        	SimpleCard[] contacts = result.cards;
+        	
             b.putParcelableArray("contacts", contacts);
 
+            b.putString("dataType", "contacts");
             b.putBoolean("result", true);
-            b.putString("action", "initialization");
-
-            receiver.send(Constants.STATUS_FINISHED, b);
-            break;
-        }
-        case GET_BOTH_CONTACT_AND_CARD: {
-            ContactAndCards contactAndCards = service.listContactAndCards(accessToken);
-
-            b.putParcelableArray("contacts", contactAndCards.contacts);
-            b.putParcelableArray("cards", contactAndCards.cards);
-
-            b.putString("action", "initialization");
-            b.putBoolean("result", true);
+            b.putString("action", Operation.GET_CONTACTS.toString());
 
             receiver.send(Constants.STATUS_FINISHED, b);
             break;
@@ -107,9 +126,17 @@ public class RemoteService extends IntentService {
             String simpleCardJSON = intent.getStringExtra("simpleCardJSON");
 
             SimpleCard simpleCard = new Gson().fromJson(simpleCardJSON, SimpleCard.class);
-            Boolean result = service.addCard(accessToken, simpleCard);
-
-            b.putString("action", "updated");
+            JsonObject res;
+            
+            if (command.equals(Operation.PUT_CARD)) {
+            	res = service.updateCard(userId, simpleCard.cardId, sessionId, simpleCard);
+            }
+            else {
+            	res = service.addCard(userId, sessionId, simpleCard);
+            }
+            
+            Boolean result = res.get("status").getAsString().equals("success") ? true : false;
+            b.putString("action", Operation.POST_CARD.toString());
             b.putBoolean("result", result);
 
             receiver.send(Constants.STATUS_FINISHED, b);
@@ -119,51 +146,51 @@ public class RemoteService extends IntentService {
             String simpleCardJSON = intent.getStringExtra("newContactJSON");
 
             SimpleCard simpleCard = new Gson().fromJson(simpleCardJSON, SimpleCard.class);
-            Boolean result = service.addContact(accessToken, simpleCard);
-
-            b.putString("action", "updated");
+            JsonObject res = service.addContact(userId, sessionId, simpleCard);
+            Boolean result = res.get("status").getAsString().equals("success") ? true : false;
+            
+            b.putString("action", Operation.POST_CONTACT.toString());
             b.putBoolean("result", result);
 
             receiver.send(Constants.STATUS_FINISHED, b);
             break;
         }
         case DEL_CARD: {
-            SimpleCard existingCard = intent.getParcelableExtra("existingCard");
-            Boolean result = service.deleteCard(accessToken, existingCard);
-
-            b.putString("action", "updated");
-            b.putBoolean("result", result);
-
+            //SimpleCard existingCard = intent.getParcelableExtra("existingCard");
+            //Boolean result = service.deleteCard(userId, sessionId, existingCard);
+            b.putString("action", "Not Supported");
+            b.putBoolean("result", false);
             receiver.send(Constants.STATUS_FINISHED, b);
             break;
         }
         case DEL_CONTACT: {
-            SimpleCard existingCard = intent.getParcelableExtra("existingCard");
-            Boolean result = service.deleteCard(accessToken, existingCard);
-
-            b.putString("action", "updated");
-            b.putBoolean("result", result);
-
+        	//SimpleCard existingCard = intent.getParcelableExtra("existingCard");
+            //Boolean result = service.deleteCard(userId, sessionId, existingCard);
+            b.putString("action", "Not Supported");
+            b.putBoolean("result", false);
             receiver.send(Constants.STATUS_FINISHED, b);
             break;
         }
         case REFER: {
-            Log.e("cb", "referred");
             String referredTo = intent.getStringExtra("referedTo");
             String cardId = intent.getStringExtra("cardId");
-            Boolean result = service.refer(accessToken, referredTo, cardId);
-
-            b.putString("action", "updated");
+            JsonObject res = service.refer(userId, sessionId, referredTo, cardId);
+            Boolean result = res.get("status").getAsString().equals("success") ? true : false;
+            b.putString("action", Operation.REFER.toString());
             b.putBoolean("result", result);
 
             receiver.send(Constants.STATUS_FINISHED, b);
             break;
         }
         case LIST_REFERRALS: {
-            SimpleCard[] result = service.listReferrals(accessToken);
+        	APIResult res = service.listReferrals(userId, sessionId);
+            SimpleCard[] referrals = res.cards;
 
-            b.putString("action", "updated");
-            b.putParcelableArray("result", result);
+            b.putString("action", Operation.LIST_REFERRALS.toString());
+            b.putString("dataType", "referrals");
+            b.putBoolean("result", true);
+
+            b.putParcelableArray("referrals", referrals);
 
             receiver.send(Constants.STATUS_FINISHED, b);
             break;

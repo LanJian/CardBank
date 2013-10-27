@@ -38,7 +38,7 @@ JSONResultReceiver.Receiver {
 	public void onResume() {
 		super.onResume();
 
-		if (App.accessToken != null && !App.accessToken.equals("")) {
+		if (App.sessionId != null && !App.sessionId.equals("")) {
 			Intent intent = new Intent(this, MainActivity.class);
 			startActivity(intent);
 			this.finish();
@@ -98,9 +98,8 @@ JSONResultReceiver.Receiver {
 		switch (resultCode) {
 
 		case Constants.STATUS_FINISHED: {
-			App.accessToken = resultData.getString("accessToken");
-			Log.e("paul", App.accessToken);
-
+			App.sessionId = resultData.getString("sessionId");
+			App.userId = resultData.getString("userId");
 			break;
 		}
 		case Constants.STATUS_ERROR: {
@@ -109,11 +108,14 @@ JSONResultReceiver.Receiver {
 		}
 		}
 
-		if (App.accessToken != null && !App.accessToken.equals("")) {
+		if (App.userId != null && !App.userId.equals("") &&
+				App.sessionId != null && !App.sessionId.equals("")) {
+				
 			Log.e("Success", "logged in");
 			Intent intent = new Intent(this, MainActivity.class);
 			intent.putExtra("mode", "contact");
 			startActivity(intent);
+			
 			this.finish();
 		} else {
 			Log.e("Failed", "logged in");
