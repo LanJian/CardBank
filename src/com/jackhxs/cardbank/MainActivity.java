@@ -66,7 +66,7 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback,
 			
 			startService(intentCards);
 			startService(intentContacts);
-			//startService(intentReferrals);
+			startService(intentReferrals);
 			
 			dataInitialization();
 			
@@ -120,47 +120,39 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback,
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 		actionBar.setDisplayShowTitleEnabled(false);
 	}
+	
+	private void addTab(String tabName, Fragment frag, String name) {
+		ActionBar actionBar = getActionBar();
+		Tab tab = actionBar
+				.newTab()
+				.setText(tabName)
+				.setTabListener(
+						new TabListener<CardFragment>(this, name,
+								frag));
+		actionBar.addTab(tab);
+	}
 
 	private void dataUpdated(Bundle resultData) {
 		String dataType = resultData.getString("dataType");
 		SimpleCard[] data = (SimpleCard[]) resultData.getParcelableArray(dataType);
-		ActionBar actionBar = getActionBar();
-		
+			
 		if (dataType.equals("cards")) {
 			App.myCards = data;
 			
 			Fragment cardFragment = new CardFragment(App.myCards[0]);
-			Tab tab = actionBar
-					.newTab()
-					.setText("My Card")
-					.setTabListener(
-							new TabListener<CardFragment>(this, "myCard",
-									cardFragment));
-			actionBar.addTab(tab);
+			addTab("My Card", cardFragment, "myCard");
 		}
 		else if (dataType.equals("contacts")) {
 			App.myContacts = data;
 			
 			Fragment listFragment = new CardListFragment();
-			Tab tab = actionBar
-					.newTab()
-					.setText("My Contacts")
-					.setTabListener(
-							new TabListener<CardListFragment>(this, "myContacts",
-									listFragment));
-			actionBar.addTab(tab);
+			addTab("Contact", listFragment, "myContact");
 		}
 		else { //referalls
 			App.myReferrals = data;
 			
 			Fragment fragment = new ReferralsListFragment();
-			Tab tab = actionBar
-					.newTab()
-					.setText("Referrals")
-					.setTabListener(
-							new TabListener<CardListFragment>(this, "referrals",
-									fragment));
-			actionBar.addTab(tab);
+			addTab("Referrals", fragment, "referrals");
 		}
 	}
 

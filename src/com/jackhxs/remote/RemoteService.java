@@ -1,18 +1,7 @@
 package com.jackhxs.remote;
 
-import java.io.IOException;
-
-import org.apache.http.HttpResponse;
-import org.apache.http.client.CookieStore;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpUriRequest;
-import org.apache.http.client.protocol.ClientContext;
-import org.apache.http.impl.client.BasicCookieStore;
-import org.apache.http.protocol.BasicHttpContext;
-
 import retrofit.RestAdapter;
-import retrofit.client.ApacheClient;
-import retrofit.client.Client;
+import retrofit.client.OkClient;
 import android.app.IntentService;
 import android.content.Intent;
 import android.os.Bundle;
@@ -25,23 +14,14 @@ import com.jackhxs.cardbank.App;
 import com.jackhxs.data.APIResult;
 import com.jackhxs.data.SimpleCard;
 import com.jackhxs.remote.Constants.Operation;
+import com.squareup.okhttp.OkHttpClient;
 
 public class RemoteService extends IntentService {
-	Client client = new ApacheClient() {
-	    final CookieStore cookieStore = new BasicCookieStore();
-	    @Override
-	    protected HttpResponse execute(HttpClient client, HttpUriRequest request) throws IOException {
-	        // BasicHttpContext is not thread safe 
-	        // CookieStore is thread safe
-	        BasicHttpContext httpContext = new BasicHttpContext();
-	        httpContext.setAttribute(ClientContext.COOKIE_STORE, cookieStore);
-	        return client.execute(request, httpContext);
-	    }
-	};
-	
+    OkHttpClient client = new OkHttpClient();
+
     private final RestAdapter restAdapter = new RestAdapter.Builder()
     	.setServer("http://192.168.1.131:3000")
-    	.setClient(client)
+    	.setClient(new OkClient(client))
     	.build();
 
     private final RestInterface service;
@@ -129,7 +109,7 @@ public class RemoteService extends IntentService {
             JsonObject res;
             
             if (command.equals(Operation.PUT_CARD)) {
-            	res = service.updateCard(userId, simpleCard.cardId, sessionId, simpleCard);
+            	res = service.updateCard(userId, simpleCard._id, sessionId, simpleCard);
             }
             else {
             	res = service.addCard(userId, sessionId, simpleCard);

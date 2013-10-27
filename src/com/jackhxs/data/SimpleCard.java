@@ -10,10 +10,10 @@ public class SimpleCard implements Parcelable {
 	public String email;
 	public String imageUrl;
 	
-	public String cardId;
+	public String _id;
 	
 	public SimpleCard() {
-		firstName = lastName = phoneNo = email = imageUrl = cardId = "null";
+		firstName = lastName = phoneNo = email = imageUrl = _id = "null";
 	};
 	
 	public SimpleCard(Parcel in) {
@@ -32,7 +32,7 @@ public class SimpleCard implements Parcelable {
 		dst.writeString(email);
 		dst.writeString(imageUrl);
 		
-		dst.writeString(cardId);
+		dst.writeString(_id);
 	}
 	
 	private void readFromParcel(Parcel in) {
@@ -42,7 +42,7 @@ public class SimpleCard implements Parcelable {
 		email = in.readString();
 		imageUrl = in.readString();
 		
-		cardId = in.readString();
+		_id = in.readString();
 	}
 	
 	public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {

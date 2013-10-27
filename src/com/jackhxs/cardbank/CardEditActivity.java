@@ -156,7 +156,7 @@ public class CardEditActivity extends Activity implements JSONResultReceiver.Rec
 		App.myCards[0].imageUrl = String.valueOf(templateIndex); 
 
 		intent.putExtra("receiver", mReceiver);
-		intent.putExtra("operation", (Parcelable) Operation.POST_CARD);
+		intent.putExtra("operation", (Parcelable) Operation.PUT_CARD);
 		intent.putExtra("accessToken", App.sessionId);
 		intent.putExtra("simpleCardJSON", new Gson().toJson(App.myCards[0]));
 

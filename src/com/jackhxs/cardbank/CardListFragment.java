@@ -14,6 +14,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.jackhxs.data.SimpleCard;
 import com.jackhxs.remote.Constants.Operation;
@@ -22,6 +23,7 @@ import com.xtremelabs.imageutils.ImageLoader;
 
 // Fragment with a list view of the contacts
 public class CardListFragment extends Fragment {
+	private TextView emptyMsg;
 	private ListView myListView;
 	private CardAdapter myAdapter;
 	private ImageLoader mImageLoader;
@@ -65,10 +67,16 @@ public class CardListFragment extends Fragment {
 		mImageLoader = ImageLoader.buildImageLoaderForFragment(this);
 
 		myListView = (ListView) view.findViewById(R.id.list_view);
+		emptyMsg = (TextView) view.findViewById(R.id.empty_message);
+		
+		if (App.myContacts.length > 0) {
+			emptyMsg.setVisibility(View.GONE);
+		}
+		
 		ArrayList<SimpleCard> list = new ArrayList<SimpleCard>();
 		list.addAll(Arrays.asList(App.myContacts));
+		
 		myAdapter = new CardAdapter(getActivity(), R.layout.list_view_row, list, mImageLoader);
-
 		myListView.setAdapter(myAdapter);
 
 		myListView.setOnItemClickListener(new OnItemClickListener() {

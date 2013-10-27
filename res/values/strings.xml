@@ -12,6 +12,7 @@
     <string name="title_activity_card_view">Card View</string>
 
     <string name="empty_contact"> Your contact list is empty</string>
+    <string name="empty_referral"> Your referral list is empty</string>
     
     <string name="login_login_string">Login</string>
     <string name="login_email">Email</string>
