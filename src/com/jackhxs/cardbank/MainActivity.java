@@ -1,6 +1,7 @@
 package com.jackhxs.cardbank;
 
 import java.nio.charset.Charset;
+import java.text.ParseException;
 
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
@@ -32,6 +33,16 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback,
 	private Boolean editCardImmediately;
     public JSONResultReceiver mReceiver;
 
+    private void startService(Operation op, Boolean longPoll) {
+    	// update the result back to server
+		final Intent serviceIntent = new Intent(Intent.ACTION_SYNC, null, this,
+				RemoteService.class);
+		serviceIntent.putExtra("receiver", mReceiver);
+		serviceIntent.putExtra("longPoll", longPoll);
+		serviceIntent.putExtra("operation", (Parcelable) op);
+		startService(serviceIntent);
+    }
+    
 	// ----- Methods -----
 	/** Called when the activity is first created. */
 	@Override
@@ -95,9 +106,6 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback,
 			startActivity(intent);
 			return true;
 		}
-		/*case R.id.action_delete: {
-			return true;
-		}*/
 		default:
 			return super.onOptionsItemSelected(item);
 		}
@@ -122,7 +130,7 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback,
 		actionBar.addTab(tab);
 	}
 
-	private void dataUpdated(Bundle resultData) {
+	private void dataUpdated(Bundle resultData) throws ParseException {
 		String dataType = resultData.getString("dataType");
 		SimpleCard[] data = (SimpleCard[]) resultData.getParcelableArray(dataType);
 			
@@ -132,21 +140,30 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback,
 			Fragment cardFragment = new CardFragment(App.myCards[0]);
 			addTab("My Card", cardFragment, "myCard");
 			
-			final Intent intentContacts = new Intent(Intent.ACTION_SYNC, null, this,
-					RemoteService.class);
-			intentContacts.putExtra("receiver", mReceiver);
-			intentContacts.putExtra("operation",(Parcelable) Operation.GET_CONTACTS);
-			
-			startService(intentContacts);
+			startService(Operation.GET_CONTACTS, false);
 		}
 		else if (dataType.equals("contacts")) {
 			App.myContacts = data;
+			
+			if (resultData.getBoolean("longPoll", false) && App.lastUpdated != null && 
+					Util.ISO8601.toCalendar(resultData.getString("updateAt")).before(App.lastUpdated)) {
+				
+				Handler handler = new Handler(); 
+			    handler.postDelayed(new Runnable() { 
+			         public void run() { 
+			        	 startService(Operation.GET_CONTACTS, true); 
+			         } 
+			    }, 2000); 
+				
+				return;
+			}
 			
 			Fragment listFragment = new CardListFragment();
 			addTab("Contact", listFragment, "myContact");
 			
 			final Intent intentReferrals = new Intent(Intent.ACTION_SYNC, null, this,
 					RemoteService.class);
+			
 			intentReferrals.putExtra("receiver", mReceiver);
 			intentReferrals.putExtra("operation",(Parcelable) Operation.LIST_REFERRALS);
 			startService(intentReferrals);
@@ -182,7 +199,12 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback,
 
 		switch (resultCode) {
 		case Constants.STATUS_FINISHED: {
-			dataUpdated(resultData);
+			try {
+				dataUpdated(resultData);
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			break;
 		}
 		case Constants.STATUS_ERROR: {
@@ -219,7 +241,7 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback,
 		serviceIntent.putExtra("receiver", mReceiver);
 		serviceIntent.putExtra("operation", (Parcelable) Operation.POST_CONTACT);
 		serviceIntent.putExtra("newContactJSON", simpleCardJSON);
-		startService(serviceIntent);	
+		startService(serviceIntent);
 	}
 
 	/**
@@ -244,7 +266,8 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback,
 						createMimeRecord("application/com.jackhxs.cardbank", serializedCard.getBytes()),
 						//NdefRecord.createApplicationRecord("com.jackhxs.cardbank")
 				});
-
+		
+		startService(Operation.GET_CONTACTS, true);
 		return msg;
 	}
 }

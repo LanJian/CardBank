@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Date;
 
 import android.app.Application;
 import android.content.res.AssetManager;
@@ -22,7 +23,8 @@ public class App extends Application {
 	public static SimpleCard[] myReferrals;
 	
 	public static TemplateConfig[] templateConfig;
-
+	public static Date lastUpdated;
+	
 	public Boolean addContact() {
 		return null;
 	}
@@ -39,6 +41,7 @@ public class App extends Application {
 	@Override
 	public void onCreate() {
 		super.onCreate();
+		lastUpdated = null;
 		myContacts = null;
 		myCards = null;
 		userId = null;
@@ -54,10 +57,10 @@ public class App extends Application {
 
 		    String line = null;
 		    
-		    while ((line = reader.readLine()) != null)
-		    {
+		    while ((line = reader.readLine()) != null) {
 		        sb.append(line + "\n");
 		    }
+		    
 		    templateConfig = new Gson().fromJson(sb.toString(), TemplateConfig[].class);
 		    
 		} catch (IOException e) {

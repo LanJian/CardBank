@@ -21,7 +21,7 @@ public class RemoteService extends IntentService {
     OkHttpClient client = new OkHttpClient();
 
     private final RestAdapter restAdapter = new RestAdapter.Builder()
-    	.setServer("http://192.168.1.131:3000")
+    	.setServer("http://cardbeam-server.herokuapp.com/")
     	.setClient(new OkClient(client))
     	.build();
 
@@ -50,7 +50,7 @@ public class RemoteService extends IntentService {
         String userId = App.userId;
         Boolean success = true;
         
-        Log.i("paul", command.toString());
+    	b.putBoolean("longPoll", intent.getBooleanExtra("longPoll", false));
         
         try {
         	switch (command) {
@@ -96,13 +96,15 @@ public class RemoteService extends IntentService {
             }
             case GET_CONTACTS: {
             	APIResult result = service.listContacts(userId, sessionId);
+            	
             	SimpleCard[] contacts = result.cards;
             	
-                b.putParcelableArray("contacts", contacts);
-
+            	b.putParcelableArray("contacts", contacts);
                 b.putString("dataType", "contacts");
+                b.putString("updatedAt", result.updatedAt);
                 b.putBoolean("result", true);
                 b.putString("action", Operation.GET_CONTACTS.toString());
+                
                 break;
             }
             case PUT_CARD:
