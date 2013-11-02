@@ -146,7 +146,7 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback,
 			App.myContacts = data;
 			
 			if (resultData.getBoolean("longPoll", false) && App.lastUpdated != null && 
-					Util.ISO8601.toCalendar(resultData.getString("updateAt")).before(App.lastUpdated)) {
+					Util.ISO8601.toCalendar(resultData.getString("updatedAt")).before(App.lastUpdated)) {
 				
 				Handler handler = new Handler(); 
 			    handler.postDelayed(new Runnable() { 
