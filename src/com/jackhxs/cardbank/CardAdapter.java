@@ -183,7 +183,29 @@ public class CardAdapter extends ArrayAdapter<SimpleCard> {
     }
 
     public void removeCard(int position) {
+    	String referralId = myData.get(position).referralId;
+    	
         this.remove(myData.get(position));
         this.notifyDataSetChanged();
+        
+        final Intent serviceIntent = new Intent(Intent.ACTION_SYNC, null,
+                getContext(), RemoteService.class);
+
+        JSONResultReceiver receiver = new JSONResultReceiver(new Handler());
+        receiver.setReceiver(new JSONResultReceiver.Receiver() {
+
+            @Override
+            public void onReceiveResult(int resultCode, Bundle resultData) {
+                Log.e("paul", "receive result add referal");
+                Log.e("add referral", Integer.toString(resultCode));
+                Log.e("add referral", resultData.toString());
+            }
+        });
+
+        serviceIntent.putExtra("receiver", receiver);
+        serviceIntent.putExtra("operation", (Parcelable) Operation.DEL_REFER);
+        serviceIntent.putExtra("referralId", referralId);
+        
+        getContext().startService(serviceIntent);
     }
 }

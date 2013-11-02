@@ -10,6 +10,7 @@ public class SimpleCard implements Parcelable {
 	public String email;
 	public String imageUrl;
 	
+	public String referralId;
 	public String userId;
 	public String _id;
 	
@@ -19,7 +20,7 @@ public class SimpleCard implements Parcelable {
 		phoneNo = "000-0000";
 		email = "your@email.com";
 		imageUrl = "0"; 
-		
+		referralId = "null";
 		userId = "";
 		_id = "null";
 	};
@@ -39,7 +40,8 @@ public class SimpleCard implements Parcelable {
 		dst.writeString(phoneNo);
 		dst.writeString(email);
 		dst.writeString(imageUrl);
-		
+		dst.writeString(userId);
+		dst.writeString(referralId);
 		dst.writeString(_id);
 	}
 	
@@ -49,7 +51,8 @@ public class SimpleCard implements Parcelable {
 		phoneNo = in.readString();
 		email = in.readString();
 		imageUrl = in.readString();
-		
+		userId = in.readString();
+		referralId = in.readString();
 		_id = in.readString();
 	}
 	

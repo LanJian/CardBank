@@ -20,6 +20,7 @@ public final class Constants {
 		POST_CONTACT,
 		DEL_CONTACT,
 		DEL_CARD,
+		DEL_REFER,
         REFER,
         LIST_REFERRALS;
 

@@ -21,7 +21,7 @@ public class RemoteService extends IntentService {
     OkHttpClient client = new OkHttpClient();
 
     private final RestAdapter restAdapter = new RestAdapter.Builder()
-    	.setServer("http://cardbeam-server.herokuapp.com/")
+    	.setServer("http://10.8.104.15:3000") //"http://cardbeam-server.herokuapp.com/")
     	.setClient(new OkClient(client))
     	.build();
 
@@ -149,6 +149,12 @@ public class RemoteService extends IntentService {
                 //Boolean result = service.deleteCard(userId, sessionId, existingCard);
                 b.putString("action", "Not Supported");
                 b.putBoolean("result", false);
+                break;
+            }
+            case DEL_REFER: {
+            	//SimpleCard existingCard = intent.getParcelableExtra("existingCard");
+                //Boolean result = service.deleteCard(userId, sessionId, existingCard);
+                
                 break;
             }
             case REFER: {

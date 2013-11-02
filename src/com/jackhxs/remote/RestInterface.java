@@ -60,6 +60,9 @@ public interface RestInterface {
 	@GET("/users/{userId}/referrals") // get list of cards referred to me
 	APIResult listReferrals(@Path("userId") String userId, @Query("sessionId") String sessionId);
 
+	@DELETE("/users/{userId}/referrals/{referralId}")
+	void deleteReferrals(@Path("userId") String userId, @Query("sessionId") String sessionId, @Path("referralId") String referralId);
+	
 	/** Misc. */
 	//Signing up
 	@FormUrlEncoded
