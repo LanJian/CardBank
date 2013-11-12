@@ -31,14 +31,28 @@ import com.jackhxs.remote.RemoteService;
 public class MainActivity extends Activity implements CreateNdefMessageCallback, JSONResultReceiver.Receiver {
 	private NfcAdapter mNfcAdapter;
 	private Boolean editCardImmediately;
+	private Boolean networkFinished;
+	private Boolean pollingInProgress;
+	private Integer longPollCount;
     public JSONResultReceiver mReceiver;
-
-    private void startService(Operation op, Boolean longPoll) {
-    	// update the result back to server
-		final Intent serviceIntent = new Intent(Intent.ACTION_SYNC, null, this,
+    
+    private void startLongPollingGetContact() {
+    	if (!networkFinished) 
+    		return;
+    	networkFinished = false;
+    	pollingInProgress = true;
+    	final Intent serviceIntent = new Intent(Intent.ACTION_SYNC, null, this,
 				RemoteService.class);
 		serviceIntent.putExtra("receiver", mReceiver);
-		serviceIntent.putExtra("longPoll", longPoll);
+		serviceIntent.putExtra("longPoll", true);
+		serviceIntent.putExtra("operation", (Parcelable) Operation.GET_CONTACTS);
+		startService(serviceIntent);
+    }
+    
+    private void startService(Operation op) {
+    	final Intent serviceIntent = new Intent(Intent.ACTION_SYNC, null, this,
+				RemoteService.class);
+		serviceIntent.putExtra("receiver", mReceiver);
 		serviceIntent.putExtra("operation", (Parcelable) op);
 		startService(serviceIntent);
     }
@@ -49,7 +63,9 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback,
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		editCardImmediately = getIntent().getExtras().getString("mode", "oldAccount").equals("newAccount");
-	    
+		pollingInProgress = networkFinished = false;
+		longPollCount = 0;
+		
 		if (!Util.isTablet(getApplicationContext())) {
 			getActionBar().setDisplayShowTitleEnabled(false);
 			getActionBar().setDisplayShowHomeEnabled(false);
@@ -88,7 +104,8 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback,
 	@Override
 	public void onResume() {
 		super.onResume();
-
+		if (!pollingInProgress)
+			startLongPollingGetContact();
 		// Check to see that the Activity started due to an Android Beam
 		if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(getIntent().getAction())) {
 			processIntent(getIntent());
@@ -133,28 +150,44 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback,
 	private void dataUpdated(Bundle resultData) throws ParseException {
 		String dataType = resultData.getString("dataType");
 		SimpleCard[] data = (SimpleCard[]) resultData.getParcelableArray(dataType);
-			
+		
 		if (dataType.equals("cards")) {
 			App.myCards = data;
 			
 			Fragment cardFragment = new CardFragment(App.myCards[0]);
 			addTab("My Card", cardFragment, "myCard");
 			
-			startService(Operation.GET_CONTACTS, true);
+			startService(Operation.GET_CONTACTS);
 		}
 		else if (dataType.equals("contacts")) {
 			App.myContacts = data;
-			
+			networkFinished = true;
 			if (resultData.getBoolean("longPoll", false) && App.lastUpdated != null && 
-					Util.ISO8601.toCalendar(resultData.getString("updatedAt")).before(App.lastUpdated)) {
+					Util.ISO8601.toCalendar(resultData.getString("updatedAt")).compareTo(App.lastUpdated) != 1) {
 				
 				Handler handler = new Handler(); 
 			    handler.postDelayed(new Runnable() { 
 			         public void run() { 
-			        	 startService(Operation.GET_CONTACTS, true); 
+			        	 Log.e("LONG POLL", "LONG POLL");
+			        	 longPollCount += 1;
+			        	 
+			        	 if (longPollCount <= 5) // stop long polling after 5 times
+			        		 startLongPollingGetContact();
+			        	 else
+			        		 longPollCount = 0;
 			         } 
 			    }, 2000); 
 				
+				return;
+			}
+			else {
+				pollingInProgress = false;
+			}
+			
+			App.lastUpdated = Util.ISO8601.toCalendar(resultData.getString("updatedAt"));
+			
+			// This is needed to prevent generating repeat tabs on home screen
+			if (resultData.getBoolean("longPoll", false)) {
 				return;
 			}
 			
@@ -176,20 +209,12 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback,
 			
 			// this is always the last call
 			if (editCardImmediately) {
+				editCardImmediately = !editCardImmediately;
 				Intent intent = new Intent(
 					getApplicationContext(),
 					TemplateGallery.class);
 				startActivity(intent);
 			}
-		}
-		else if (dataType.equals("postCard")) {
-
-			final Intent intentContacts = new Intent(Intent.ACTION_SYNC, null, this,
-					RemoteService.class);
-			intentContacts.putExtra("receiver", mReceiver);
-			intentContacts.putExtra("operation",(Parcelable) Operation.GET_CONTACTS);
-			
-			startService(intentContacts);
 		}
 	}
 
@@ -253,6 +278,7 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback,
 		NdefRecord mimeRecord = new NdefRecord(
 				NdefRecord.TNF_MIME_MEDIA, mimeBytes, new byte[0], payload);
 
+		
 		return mimeRecord;
 	}
 
@@ -264,10 +290,9 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback,
 		NdefMessage msg = new NdefMessage(
 				new NdefRecord[] {
 						createMimeRecord("application/com.jackhxs.cardbank", serializedCard.getBytes()),
-						//NdefRecord.createApplicationRecord("com.jackhxs.cardbank")
 				});
 		
-		startService(Operation.GET_CONTACTS, true);
+		startLongPollingGetContact();
 		return msg;
 	}
 }

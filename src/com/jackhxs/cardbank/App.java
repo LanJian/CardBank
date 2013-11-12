@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Calendar;
 import java.util.Date;
 
 import android.app.Application;
@@ -23,7 +24,7 @@ public class App extends Application {
 	public static SimpleCard[] myReferrals;
 	
 	public static TemplateConfig[] templateConfig;
-	public static Date lastUpdated;
+	public static Calendar lastUpdated;
 	
 	public Boolean addContact() {
 		return null;

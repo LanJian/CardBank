@@ -133,6 +133,7 @@ public class RemoteService extends IntentService {
                 JsonObject res = service.addContact(userId, sessionId, simpleCard);
                 Boolean result = res.get("status").getAsString().equals("success") ? true : false;
                 
+                b.putString("dataType", "postCard");
                 b.putString("action", Operation.POST_CONTACT.toString());
                 b.putBoolean("result", result);
                 break;
@@ -175,7 +176,6 @@ public class RemoteService extends IntentService {
                 b.putString("dataType", "referrals");
                 b.putBoolean("result", true);
                 b.putParcelableArray("referrals", referrals);
-
                 
                 break;
             }
