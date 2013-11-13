@@ -39,10 +39,13 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback,
     private void startLongPollingGetContact() {
     	if (!networkFinished) 
     		return;
+    	
     	networkFinished = false;
     	pollingInProgress = true;
+    	
     	final Intent serviceIntent = new Intent(Intent.ACTION_SYNC, null, this,
 				RemoteService.class);
+    	
 		serviceIntent.putExtra("receiver", mReceiver);
 		serviceIntent.putExtra("longPoll", true);
 		serviceIntent.putExtra("operation", (Parcelable) Operation.GET_CONTACTS);
@@ -52,6 +55,7 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback,
     private void startService(Operation op) {
     	final Intent serviceIntent = new Intent(Intent.ACTION_SYNC, null, this,
 				RemoteService.class);
+    	
 		serviceIntent.putExtra("receiver", mReceiver);
 		serviceIntent.putExtra("operation", (Parcelable) op);
 		startService(serviceIntent);
@@ -171,10 +175,12 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback,
 			        	 Log.e("LONG POLL", "LONG POLL");
 			        	 longPollCount += 1;
 			        	 
-			        	 if (longPollCount <= 5) // stop long polling after 5 times
+			        	 if (longPollCount <= 5) { // stop long polling after 5 times
 			        		 startLongPollingGetContact();
-			        	 else
+			        	 }
+			        	 else {
 			        		 longPollCount = 0;
+			        	 }
 			         } 
 			    }, 2000); 
 				
