@@ -28,5 +28,7 @@
     <string name="card_flip_view_email_label">Email</string>
 
     <string name="appName">CardBeam</string>
+    
+    <string name="remember_me">Remember me</string>
 
 </resources>

@@ -4,12 +4,14 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
+import android.widget.CheckBox;
 import android.widget.EditText;
 
 import com.jackhxs.remote.Constants;
@@ -17,24 +19,37 @@ import com.jackhxs.remote.Constants.Operation;
 import com.jackhxs.remote.JSONResultReceiver;
 import com.jackhxs.remote.RemoteService;
 
-public class LoginActivity extends Activity implements
-JSONResultReceiver.Receiver {
-	private EditText emailField, passwordField;
+public class LoginActivity extends Activity implements JSONResultReceiver.Receiver {
+    public static final String PREFS_NAME = "MyPrefsFile";
+
+    private EditText emailField, passwordField;
+    private CheckBox rememberLogin;
+    
 	public JSONResultReceiver mReceiver;
 	private ProgressDialog progress;
+	private SharedPreferences settings;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+		
 		setContentView(R.layout.activity_login);
 
 		mReceiver = new JSONResultReceiver(new Handler());
 		mReceiver.setReceiver(this);
-
+		
+		settings = getSharedPreferences(PREFS_NAME, 0);
+		
 		emailField = (EditText) findViewById(R.id.login_email);
 		passwordField = (EditText) findViewById(R.id.login_password);
+		rememberLogin = (CheckBox) findViewById(R.id.rememberMeCheckbox);
+		
+		if (false && settings.getBoolean("authenticated", false)) {
+			App.sessionId = settings.getString("sessionId", "none");
+			App.userId = settings.getString("userId", "none");
+			onReceiveResult(-1, null);
+		}
 	}
 
 	@Override
@@ -103,7 +118,10 @@ JSONResultReceiver.Receiver {
 	public void onReceiveResult(int resultCode, Bundle resultData) {
 		Log.e("paul", "result");
 
-		progress.dismiss();
+		if (progress != null) {
+			progress.dismiss();
+		}
+		
 		switch (resultCode) {
 
 		case Constants.STATUS_FINISHED: {
@@ -116,6 +134,13 @@ JSONResultReceiver.Receiver {
 			
 			App.sessionId = resultData.getString("sessionId");
 			App.userId = resultData.getString("userId");
+			
+			if (rememberLogin.isChecked()) {
+				settings.edit().putBoolean("authenticated", true).commit();
+				settings.edit().putString("sessionId", App.sessionId).commit();
+				settings.edit().putString("userId", App.userId).commit();
+			}
+			
 			break;
 		}
 		case Constants.STATUS_ERROR: {

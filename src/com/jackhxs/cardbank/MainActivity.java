@@ -32,6 +32,7 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback,
 	private NfcAdapter mNfcAdapter;
 	private Boolean editCardImmediately;
 	private Boolean networkFinished;
+	private Boolean startedPolling;
 	private Boolean pollingInProgress;
 	private Integer longPollCount;
     public JSONResultReceiver mReceiver;
@@ -40,6 +41,7 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback,
     	if (!networkFinished) 
     		return;
     	
+    	startedPolling = true;
     	networkFinished = false;
     	pollingInProgress = true;
     	
@@ -67,7 +69,7 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback,
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		editCardImmediately = getIntent().getExtras().getString("mode", "oldAccount").equals("newAccount");
-		pollingInProgress = networkFinished = false;
+		startedPolling = pollingInProgress = networkFinished = false;
 		longPollCount = 0;
 		
 		if (!Util.isTablet(getApplicationContext())) {
@@ -108,7 +110,7 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback,
 	@Override
 	public void onResume() {
 		super.onResume();
-		if (!pollingInProgress)
+		if (startedPolling && !pollingInProgress)
 			startLongPollingGetContact();
 		// Check to see that the Activity started due to an Android Beam
 		if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(getIntent().getAction())) {
@@ -123,7 +125,7 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback,
 		case R.id.action_edit: {
 			Intent intent = new Intent(
 				getApplicationContext(),
-				TemplateGallery.class);
+				CardEditActivity.class);
 			startActivity(intent);
 			return true;
 		}
@@ -134,6 +136,7 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback,
 
 	private void dataInitialization() {
 		Log.i("info", "starting...");
+		
 		// setup action bar for tabs
 		ActionBar actionBar = getActionBar();
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
@@ -166,6 +169,7 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback,
 		else if (dataType.equals("contacts")) {
 			App.myContacts = data;
 			networkFinished = true;
+			
 			if (resultData.getBoolean("longPoll", false) && App.lastUpdated != null && 
 					Util.ISO8601.toCalendar(resultData.getString("updatedAt")).compareTo(App.lastUpdated) != 1) {
 				
@@ -188,6 +192,7 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback,
 			}
 			else {
 				pollingInProgress = false;
+				startedPolling = false;
 			}
 			
 			App.lastUpdated = Util.ISO8601.toCalendar(resultData.getString("updatedAt"));
@@ -218,7 +223,7 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback,
 				editCardImmediately = !editCardImmediately;
 				Intent intent = new Intent(
 					getApplicationContext(),
-					TemplateGallery.class);
+					CardEditActivity.class);
 				startActivity(intent);
 			}
 		}

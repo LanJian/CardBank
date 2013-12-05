@@ -1,60 +1,6 @@
 [
 	{
-		"url": "template_green",
-		"name": {
-			"color": "white",
-			"left": 100,
-			"top": 100
-		},
-		"phone": {
-			"color": "white",
-			"left": 100,
-			"top": 250
-		},
-		"email": {
-			"color": "white",
-			"left": 100,
-			"top": 300
-		}
-	},
-	{
-		"url": "template_gold",
-		"name": {
-			"color": "white",
-			"left": 125,
-			"top": 100
-		},
-		"phone": {
-			"color": "white",
-			"left": 125,
-			"top": 200
-		},
-		"email": {
-			"color": "white",
-			"left": 125,
-			"top": 250
-		}
-	},
-	{
-		"url": "template_colorful",
-		"name": {
-			"color": "white",
-			"left": 100,
-			"top": 125
-		},
-		"phone": {
-			"color": "white",
-			"left": 100,
-			"top": 250
-		},
-		"email": {
-			"color": "white",
-			"left": 100,
-			"top": 275
-		}
-	},
-	{
-		"url": "template_circle",
+		"url": "template_white",
 		"name": {
 			"color": "black",
 			"left": 100,
@@ -69,24 +15,6 @@
 			"color": "black",
 			"left": 100,
 			"top": 400
-		}
-	},
-	{
-		"url": "template_bar",
-		"name": {
-			"color": "white",
-			"left": 100,
-			"top": 75
-		},
-		"phone": {
-			"color": "white",
-			"left": 500,
-			"top": 300
-		},
-		"email": {
-			"color": "white",
-			"left": 500,
-			"top": 350
 		}
 	}
 ]

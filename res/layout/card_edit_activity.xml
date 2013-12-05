@@ -1,97 +1,164 @@
-<LinearLayout
-  xmlns:android="http://schemas.android.com/apk/res/android"
-  android:orientation="vertical"
-  android:layout_width="fill_parent"
-  android:layout_height="fill_parent"
-  android:background="#FFF"
-  android:padding="10dp">
-
-  <EditText android:id="@+id/card_flip_view_nameEdit"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:gravity="center_vertical"
-    android:textSize="40sp"
-    android:textColor="#FFF"
-    android:background="#00AF64"
-    android:paddingLeft="5dp"
-    android:paddingRight="5dp"
-    android:inputType="textCapWords"
-    android:hint="New Name"
-    android:layout_marginBottom="5dp" />
-
-  <ImageView android:id="@+id/card_flip_view_image"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:adjustViewBounds="true"
-    android:scaleType="centerCrop"
-    android:background="#33AF64"
-    android:layout_marginBottom="5dp" />
-
-  <LinearLayout
-    android:orientation="horizontal"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:paddingLeft="5dp"
-    android:paddingRight="5dp"
-    android:background="#8B5C7A" >
+    android:background="#FFF"
+    android:orientation="vertical"
+    android:padding="10dp" >
 
-    <LinearLayout
-      android:orientation="vertical"
-      android:paddingLeft="5dp"
-      android:paddingRight="5dp"
-      android:layout_width="wrap_content"
-      android:layout_height="fill_parent" >
-
-      <TextView
+    <EditText
+        android:id="@+id/card_flip_view_nameEdit"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:background="#00AF64"
         android:gravity="center_vertical"
-        android:textSize="16sp"
-        android:textColor="#d6b6ca"
-        android:text="Phone"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="20dp" />
+        android:hint="New Name"
+        android:inputType="textCapWords"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:textColor="#FFF"
+        android:textSize="40sp" />
 
-      <TextView
-          android:layout_width="fill_parent"
-          android:layout_height="wrap_content"
-          android:layout_marginBottom="5dp"
-          android:layout_marginTop="25dp"
-          android:gravity="center_vertical"
-          android:text="Email"
-          android:textColor="#d6b6ca"
-          android:textSize="16sp" />
-
-    </LinearLayout>
+    <ImageView
+        android:id="@+id/card_flip_view_image"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:adjustViewBounds="true"
+        android:background="#33AF64"
+        android:scaleType="centerCrop" />
 
     <LinearLayout
-      android:orientation="vertical"
-      android:paddingLeft="5dp"
-      android:paddingRight="5dp"
-      android:layout_width="fill_parent"
-      android:layout_height="fill_parent" >
-
-      <EditText android:id="@+id/card_flip_view_phoneNoEdit"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:gravity="right"
-        android:textSize="16sp"
-        android:inputType="phone"
-        android:textColor="#FFF"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp" />
+        android:layout_height="fill_parent"
+        android:background="#8B5C7A"
+        android:orientation="horizontal"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp" >
 
-      <EditText android:id="@+id/card_flip_view_emailEdit"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:gravity="right"
-        android:textSize="16sp"
-        android:inputType="textEmailAddress"
-        android:textColor="#FFF"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="5dp" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:orientation="vertical"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp" >
 
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:layout_marginTop="10dp"
+                android:gravity="center_vertical"
+                android:text="Company"
+                android:textColor="#d6b6ca"
+                android:textSize="16sp" />
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:layout_marginTop="10dp"
+                android:gravity="center_vertical"
+                android:text="Job Title"
+                android:textColor="#d6b6ca"
+                android:textSize="16sp" />
+
+            
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="25dp"
+                android:gravity="center_vertical"
+                android:text="Email"
+                android:textColor="#d6b6ca"
+                android:textSize="16sp" />
+            
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:layout_marginTop="10dp"
+                android:gravity="center_vertical"
+                android:text="Phone"
+                android:textColor="#d6b6ca"
+                android:textSize="16sp" />
+            
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:layout_marginTop="10dp"
+                android:gravity="center_vertical"
+                android:text="Address"
+                android:textColor="#d6b6ca"
+                android:textSize="16sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="vertical"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp" >
+
+            <EditText
+                android:id="@+id/card_flip_view_phoneNoEdit"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="5dp"
+                android:gravity="right"
+                android:inputType="textCapCharacters"
+                android:textColor="#FFF"
+                android:textSize="16sp" />
+
+            <EditText
+                android:id="@+id/card_flip_view_phoneNoEdit"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="5dp"
+                android:gravity="right"
+                android:inputType="textCapCharacters"
+                android:textColor="#FFF"
+                android:textSize="16sp" />
+
+            <EditText
+                android:id="@+id/card_flip_view_emailEdit"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="20dp"
+                android:gravity="right"
+                android:inputType="textEmailAddress"
+                android:textColor="#FFF"
+                android:textSize="16sp" />
+
+            <EditText
+                android:id="@+id/card_flip_view_phoneNoEdit"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="5dp"
+                android:gravity="right"
+                android:inputType="phone"
+                android:textColor="#FFF"
+                android:textSize="16sp" />
+
+            <EditText
+                android:id="@+id/card_flip_view_phoneNoEdit"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="5dp"
+                android:gravity="right"
+                android:inputType="textCapCharacters"
+                android:textColor="#FFF"
+                android:textSize="16sp" />
+
+        </LinearLayout>
     </LinearLayout>
 
-  </LinearLayout>
 </LinearLayout>

@@ -15,8 +15,10 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnFocusChangeListener;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.jackhxs.data.SimpleCard;
@@ -84,6 +86,23 @@ public class CardEditActivity extends Activity implements JSONResultReceiver.Rec
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
+		OnFocusChangeListener stdEditTextOnFocusListener = new OnFocusChangeListener() {
+			String originalContent = "";
+			@Override
+			public void onFocusChange(View v, boolean hasFocus) {
+				EditText view = ((EditText) v);
+			    if(hasFocus){
+			    	originalContent = view.getText().toString(); 
+			    	view.setText("");
+			    } else {
+			    	String newTxt = view.getText().toString();
+			    	if (newTxt.trim().equals("")) {
+			    		view.setText(originalContent);
+			    	}
+			    }
+			   }
+			};
+			
 		super.onCreate(savedInstanceState);
 
 		getActionBar().setDisplayShowTitleEnabled(false);
@@ -96,6 +115,10 @@ public class CardEditActivity extends Activity implements JSONResultReceiver.Rec
 		emailField = (EditText) findViewById(R.id.card_flip_view_emailEdit);
 		cardImage = (ImageView) findViewById(R.id.card_flip_view_image);
 
+		nameField.setOnFocusChangeListener(stdEditTextOnFocusListener);
+		phoneField.setOnFocusChangeListener(stdEditTextOnFocusListener);
+		emailField.setOnFocusChangeListener(stdEditTextOnFocusListener);
+		
 		SimpleCard myCard = App.myCards[0];
 
 		nameField.setText(myCard.firstName + " " + myCard.lastName);
