@@ -45,7 +45,7 @@ public class LoginActivity extends Activity implements JSONResultReceiver.Receiv
 		passwordField = (EditText) findViewById(R.id.login_password);
 		rememberLogin = (CheckBox) findViewById(R.id.rememberMeCheckbox);
 		
-		if (false && settings.getBoolean("authenticated", false)) {
+		if (settings.getBoolean("authenticated", false)) {
 			App.sessionId = settings.getString("sessionId", "none");
 			App.userId = settings.getString("userId", "none");
 			onReceiveResult(-1, null);

@@ -68,7 +68,8 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback,
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		editCardImmediately = getIntent().getExtras().getString("mode", "oldAccount").equals("newAccount");
+		editCardImmediately = 
+				getIntent().getExtras().getString("mode", "oldAccount").equals("newAccount");
 		startedPolling = pollingInProgress = networkFinished = false;
 		longPollCount = 0;
 		
