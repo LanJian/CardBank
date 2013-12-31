@@ -1,95 +1,179 @@
-<LinearLayout
-  xmlns:android="http://schemas.android.com/apk/res/android"
-  android:orientation="vertical"
-  android:layout_width="fill_parent"
-  android:layout_height="fill_parent"
-  android:background="#FFF"
-  android:padding="10dp">
-
-  <TextView android:id="@+id/card_flip_view_name"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:gravity="center_vertical"
-    android:textSize="40dp"
-    android:textColor="#FFF"
-    android:background="#00AF64"
-    android:paddingLeft="5dp"
-    android:paddingRight="5dp"
-    android:layout_marginBottom="2dp" />
-
-  <ImageView android:id="@+id/card_flip_view_image"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:adjustViewBounds="true"
-    android:scaleType="centerCrop"
-    android:background="#33AF64"
-    android:layout_marginBottom="5dp" />
-
-  <LinearLayout
-    android:orientation="vertical"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:layout_marginTop="10dp"
-    android:paddingLeft="5px"
-    android:paddingRight="5px"
-    android:background="#333" >
+    android:background="#FFF"
+    android:orientation="vertical"
+    android:padding="10dp" >
 
-    <LinearLayout
-      android:orientation="horizontal"
-      android:paddingLeft="5dp"
-      android:paddingRight="5dp"
-      android:layout_width="fill_parent"
-      android:layout_height="wrap_content" >
-
-      <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:textSize="16dp"
-        android:textColor="#bbb"
-        android:text="Phone"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp" />
-
-      <TextView android:id="@+id/card_flip_view_phoneNo"
+    <TextView
+        android:id="@+id/card_flip_view_name"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:gravity="right"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentBottom="true"
-        android:textSize="16dp"
-        android:textColor="#FFF"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp" />
-    </LinearLayout>
-
-    <LinearLayout
-      android:orientation="horizontal"
-      android:paddingLeft="5dp"
-      android:paddingRight="5dp"
-      android:layout_width="fill_parent"
-      android:layout_height="wrap_content" >
-         
-      <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_marginBottom="2dp"
+        android:background="#00AF64"
         android:gravity="center_vertical"
-        android:textSize="16dp"
-        android:textColor="#bbb"
-        android:text="Email"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp" />
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:textColor="#FFF"
+        android:textSize="40sp" />
 
-      <TextView android:id="@+id/card_flip_view_email"
+    <ImageView
+        android:id="@+id/card_flip_view_image"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:gravity="right"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentBottom="true"
-        android:textSize="16dp"
-        android:textColor="#FFF"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp" />
+        android:layout_marginBottom="10dp"
+        android:adjustViewBounds="true"
+        android:background="#33AF64"
+        android:scaleType="centerCrop" />
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_marginTop="10dp"
+        android:background="#333"
+        android:orientation="vertical"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp" >
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                android:gravity="center_vertical"
+                android:text="Comany"
+                android:textColor="#bbb"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/card_flip_view_company"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                android:gravity="right"
+                android:textColor="#FFF"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                android:gravity="center_vertical"
+                android:text="Job Title"
+                android:textColor="#bbb"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/card_flip_view_jobTitle"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                android:gravity="right"
+                android:textColor="#FFF"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                android:gravity="center_vertical"
+                android:text="Email"
+                android:textColor="#bbb"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/card_flip_view_email"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                android:gravity="right"
+                android:textColor="#FFF"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                android:gravity="center_vertical"
+                android:text="Phone"
+                android:textColor="#bbb"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/card_flip_view_phoneNo"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                android:gravity="right"
+                android:textColor="#FFF"
+                android:textSize="16sp" />
+        </LinearLayout>
+        
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                android:gravity="center_vertical"
+                android:text="Address"
+                android:textColor="#bbb"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/card_flip_view_address"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                android:gravity="right"
+                android:textColor="#FFF"
+                android:textSize="16sp" />
+        </LinearLayout>
     </LinearLayout>
-  </LinearLayout>
+
 </LinearLayout>

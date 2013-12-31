@@ -185,6 +185,9 @@ public class RemoteService extends IntentService {
             }
         }
         catch (RetrofitError re) {
+        	if (re.getResponse().getStatus() == 403) { // token expired
+        	}
+        	
         	success = false;
         }
         finally {

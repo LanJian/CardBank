@@ -3,6 +3,9 @@
 		<string name="your_name"> Your Name</string>
 		<string name="your_number"> 000&#8211;0000</string>
 		<string name="your_email">sample@email.com</string>
+		<string name="your_company">Company</string>
+		<string name="your_jobTitle">Job Title</string>
+		<string name="your_address">Your Address</string>
 		
     <string name="app_name">CardBeam</string>
     <string name="hint_enter_text">Enter Text</string>

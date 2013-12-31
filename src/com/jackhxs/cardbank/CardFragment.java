@@ -19,6 +19,50 @@ import com.jackhxs.util.ImageUtil;
 @SuppressLint("ValidFragment")
 public class CardFragment extends Fragment {
 	private SimpleCard myCard;
+	
+	private void updateUI(View item) {
+		int index = 0;
+		if (!myCard.imageUrl.equals("")) {
+			index = Integer.parseInt(myCard.imageUrl);
+		}
+		
+		String name, phone, email, company, address, jobTitle;
+		
+		// Inflate the layout for this fragment
+		Log.e("paul", "create fragment");
+		
+		TextView txtView = (TextView) item
+				.findViewById(R.id.card_flip_view_name);
+		txtView.setText(myCard.firstName + " " + myCard.lastName);
+		name = txtView.getText().toString();
+		
+		txtView = (TextView) item.findViewById(R.id.card_flip_view_phoneNo);
+		txtView.setText(myCard.phoneNo);
+		phone = txtView.getText().toString();
+
+		txtView = (TextView) item.findViewById(R.id.card_flip_view_email);
+		txtView.setText(myCard.email);
+		email = txtView.getText().toString();
+		
+		txtView = (TextView) item.findViewById(R.id.card_flip_view_company);
+        txtView.setText(myCard.company);
+        company = txtView.getText().toString();
+
+        txtView = (TextView) item.findViewById(R.id.card_flip_view_jobTitle);
+        txtView.setText(myCard.jobTitle);
+        jobTitle = txtView.getText().toString();
+
+        txtView = (TextView) item.findViewById(R.id.card_flip_view_address);
+        txtView.setText(myCard.address);
+        address = txtView.getText().toString();
+		
+		ImageView imgView = (ImageView) item
+				.findViewById(R.id.card_flip_view_image);
+		
+		Bitmap newCard = ImageUtil.GenerateCardImage(getActivity(), App.templateConfig[index], name, email, phone, company, address, jobTitle);
+		imgView.setImageBitmap(newCard);
+	}
+	
     @SuppressLint("ValidFragment")
 	public CardFragment(SimpleCard card) {
 		myCard = card;
@@ -35,67 +79,18 @@ public class CardFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, 
 			Bundle savedInstanceState) {
-		String name, phone, email;
+
 		
-		// Inflate the layout for this fragment
-		Log.e("paul", "create fragment");
 		View item = inflater.inflate(R.layout.card_flip_view, container, false);
-
-		TextView txtView = (TextView) item
-				.findViewById(R.id.card_flip_view_name);
-		txtView.setText(myCard.firstName + " " + myCard.lastName);
-		name = txtView.getText().toString();
-		
-		txtView = (TextView) item.findViewById(R.id.card_flip_view_phoneNo);
-		txtView.setText(myCard.phoneNo);
-		phone = txtView.getText().toString();
-
-		txtView = (TextView) item.findViewById(R.id.card_flip_view_email);
-		txtView.setText(myCard.email);
-		email = txtView.getText().toString();
-		
-		ImageView imgView = (ImageView) item
-				.findViewById(R.id.card_flip_view_image);
-		
-		int index = 0;
-		if (!myCard.imageUrl.equals("")) {
-			index = Integer.parseInt(myCard.imageUrl);
-		}
-		
-		Bitmap newCard = ImageUtil.GenerateCardImage(getActivity(), App.templateConfig[index], name, email, phone);
-		imgView.setImageBitmap(newCard);
-
+		updateUI(item);
 		return item;
 	}
 	
 	@Override
 	public void onResume() {
 		super.onResume();
-		String name, phone, email;
 		myCard = App.myCards[0];
-		
-		TextView txtView = (TextView) getView().findViewById(R.id.card_flip_view_name);
-		txtView.setText(myCard.firstName + " " + myCard.lastName);
-		name = txtView.getText().toString();
-		
-		txtView = (TextView) getView().findViewById(R.id.card_flip_view_phoneNo);
-		txtView.setText(myCard.phoneNo);
-		phone = txtView.getText().toString();
-		
-		txtView = (TextView) getView().findViewById(R.id.card_flip_view_email);
-		txtView.setText(myCard.email);
-		email = txtView.getText().toString();
-		
-		ImageView imgView = (ImageView) getView() .findViewById(R.id.card_flip_view_image);
-		
-		int index = 0;
-		if (!myCard.imageUrl.equals("")) {;
-			index = Integer.parseInt(myCard.imageUrl);
-		}
-		
-		Bitmap newCard = ImageUtil.GenerateCardImage(getActivity(), App.templateConfig[index], name, email, phone);
-		imgView.setImageBitmap(newCard);
-
+		updateUI(getView());
 	}
 	
 	@Override

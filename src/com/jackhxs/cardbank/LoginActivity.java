@@ -20,35 +20,38 @@ import com.jackhxs.remote.JSONResultReceiver;
 import com.jackhxs.remote.RemoteService;
 
 public class LoginActivity extends Activity implements JSONResultReceiver.Receiver {
-    public static final String PREFS_NAME = "MyPrefsFile";
+	public static final String PREFS_NAME = "MyPrefsFile";
 
-    private EditText emailField, passwordField;
-    private CheckBox rememberLogin;
-    
+	private EditText emailField, passwordField;
+	private CheckBox rememberLogin;
+
 	public JSONResultReceiver mReceiver;
 	private ProgressDialog progress;
 	private SharedPreferences settings;
-	
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-		
+
 		setContentView(R.layout.activity_login);
 
 		mReceiver = new JSONResultReceiver(new Handler());
 		mReceiver.setReceiver(this);
-		
+
 		settings = getSharedPreferences(PREFS_NAME, 0);
-		
+
 		emailField = (EditText) findViewById(R.id.login_email);
 		passwordField = (EditText) findViewById(R.id.login_password);
 		rememberLogin = (CheckBox) findViewById(R.id.rememberMeCheckbox);
-		
-		if (settings.getBoolean("authenticated", false)) {
+
+		if (false && settings.getBoolean("authenticated", false)) {
 			App.sessionId = settings.getString("sessionId", "none");
 			App.userId = settings.getString("userId", "none");
-			onReceiveResult(-1, null);
+
+			if (!App.sessionId.equals("none") && !App.userId.equals("none")) {
+				onReceiveResult(-1, null);	
+			}
 		}
 	}
 
@@ -67,24 +70,24 @@ public class LoginActivity extends Activity implements JSONResultReceiver.Receiv
 		String email = emailField.getText().toString();
 		String password = passwordField.getText().toString();
 		Boolean valid = true;
-		
+
 		if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
 			emailField.setError("Email is invalid");
 			valid = false;
 		}
-		
+
 		if (!valid) {
 			return;
 		}
-		
+
 		try {
 			Log.e("paul", "before intent");
 			progress = new ProgressDialog(this);
 			progress.setCancelable(false);
 			progress.setMessage("Logging in...");
-	        progress.show();
+			progress.show();
 
-	        final Intent intent = new Intent(Intent.ACTION_SYNC, null, this,
+			final Intent intent = new Intent(Intent.ACTION_SYNC, null, this,
 					RemoteService.class);
 
 			intent.putExtra("receiver", mReceiver);
@@ -121,26 +124,26 @@ public class LoginActivity extends Activity implements JSONResultReceiver.Receiv
 		if (progress != null) {
 			progress.dismiss();
 		}
-		
+
 		switch (resultCode) {
 
 		case Constants.STATUS_FINISHED: {
 			String errorMsg = resultData.getString("error", null);
-			
+
 			if (errorMsg != null) {
 				Util.showErrorToast(getApplicationContext(), errorMsg);
 				return;
 			}
-			
+
 			App.sessionId = resultData.getString("sessionId");
 			App.userId = resultData.getString("userId");
-			
+
 			if (rememberLogin.isChecked()) {
 				settings.edit().putBoolean("authenticated", true).commit();
 				settings.edit().putString("sessionId", App.sessionId).commit();
 				settings.edit().putString("userId", App.userId).commit();
 			}
-			
+
 			break;
 		}
 		case Constants.STATUS_ERROR: {
@@ -153,15 +156,15 @@ public class LoginActivity extends Activity implements JSONResultReceiver.Receiv
 
 		if (App.userId != null && !App.userId.equals("") &&
 				App.sessionId != null && !App.sessionId.equals("")) {
-			
+
 			Log.e("Success", "logged in");
-			
+
 			Intent intent = new Intent(this, MainActivity.class);
 			intent.putExtra("mode", "oldAccount");
-			
+
 			startActivity(intent);
-			
 			this.finish();
+			
 		} else {
 			Log.e("Failed", "logged in");
 		}

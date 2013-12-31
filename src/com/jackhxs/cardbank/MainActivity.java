@@ -35,15 +35,17 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback,
 	private Boolean startedPolling;
 	private Boolean pollingInProgress;
 	private Integer longPollCount;
+	
     public JSONResultReceiver mReceiver;
     
     private void startLongPollingGetContact() {
-    	if (!networkFinished) 
+    	if (!networkFinished) { 
     		return;
+    	}
     	
-    	startedPolling = true;
+    	pollingInProgress = startedPolling = true;
     	networkFinished = false;
-    	pollingInProgress = true;
+    	
     	
     	final Intent serviceIntent = new Intent(Intent.ACTION_SYNC, null, this,
 				RemoteService.class);
@@ -111,8 +113,9 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback,
 	@Override
 	public void onResume() {
 		super.onResume();
-		if (startedPolling && !pollingInProgress)
+		if (startedPolling && !pollingInProgress) {
 			startLongPollingGetContact();
+		}
 		// Check to see that the Activity started due to an Android Beam
 		if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(getIntent().getAction())) {
 			processIntent(getIntent());

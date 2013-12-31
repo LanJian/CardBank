@@ -18,7 +18,6 @@ import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.jackhxs.data.SimpleCard;
@@ -65,10 +64,17 @@ public class CardEditActivity extends Activity implements JSONResultReceiver.Rec
 	private static final int SWIPE_MIN_DISTANCE = 120;
 	private static final int SWIPE_MAX_OFF_PATH = 250;
 	private static final int SWIPE_THRESHOLD_VELOCITY = 200;
+	
 	private GestureDetector gestureDetector;
 	View.OnTouchListener gestureListener;
 
-	private EditText nameField, phoneField, emailField;
+	private EditText nameField, 
+		phoneField, 
+		emailField,
+		companyField,
+		jobTitleField,
+		addressField;
+	
 	private ImageView cardImage;
 
 	private int templateIndex;
@@ -113,17 +119,27 @@ public class CardEditActivity extends Activity implements JSONResultReceiver.Rec
 		nameField = (EditText) findViewById(R.id.card_flip_view_nameEdit);
 		phoneField = (EditText) findViewById(R.id.card_flip_view_phoneNoEdit);
 		emailField = (EditText) findViewById(R.id.card_flip_view_emailEdit);
+		companyField = (EditText) findViewById(R.id.card_flip_view_companyEdit);
+		addressField = (EditText) findViewById(R.id.card_flip_view_addressEdit);
+		jobTitleField = (EditText) findViewById(R.id.card_flip_view_jobTitleEdit);
+		
 		cardImage = (ImageView) findViewById(R.id.card_flip_view_image);
 
 		nameField.setOnFocusChangeListener(stdEditTextOnFocusListener);
 		phoneField.setOnFocusChangeListener(stdEditTextOnFocusListener);
 		emailField.setOnFocusChangeListener(stdEditTextOnFocusListener);
+		companyField.setOnFocusChangeListener(stdEditTextOnFocusListener);
+		addressField.setOnFocusChangeListener(stdEditTextOnFocusListener);
+		jobTitleField.setOnFocusChangeListener(stdEditTextOnFocusListener);
 		
 		SimpleCard myCard = App.myCards[0];
 
 		nameField.setText(myCard.firstName + " " + myCard.lastName);
 		phoneField.setText(myCard.phoneNo);
 		emailField.setText(myCard.email);
+		companyField.setText(myCard.company);
+		addressField.setText(myCard.address);
+		jobTitleField.setText(myCard.jobTitle);
 
 		// android.R.id.content as the container for each fragment
 		mReceiver = new JSONResultReceiver(new Handler());
@@ -157,8 +173,11 @@ public class CardEditActivity extends Activity implements JSONResultReceiver.Rec
 		String name = nameField.getText().toString();
 		String phone = phoneField.getText().toString();
 		String email = emailField.getText().toString();
+		String company = companyField.getText().toString();
+		String jobTitle = jobTitleField.getText().toString();
+		String address = addressField.getText().toString();
 
-		Bitmap newCard = ImageUtil.GenerateCardImage(this, App.templateConfig[index], name, email, phone);
+		Bitmap newCard = ImageUtil.GenerateCardImage(this, App.templateConfig[index], name, email, phone, company, address, jobTitle);
 		
 		ImageView imgView = (ImageView) findViewById(R.id.card_flip_view_image);
 		imgView.setImageBitmap(newCard);
@@ -174,6 +193,9 @@ public class CardEditActivity extends Activity implements JSONResultReceiver.Rec
 		
 		String phone = phoneField.getText().toString();
 		String email = emailField.getText().toString();
+		String address = addressField.getText().toString();
+		String company = companyField.getText().toString();
+		String jobTitle = jobTitleField.getText().toString();
 
 		final Intent intent = new Intent(Intent.ACTION_SYNC, null, this,
 				RemoteService.class);
@@ -182,6 +204,9 @@ public class CardEditActivity extends Activity implements JSONResultReceiver.Rec
 		App.myCards[0].phoneNo = phone;
 		App.myCards[0].firstName = name.split(" ")[0];
 		App.myCards[0].lastName = name.split(" ")[1];
+		App.myCards[0].company = company;
+		App.myCards[0].address = address;
+		App.myCards[0].jobTitle = jobTitle;
 		App.myCards[0].imageUrl = String.valueOf(templateIndex); 
 
 		intent.putExtra("receiver", mReceiver);

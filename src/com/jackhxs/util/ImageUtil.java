@@ -60,20 +60,35 @@ public class ImageUtil {
 	    }
 	}
 	
-	static public Bitmap GenerateCardImage(Activity ref, TemplateConfig template, String name, String email, String phone) {
-		String cacheKey = name + email + phone + template.url;
+	static public Bitmap GenerateCardImage(Activity ref, 
+			TemplateConfig template, 
+			String name, 
+			String email, 
+			String phone,
+			String company,
+			String address,
+			String jobTitle) {
+		
+		String cacheKey = name + email + phone + company + address + jobTitle + template.url;
 		Bitmap cached = getBitmapFromMemCache(cacheKey);
 		
 		if (cached != null) return cached;
 		
 		Bitmap bg = getBitmapFromAsset(ref, template.url);
-		Bitmap res = combineImages(template, bg, name, email, phone);
+		Bitmap res = combineImages(template, bg, name, email, phone, company, address, jobTitle);
 		addBitmapToMemoryCache(cacheKey, res);
 		
 		return res;
 	}
 	
-	static public Bitmap combineImages(TemplateConfig template, Bitmap background, String name, String email, String phone) { 
+	static public Bitmap combineImages(TemplateConfig template, 
+			Bitmap background, 
+			String name, 
+			String email, 
+			String phone,
+			String company,
+			String address,
+			String jobTitle) { 
 		int width = 768, height = 416;
 
 		Paint paint = new Paint(); 
@@ -101,6 +116,12 @@ public class ImageUtil {
 		comboImage.drawText(email, template.email.left, template.email.top, paint);
 		paint.setTextSize(25); 
 		comboImage.drawText(phone, template.phone.left, template.phone.top, paint);
+		paint.setTextSize(25); 
+		comboImage.drawText(company, template.company.left, template.company.top, paint);
+		paint.setTextSize(25); 
+		comboImage.drawText(address, template.address.left, template.address.top, paint);
+		paint.setTextSize(25); 
+		comboImage.drawText(jobTitle, template.jobTitle.left, template.jobTitle.top, paint);
 		
 		return cs;
 	}

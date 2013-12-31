@@ -31,6 +31,9 @@ public class TemplateGallery extends Activity {
 		private final String sampleName = getString(R.string.your_name);
 		private final String sampleEmail = getString(R.string.your_email);
 		private final String sampleNumber = getString(R.string.your_number);
+		private final String sampleCompany = getString(R.string.your_company);
+		private final String sampleAddress = getString(R.string.your_address);
+		private final String sampleJobTitle = getString(R.string.your_jobTitle);
 		
 		private Context mContext;
 
@@ -64,7 +67,8 @@ public class TemplateGallery extends Activity {
 			}
 
 			imageView.setImageResource(mThumbIds[position]);
-			Bitmap newCard = ImageUtil.GenerateCardImage((Activity) mContext, App.templateConfig[0], sampleName, sampleEmail, sampleNumber);
+			Bitmap newCard = ImageUtil.GenerateCardImage(
+					(Activity) mContext, App.templateConfig[0], sampleName, sampleEmail, sampleNumber, sampleCompany, sampleAddress, sampleJobTitle);
 			imageView.setImageBitmap(newCard);
 
 			return imageView;
