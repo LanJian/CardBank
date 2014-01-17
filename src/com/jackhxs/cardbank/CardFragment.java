@@ -26,7 +26,7 @@ public class CardFragment extends Fragment {
 			index = Integer.parseInt(myCard.imageUrl);
 		}
 		
-		String name, phone, email, company, address, jobTitle;
+		String name, phone, email, companyName, address, jobTitle;
 		
 		// Inflate the layout for this fragment
 		Log.e("paul", "create fragment");
@@ -36,17 +36,17 @@ public class CardFragment extends Fragment {
 		txtView.setText(myCard.firstName + " " + myCard.lastName);
 		name = txtView.getText().toString();
 		
-		txtView = (TextView) item.findViewById(R.id.card_flip_view_phoneNo);
-		txtView.setText(myCard.phoneNo);
+		txtView = (TextView) item.findViewById(R.id.card_flip_view_phone);
+		txtView.setText(myCard.phone);
 		phone = txtView.getText().toString();
 
 		txtView = (TextView) item.findViewById(R.id.card_flip_view_email);
 		txtView.setText(myCard.email);
 		email = txtView.getText().toString();
 		
-		txtView = (TextView) item.findViewById(R.id.card_flip_view_company);
-        txtView.setText(myCard.company);
-        company = txtView.getText().toString();
+		txtView = (TextView) item.findViewById(R.id.card_flip_view_companyName);
+        txtView.setText(myCard.companyName);
+        companyName = txtView.getText().toString();
 
         txtView = (TextView) item.findViewById(R.id.card_flip_view_jobTitle);
         txtView.setText(myCard.jobTitle);
@@ -59,7 +59,7 @@ public class CardFragment extends Fragment {
 		ImageView imgView = (ImageView) item
 				.findViewById(R.id.card_flip_view_image);
 		
-		Bitmap newCard = ImageUtil.GenerateCardImage(getActivity(), App.templateConfig[index], name, email, phone, company, address, jobTitle);
+		Bitmap newCard = ImageUtil.GenerateCardImage(getActivity(), App.templateConfig[index], name, email, phone, companyName, address, jobTitle);
 		imgView.setImageBitmap(newCard);
 	}
 	

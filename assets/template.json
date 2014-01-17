@@ -3,32 +3,32 @@
 		"url": "template_white",
 		"name": {
 			"color": "black",
-			"left": 100,
+			"left": 50,
 			"top": 100
 		},
 		"phone": {
 			"color": "black",
-			"left": 100,
+			"left": 50,
 			"top": 350
 		},
 		"email": {
 			"color": "black",
-			"left": 100,
+			"left": 50,
 			"top": 400
 		},
         "company": {
 			"color": "black",
-			"left": 700,
+			"left": 450,
 			"top": 350
 		},
         "address": {
 			"color": "black",
-			"left": 700,
+			"left": 450,
 			"top": 400
 		},
         "jobTitle": {
 			"color": "black",
-			"left": 700,
+			"left": 450,
 			"top": 100
 		}
 	}

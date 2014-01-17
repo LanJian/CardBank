@@ -46,7 +46,7 @@
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
+                android:layout_marginBottom="5dp"
                 android:layout_marginTop="10dp"
                 android:gravity="center_vertical"
                 android:text="Company"
@@ -56,8 +56,8 @@
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="15dp"
                 android:gravity="center_vertical"
                 android:text="Job Title"
                 android:textColor="#d6b6ca"
@@ -67,8 +67,8 @@
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
-                android:layout_marginTop="25dp"
+                android:layout_marginBottom="15dp"
+                android:layout_marginTop="15dp"
                 android:gravity="center_vertical"
                 android:text="Email"
                 android:textColor="#d6b6ca"
@@ -104,7 +104,7 @@
             android:paddingRight="5dp" >
 
             <EditText
-                android:id="@+id/card_flip_view_companyEdit"
+                android:id="@+id/card_flip_view_companyNameEdit"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
@@ -130,14 +130,14 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="5dp"
                 android:gravity="right"
                 android:inputType="textEmailAddress"
                 android:textColor="#FFF"
                 android:textSize="16sp" />
 
             <EditText
-                android:id="@+id/card_flip_view_phoneNoEdit"
+                android:id="@+id/card_flip_view_phoneEdit"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"

@@ -71,7 +71,7 @@ public class CardEditActivity extends Activity implements JSONResultReceiver.Rec
 	private EditText nameField, 
 		phoneField, 
 		emailField,
-		companyField,
+		companyNameField,
 		jobTitleField,
 		addressField;
 	
@@ -117,9 +117,9 @@ public class CardEditActivity extends Activity implements JSONResultReceiver.Rec
 		setContentView(R.layout.card_edit_activity);
 
 		nameField = (EditText) findViewById(R.id.card_flip_view_nameEdit);
-		phoneField = (EditText) findViewById(R.id.card_flip_view_phoneNoEdit);
+		phoneField = (EditText) findViewById(R.id.card_flip_view_phoneEdit);
 		emailField = (EditText) findViewById(R.id.card_flip_view_emailEdit);
-		companyField = (EditText) findViewById(R.id.card_flip_view_companyEdit);
+		companyNameField = (EditText) findViewById(R.id.card_flip_view_companyNameEdit);
 		addressField = (EditText) findViewById(R.id.card_flip_view_addressEdit);
 		jobTitleField = (EditText) findViewById(R.id.card_flip_view_jobTitleEdit);
 		
@@ -128,16 +128,16 @@ public class CardEditActivity extends Activity implements JSONResultReceiver.Rec
 		nameField.setOnFocusChangeListener(stdEditTextOnFocusListener);
 		phoneField.setOnFocusChangeListener(stdEditTextOnFocusListener);
 		emailField.setOnFocusChangeListener(stdEditTextOnFocusListener);
-		companyField.setOnFocusChangeListener(stdEditTextOnFocusListener);
+		companyNameField.setOnFocusChangeListener(stdEditTextOnFocusListener);
 		addressField.setOnFocusChangeListener(stdEditTextOnFocusListener);
 		jobTitleField.setOnFocusChangeListener(stdEditTextOnFocusListener);
 		
 		SimpleCard myCard = App.myCards[0];
 
 		nameField.setText(myCard.firstName + " " + myCard.lastName);
-		phoneField.setText(myCard.phoneNo);
+		phoneField.setText(myCard.phone);
 		emailField.setText(myCard.email);
-		companyField.setText(myCard.company);
+		companyNameField.setText(myCard.companyName);
 		addressField.setText(myCard.address);
 		jobTitleField.setText(myCard.jobTitle);
 
@@ -173,11 +173,11 @@ public class CardEditActivity extends Activity implements JSONResultReceiver.Rec
 		String name = nameField.getText().toString();
 		String phone = phoneField.getText().toString();
 		String email = emailField.getText().toString();
-		String company = companyField.getText().toString();
+		String companyName = companyNameField.getText().toString();
 		String jobTitle = jobTitleField.getText().toString();
 		String address = addressField.getText().toString();
 
-		Bitmap newCard = ImageUtil.GenerateCardImage(this, App.templateConfig[index], name, email, phone, company, address, jobTitle);
+		Bitmap newCard = ImageUtil.GenerateCardImage(this, App.templateConfig[index], name, email, phone, companyName, address, jobTitle);
 		
 		ImageView imgView = (ImageView) findViewById(R.id.card_flip_view_image);
 		imgView.setImageBitmap(newCard);
@@ -194,17 +194,17 @@ public class CardEditActivity extends Activity implements JSONResultReceiver.Rec
 		String phone = phoneField.getText().toString();
 		String email = emailField.getText().toString();
 		String address = addressField.getText().toString();
-		String company = companyField.getText().toString();
+		String companyName = companyNameField.getText().toString();
 		String jobTitle = jobTitleField.getText().toString();
 
 		final Intent intent = new Intent(Intent.ACTION_SYNC, null, this,
 				RemoteService.class);
 
 		App.myCards[0].email = email;
-		App.myCards[0].phoneNo = phone;
+		App.myCards[0].phone = phone;
 		App.myCards[0].firstName = name.split(" ")[0];
 		App.myCards[0].lastName = name.split(" ")[1];
-		App.myCards[0].company = company;
+		App.myCards[0].companyName = companyName;
 		App.myCards[0].address = address;
 		App.myCards[0].jobTitle = jobTitle;
 		App.myCards[0].imageUrl = String.valueOf(templateIndex); 

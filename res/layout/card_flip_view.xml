@@ -40,7 +40,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:paddingTop="5dp"
+            android:paddingTop="15dp"
             android:paddingBottom="5dp"
             android:paddingLeft="10dp"
             android:paddingRight="10dp" >
@@ -49,12 +49,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
-                android:text="Comany"
+                android:text="Company"
                 android:textColor="#bbb"
                 android:textSize="16sp" />
 
             <TextView
-                android:id="@+id/card_flip_view_company"
+                android:id="@+id/card_flip_view_companyName"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:gravity="right"
@@ -129,7 +129,7 @@
                 android:textSize="16sp" />
 
             <TextView
-                android:id="@+id/card_flip_view_phoneNo"
+                android:id="@+id/card_flip_view_phone"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:gravity="right"

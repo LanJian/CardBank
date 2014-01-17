@@ -84,13 +84,13 @@ public class CardAdapter extends ArrayAdapter<SimpleCard> {
         LayoutInflater inflater = ((Activity) myContext).getLayoutInflater();
         row = inflater.inflate(myResourceId, parent, false);
 
-        String name, phone, email, company, jobTitle, address;
+        String name, phone, email, companyName, jobTitle, address;
 
         name = myData.get(position).firstName + " "
                 + myData.get(position).lastName;
-        phone = myData.get(position).phoneNo;
+        phone = myData.get(position).phone;
         email = myData.get(position).email;
-        company = myData.get(position).company;
+        companyName = myData.get(position).companyName;
         address = myData.get(position).address;
         jobTitle = myData.get(position).jobTitle;
 
@@ -98,7 +98,7 @@ public class CardAdapter extends ArrayAdapter<SimpleCard> {
                 .findViewById(R.id.refer_list_row_image);
         int index = Integer.parseInt(myData.get(position).imageUrl);
         Bitmap newCard = ImageUtil.GenerateCardImage((Activity) myContext,
-                App.templateConfig[index], name, email, phone, company, address, jobTitle);
+                App.templateConfig[index], name, email, phone, companyName, address, jobTitle);
         imgView.setImageBitmap(newCard);
 
         final int positionCopy = position;
@@ -130,7 +130,7 @@ public class CardAdapter extends ArrayAdapter<SimpleCard> {
 
     public View getFlipItemView(int position, View convertView, ViewGroup parent) {
         View item = convertView;
-        String name, phone, email, company, jobTitle, address;
+        String name, phone, email, companyName, jobTitle, address;
 
         LayoutInflater inflater = ((Activity) myContext).getLayoutInflater();
         item = inflater.inflate(myResourceId, parent, false);
@@ -141,8 +141,8 @@ public class CardAdapter extends ArrayAdapter<SimpleCard> {
                 + myData.get(position).lastName);
         name = txtView.getText().toString();
 
-        txtView = (TextView) item.findViewById(R.id.card_flip_view_phoneNo);
-        txtView.setText(myData.get(position).phoneNo);
+        txtView = (TextView) item.findViewById(R.id.card_flip_view_phone);
+        txtView.setText(myData.get(position).phone);
         phone = txtView.getText().toString();
         Linkify.addLinks(txtView, Linkify.PHONE_NUMBERS);
 
@@ -151,9 +151,9 @@ public class CardAdapter extends ArrayAdapter<SimpleCard> {
         email = txtView.getText().toString();
         Linkify.addLinks(txtView, Linkify.EMAIL_ADDRESSES);
         
-        txtView = (TextView) item.findViewById(R.id.card_flip_view_company);
-        txtView.setText(myData.get(position).company);
-        company = txtView.getText().toString();
+        txtView = (TextView) item.findViewById(R.id.card_flip_view_companyName);
+        txtView.setText(myData.get(position).companyName);
+        companyName = txtView.getText().toString();
 
         txtView = (TextView) item.findViewById(R.id.card_flip_view_jobTitle);
         txtView.setText(myData.get(position).jobTitle);
@@ -168,7 +168,7 @@ public class CardAdapter extends ArrayAdapter<SimpleCard> {
         //myImageLoader.loadImage(imgView, myData[position].imageUrl);
         int index = Integer.parseInt(myData.get(position).imageUrl);
         Bitmap newCard = ImageUtil.GenerateCardImage((Activity) myContext,
-                App.templateConfig[index], name, email, phone, company, address, jobTitle);
+                App.templateConfig[index], name, email, phone, companyName, address, jobTitle);
         imgView.setImageBitmap(newCard);
 
         return item;

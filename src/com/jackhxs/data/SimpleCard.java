@@ -6,9 +6,9 @@ import android.os.Parcelable;
 public class SimpleCard implements Parcelable {
 	public String firstName;
 	public String lastName;
-	public String phoneNo;
+	public String phone;
 	public String email;
-	public String company;
+	public String companyName;
 	public String address;
 	public String jobTitle;
 	
@@ -21,9 +21,9 @@ public class SimpleCard implements Parcelable {
 	public SimpleCard() {
 		firstName = "Your"; 
 		lastName = "Name";
-		phoneNo = "000-0000";
+		phone = "000-0000";
 		email = "your@email.com";
-		company = "Company Name";
+		companyName = "companyName Name";
 		address = "Your Address";
 		jobTitle = "Ex. Financial Analyst";
 		
@@ -46,9 +46,9 @@ public class SimpleCard implements Parcelable {
 	public void writeToParcel(Parcel dst, int flags) {
 		dst.writeString(firstName);
 		dst.writeString(lastName);
-		dst.writeString(phoneNo);
+		dst.writeString(phone);
 		dst.writeString(email);
-		dst.writeString(company);
+		dst.writeString(companyName);
 		dst.writeString(jobTitle);
 		dst.writeString(address);
 		dst.writeString(imageUrl);
@@ -60,9 +60,9 @@ public class SimpleCard implements Parcelable {
 	private void readFromParcel(Parcel in) {
 		firstName = in.readString();
 		lastName = in.readString();
-		phoneNo = in.readString();
+		phone = in.readString();
 		email = in.readString();
-		company = in.readString();
+		companyName = in.readString();
 		jobTitle = in.readString();
 		address = in.readString();
 		imageUrl = in.readString();
