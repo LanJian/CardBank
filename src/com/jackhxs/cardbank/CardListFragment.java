@@ -1,12 +1,15 @@
 package com.jackhxs.cardbank;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Parcelable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,13 +19,21 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.devspark.progressfragment.ProgressFragment;
+import com.jackhxs.data.APIResult;
 import com.jackhxs.data.SimpleCard;
 import com.jackhxs.remote.Constants.Operation;
+import com.jackhxs.remote.JSONResultReceiver;
 import com.jackhxs.remote.RemoteService;
 import com.xtremelabs.imageutils.ImageLoader;
 
 // Fragment with a list view of the contacts
-public class CardListFragment extends Fragment {
+public class CardListFragment extends ProgressFragment implements JSONResultReceiver.Receiver{
+	private static final String TAG = "CardListFragment";
+	
+	public JSONResultReceiver mReceiver;
+	private View mContentView;
+    
 	private TextView emptyMsg;
 	private ListView myListView;
 	private CardAdapter myAdapter;
@@ -66,12 +77,74 @@ public class CardListFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		// Inflate the layout for this fragment
-		View view = inflater.inflate(R.layout.activity_card_list, container, false);
-		mImageLoader = ImageLoader.buildImageLoaderForFragment(this);
-
-		myListView = (ListView) view.findViewById(R.id.list_view);
-		emptyMsg = (TextView) view.findViewById(R.id.empty_message);
+		mContentView = inflater.inflate(R.layout.activity_card_list, container, false);
 		
+		mReceiver = new JSONResultReceiver(new Handler());
+		mReceiver.setReceiver(this);
+		
+		final Intent intentCards = new Intent(Intent.ACTION_SYNC, null, getActivity(), RemoteService.class);
+		
+		intentCards.putExtra("receiver", mReceiver);
+		intentCards.putExtra("operation",(Parcelable) Operation.GET_CONTACTS);
+		
+		getActivity().startService(intentCards);
+		
+		return super.onCreateView(inflater, container, savedInstanceState);
+	}
+
+	@Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        // Setup content view
+        setContentView(mContentView);
+        setContentShown(false);
+
+        // Setup text for empty content
+        setEmptyText("no data");
+    }
+	
+	@Override
+	public void onDestroyView() {
+		super.onDestroy();
+		mImageLoader.destroy();
+	}
+
+	@Override
+	public void onReceiveResult(int resultCode, Bundle resultData) {
+		// TODO Auto-generated method stub
+	
+		Log.d(TAG, "recieved Result in CardListFragment");
+		
+		SimpleCard[] data = (SimpleCard[]) resultData.getParcelableArray("contacts");
+		
+
+		App.myContacts = data;
+		
+		try {
+			App.lastUpdated = Util.ISO8601.toCalendar(resultData.getString("updatedAt"));
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		/*
+		// This is needed to prevent generating repeat tabs on home screen
+		if (resultData.getBoolean("longPoll", false)) {
+			return;
+		}
+		
+		Fragment listFragment = new CardListFragment();
+		//addTab("Contact", listFragment, "myContact");
+		*/
+			
+		mImageLoader = ImageLoader.buildImageLoaderForSupportFragment(this);
+		//mImageLoader = ImageLoader.buildImageLoaderForFragment(this);
+
+		myListView = (ListView) getView().findViewById(R.id.list_view);
+		emptyMsg = (TextView) getView().findViewById(R.id.empty_message);
+		
+		// should use the ListView emptyView
+		//myListView.setEmptyView(R.id.empty_message);
 		if (App.myContacts.length > 0) {
 			emptyMsg.setVisibility(View.GONE);
 		}
@@ -92,13 +165,7 @@ public class CardListFragment extends Fragment {
 				}
 			}
 		});
-
-		return view;
-	}
-
-	@Override
-	public void onDestroyView() {
-		super.onDestroy();
-		mImageLoader.destroy();
+		
+		setContentShown(true);
 	}
 }

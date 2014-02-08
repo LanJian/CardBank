@@ -10,6 +10,7 @@ public class ReferToListView extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        /*
         if (savedInstanceState == null) {
             Fragment fragment = new CardListFragment();
             Bundle args = new Bundle();
@@ -21,5 +22,6 @@ public class ReferToListView extends Activity {
             FragmentTransaction ft = getFragmentManager().beginTransaction();
             ft.add(android.R.id.content, fragment).commit();
         }
+        */
     }
 }

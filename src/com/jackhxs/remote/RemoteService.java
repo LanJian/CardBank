@@ -13,6 +13,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.jackhxs.cardbank.App;
 import com.jackhxs.data.APIResult;
+import com.jackhxs.data.LoginSignupResponse;
 import com.jackhxs.data.SimpleCard;
 import com.jackhxs.remote.Constants.Operation;
 import com.squareup.okhttp.OkHttpClient;
@@ -23,6 +24,7 @@ public class RemoteService extends IntentService {
     private final RestAdapter restAdapter = new RestAdapter.Builder()
     	.setServer("http://cardbeam-server.herokuapp.com/")
     	.setClient(new OkClient(client))
+    	.setDebug(true)
     	.build();
 
     private final RestInterface service;
@@ -51,27 +53,29 @@ public class RemoteService extends IntentService {
         Boolean success = true;
         
     	b.putBoolean("longPoll", intent.getBooleanExtra("longPoll", false));
-        
-        try {
-        	switch (command) {
+    	
+    	try {
+    		switch (command) {
             case POST_SIGNUP:
             case POST_LOGIN: {
-                String email = intent.getStringExtra("email");
+                
+            	String email = intent.getStringExtra("email");
                 String password = intent.getStringExtra("password");
                 
-                JsonObject res;
+                LoginSignupResponse mLoginSignupResponse;;
+                
                 if (command.equals(Operation.POST_SIGNUP)) {
-                	res = service.signup(email, password);
+                	mLoginSignupResponse = service.signup(email, password);
                 }
                 else {
-                	res = service.login(email, password);
+                	mLoginSignupResponse = service.login(email, password);
                 }
                 
-                Boolean ok = res.get("status").getAsString().equals("success");
+                Boolean ok = mLoginSignupResponse.getStatus().equals("success");
                 
                 if (ok) {
-                	String newUserId = res.get("userId").getAsString();
-                    String newSessionId = res.get("sessionId").getAsString();
+                	String newUserId = mLoginSignupResponse.getUserId();
+                    String newSessionId = mLoginSignupResponse.getSessionId();
                     
                 	b.putString("sessionId", newSessionId);
                 	b.putString("userId", newUserId);
@@ -79,7 +83,7 @@ public class RemoteService extends IntentService {
                 	Log.i("Logged In UserId", newUserId);
                     Log.i("Logged In sessionId", newSessionId);
                 } else {
-                	b.putString("error", res.get("err").getAsString());
+                	b.putString("error", mLoginSignupResponse.getErr());
                 }
                 
                 break;
@@ -89,6 +93,10 @@ public class RemoteService extends IntentService {
 
                 b.putParcelableArray("cards", result.cards);
                 
+                /*
+                 *  TODO is dataType needed anymore? data is loaded in the fragments (only 1 datatype at a time) so is it really needed???
+                 *  same thing for action. 
+                 */
                 b.putString("dataType", "cards");
                 b.putString("action", Operation.GET_CARDS.toString());
                 b.putBoolean("result", true);
@@ -99,6 +107,11 @@ public class RemoteService extends IntentService {
             	
             	SimpleCard[] contacts = result.cards;
             	
+            	/*
+                 *  TODO is dataType needed anymore? data is loaded in the fragments (only 1 datatype at a time) so is it really needed???
+                 *  same thing for action. 
+                 */
+                
             	b.putParcelableArray("contacts", contacts);
                 b.putString("dataType", "contacts");
                 b.putString("updatedAt", result.updatedAt);
@@ -185,6 +198,12 @@ public class RemoteService extends IntentService {
             }
         }
         catch (RetrofitError re) {
+        	
+        	Log.e("response body", re.getResponse().getReason());
+        	
+        	// re.isNetworkError() - network error (no connection)
+        	// re.getResponse().getStatus() == 403 - API error (ex: wrong email/password)
+        	
         	if (re.getResponse() != null && re.getResponse().getStatus() == 403) { // token expired
         	}
         	

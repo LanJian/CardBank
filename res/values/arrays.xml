@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="fragment_name_array">
+        <item>@string/nav_drawer_my_card</item>
+        <item>@string/nav_drawer_contacts</item>
+        <item>@string/nav_drawer_referrals</item>
+		<item>@string/nav_drawer_events</item>
+	</string-array>
+	
+    <string-array name="fragment_icon_array">
+        <item>@drawable/ic_card</item>
+        <item>@drawable/ic_ccontacts</item>
+        <item>@drawable/ic_referral</item>
+        <item>@drawable/ic_events</item>
+	</string-array>
+	
+</resources>

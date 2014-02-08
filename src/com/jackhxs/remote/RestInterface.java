@@ -12,6 +12,7 @@ import retrofit.http.Query;
 
 import com.google.gson.JsonObject;
 import com.jackhxs.data.APIResult;
+import com.jackhxs.data.LoginSignupResponse;
 import com.jackhxs.data.SimpleCard;
 
 /**
@@ -67,10 +68,10 @@ public interface RestInterface {
 	//Signing up
 	@FormUrlEncoded
 	@POST("/users")
-	JsonObject signup(@Field("email") String email, @Field("password") String password);
+	LoginSignupResponse signup(@Field("email") String email, @Field("password") String password);
 	
 	// Logging In
 	@FormUrlEncoded
 	@POST("/sessions")
-	JsonObject login(@Field("email") String email, @Field("password") String password);
+	LoginSignupResponse login(@Field("email") String email, @Field("password") String password);
 }

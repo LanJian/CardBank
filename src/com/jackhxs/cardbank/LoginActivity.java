@@ -28,7 +28,7 @@ public class LoginActivity extends Activity implements JSONResultReceiver.Receiv
 	public JSONResultReceiver mReceiver;
 	private ProgressDialog progress;
 	private SharedPreferences settings;
-
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -60,7 +60,7 @@ public class LoginActivity extends Activity implements JSONResultReceiver.Receiv
 		super.onResume();
 
 		if (App.sessionId != null && !App.sessionId.equals("")) {
-			Intent intent = new Intent(this, MainActivity.class);
+			Intent intent = new Intent(this, HomeActivity.class);
 			startActivity(intent);
 			this.finish();
 		}
@@ -148,18 +148,26 @@ public class LoginActivity extends Activity implements JSONResultReceiver.Receiv
 		}
 		case Constants.STATUS_ERROR: {
 			Context context = getApplicationContext();
+			/*
+			 *  This is wrong. there need to be 2 error states:
+			 *  1. Network error
+			 *  2. API/Data error
+			 */
+			
 			Util.showWifiErrorToast(context);
 			Log.e("Network Error", "Error logging in");
 			break;
 		}
 		}
-
+		
+		
+		// Why even check this if there is a network or login issue? it will always fail
 		if (App.userId != null && !App.userId.equals("") &&
 				App.sessionId != null && !App.sessionId.equals("")) {
 
 			Log.e("Success", "logged in");
 
-			Intent intent = new Intent(this, MainActivity.class);
+			Intent intent = new Intent(this, HomeActivity.class);
 			intent.putExtra("mode", "oldAccount");
 
 			startActivity(intent);

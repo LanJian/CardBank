@@ -6,7 +6,6 @@ import java.text.ParseException;
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
 import android.app.Activity;
-import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.nfc.NdefMessage;
@@ -17,6 +16,7 @@ import android.nfc.NfcEvent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -148,6 +148,7 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback,
 	}
 	
 	private void addTab(String tabName, Fragment frag, String name) {
+	/*
 		ActionBar actionBar = getActionBar();
 		Tab tab = actionBar
 				.newTab()
@@ -156,6 +157,7 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback,
 						new TabListener<CardFragment>(this, name,
 								frag));
 		actionBar.addTab(tab);
+		*/
 	}
 
 	private void dataUpdated(Bundle resultData) throws ParseException {
@@ -218,7 +220,7 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback,
 		}
 		else if (dataType.equals("referrals")){ //referalls
 			App.myReferrals = data;
-			
+			/*
 			Fragment fragment = new ReferralsListFragment();
 			addTab("Referrals", fragment, "referrals");
 			
@@ -230,6 +232,7 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback,
 					CardEditActivity.class);
 				startActivity(intent);
 			}
+			*/
 		}
 	}
 
