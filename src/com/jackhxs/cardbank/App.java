@@ -13,6 +13,7 @@ import android.content.res.Configuration;
 import com.google.gson.Gson;
 import com.jackhxs.data.SimpleCard;
 import com.jackhxs.data.TemplateConfig;
+import com.jackhxs.remote.LinkedInAPI;
 
 public class App extends Application {
 	public static String sessionId;
@@ -21,10 +22,10 @@ public class App extends Application {
 	public static SimpleCard[] myCards;
 	public static SimpleCard[] myContacts;
 	public static SimpleCard[] myReferrals;
-	
+
 	public static TemplateConfig[] templateConfig;
 	public static Calendar lastUpdated;
-	
+
 	public Boolean addContact() {
 		return null;
 	}
@@ -47,22 +48,25 @@ public class App extends Application {
 		userId = null;
 		sessionId = null;
 
+		LinkedInAPI.getInstance();
 		AssetManager assetManager = getResources().getAssets();
 		InputStream inputStream = null;
 
 		try {
 			inputStream = assetManager.open("template.json");
-			BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"), 8);
-		    StringBuilder sb = new StringBuilder();
+			BufferedReader reader = new BufferedReader(new InputStreamReader(
+					inputStream, "UTF-8"), 8);
+			StringBuilder sb = new StringBuilder();
 
-		    String line = null;
-		    
-		    while ((line = reader.readLine()) != null) {
-		        sb.append(line + "\n");
-		    }
-		    
-		    templateConfig = new Gson().fromJson(sb.toString(), TemplateConfig[].class);
-		    
+			String line = null;
+
+			while ((line = reader.readLine()) != null) {
+				sb.append(line + "\n");
+			}
+
+			templateConfig = new Gson().fromJson(sb.toString(),
+					TemplateConfig[].class);
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

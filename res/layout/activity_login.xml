@@ -4,13 +4,19 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
+    <WebView
+        android:id="@+id/webview"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" 
+        android:visibility="gone"/>
+    
     <TextView
         android:id="@+id/titleText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginBottom="50dip"
-        android:layout_marginTop="100dip"
+        android:layout_marginTop="25dip"
         android:text="@string/appName"
         android:textSize="36sp" />
 
@@ -38,7 +44,7 @@
         android:lines="4"
         android:maxLength="760"
         android:width="250dip" />
-    
+
     <CheckBox
         android:id="@+id/rememberMeCheckbox"
         android:layout_width="wrap_content"
@@ -46,33 +52,48 @@
         android:layout_gravity="center"
         android:layout_marginBottom="20dp"
         android:text="@string/remember_me" />
- 
-    <Button
-        android:id="@+id/login_login_button"
-        android:background="@drawable/styled_btn"
+
+     <Button
+        android:id="@+id/login_lnkd_button"
+        style="@style/button_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:layout_marginBottom="0dip"
         android:layout_marginLeft="10dip"
         android:layout_marginRight="10dip"
         android:layout_marginTop="50dip"
+        android:background="@drawable/styled_btn"
+        android:onClick="signInWithLNKD"
+        android:text="@string/login_login_string_lnkd"
+        android:width="250dip" />
+     
+    <Button
+        android:id="@+id/login_login_button"
+        style="@style/button_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:layout_marginBottom="0dip"
+        android:layout_marginLeft="10dip"
+        android:layout_marginRight="10dip"
+        android:layout_marginTop="50dip"
+        android:background="@drawable/styled_btn"
         android:onClick="login"
         android:text="@string/login_login_string"
-        style="@style/button_text"
         android:width="250dip" />
 
     <Button
         android:id="@+id/sign_button"
-        android:background="@drawable/styled_btn"
         style="@style/button_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginLeft="10dip"
         android:layout_marginRight="10dip"
+        android:background="@drawable/styled_btn"
         android:onClick="signup"
         android:text="@string/newAccount_string"
-        android:width="250dip" />
+        android:width="250dip" />    
 
 </LinearLayout>
