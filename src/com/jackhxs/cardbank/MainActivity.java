@@ -167,7 +167,7 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback,
 		if (dataType.equals("cards")) {
 			App.myCards = data;
 			
-			Fragment cardFragment = new CardFragment(App.myCards[0]);
+			Fragment cardFragment = new MyCardFragment(App.myCards[0]);
 			addTab("My Card", cardFragment, "myCard");
 			
 			startService(Operation.GET_CONTACTS);

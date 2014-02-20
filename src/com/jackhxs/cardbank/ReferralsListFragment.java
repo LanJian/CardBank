@@ -31,7 +31,7 @@ public class ReferralsListFragment extends ProgressFragment implements JSONResul
 	private TextView emptyMsg;
 
 	private ListView myListView;
-	private CardAdapter myAdapter;
+	private TEMPCardAdapter myAdapter;
     private ImageLoader mImageLoader;
 
 	public void onCreate(Bundle bundle) {
@@ -92,7 +92,7 @@ public class ReferralsListFragment extends ProgressFragment implements JSONResul
 		
 		ArrayList<SimpleCard> list = new ArrayList<SimpleCard>();
         list.addAll(Arrays.asList(App.myReferrals));
-		myAdapter = new CardAdapter(getActivity(), R.layout.refer_list_row, list, mImageLoader);
+		myAdapter = new TEMPCardAdapter(getActivity(), R.layout.refer_list_row, list, mImageLoader);
 		myListView.setAdapter(myAdapter);
         myListView.setDivider(null);
         myListView.setDividerHeight(5);

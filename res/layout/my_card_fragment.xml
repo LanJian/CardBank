@@ -1,0 +1,251 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#FFF"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:id="@+id/card_wrapper_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:background="@color/card_background"
+        android:padding="16dp" >
+
+        <ImageView
+            android:id="@+id/card_flip_view_image"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop" />
+
+    </RelativeLayout>
+
+   <LinearLayout
+       android:layout_width="fill_parent"
+       android:layout_height="wrap_content"
+       android:layout_alignParentBottom="true"
+       android:layout_below="@id/card_wrapper_layout"
+       android:background="@color/light_grey"
+       android:orientation="vertical"
+       android:padding="16dp" >
+        
+            <TextView
+                android:id="@+id/card_flip_view_name"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="2dp"
+                android:gravity="center_vertical"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:text="test"
+                android:textColor="#33b5e5"
+                android:textSize="40sp"
+                android:visibility="gone" />
+            
+			<LinearLayout
+			    style="@style/detail_layout"
+			    android:layout_width="fill_parent"
+			    android:layout_height="wrap_content" >
+
+			    <TextView
+			        style="@style/detail_header"
+			        android:id="@+id/position"
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:text="Position" />
+
+			    <View
+			        android:layout_width="fill_parent"
+			        android:layout_height="1dp"
+			        android:background="@color/light_grey" />
+
+			    <LinearLayout
+			        android:layout_width="match_parent"
+			        android:layout_height="match_parent" >
+
+			        <TextView
+			            style="@style/detail_title"
+			            android:layout_width="wrap_content"
+			            android:layout_height="wrap_content"
+			            android:text="Company" />
+
+			        <TextView
+			            android:id="@+id/card_flip_view_companyName"
+			            style="@style/detail_content"
+			            android:layout_width="fill_parent"
+			            android:layout_height="wrap_content" />
+			    </LinearLayout>
+
+			    <LinearLayout
+			        android:layout_width="match_parent"
+			        android:layout_height="match_parent" >
+
+			        <TextView
+			            style="@style/detail_title"
+			            android:layout_width="wrap_content"
+			            android:layout_height="wrap_content"
+			            android:text="Job Title" />
+
+			        <TextView
+			            android:id="@+id/card_flip_view_jobTitle"
+			            style="@style/detail_content"
+			            android:layout_width="fill_parent"
+			            android:layout_height="wrap_content" />
+			    </LinearLayout>
+			</LinearLayout>
+			
+			<View
+			    android:layout_width="fill_parent"
+			    android:layout_height="@dimen/divider_height"
+			    android:background="@color/light_grey" />
+			<!-- 	
+	        <LinearLayout
+	            style="@style/detail_layout"
+			    android:layout_width="fill_parent"
+			    android:layout_height="wrap_content" >
+	
+	            <TextView
+	                style="@style/detail_title"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:text="Job Title"
+	                 />
+	
+	            <TextView
+	                android:id="@+id/card_flip_view_jobTitle"
+	                android:layout_width="fill_parent"
+	                android:layout_height="wrap_content"
+	                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+	        </LinearLayout>
+	        
+	        <View
+	            android:layout_width="fill_parent"
+	            android:layout_height="@dimen/divider_height"
+	            android:background="@color/light_grey" />
+				 -->
+				 
+	        <LinearLayout
+	            style="@style/detail_layout"
+	            android:layout_width="fill_parent"
+	            android:layout_height="wrap_content" >
+
+	            <TextView
+	                style="@style/detail_header"
+			        android:id="@+id/Contact"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:text="Contact"  />
+
+	            <View
+	                android:layout_width="fill_parent"
+	                android:layout_height="1dp"
+	                android:background="@color/dark_grey" />
+
+	            <LinearLayout
+	                android:layout_width="match_parent"
+	                android:layout_height="match_parent" >
+
+	                <TextView
+	                    style="@style/detail_title"
+	                    android:layout_width="wrap_content"
+	                    android:layout_height="wrap_content"
+	                    android:text="Email" />
+
+	                <TextView
+	                    android:id="@+id/card_flip_view_email"
+	                    style="@style/detail_content"
+	                    android:layout_width="fill_parent"
+	                    android:layout_height="wrap_content" />
+	            </LinearLayout>
+
+	            <LinearLayout
+	                android:layout_width="match_parent"
+	                android:layout_height="match_parent" >
+
+	                <TextView
+	                    style="@style/detail_title"
+	                    android:layout_width="wrap_content"
+	                    android:layout_height="wrap_content"
+	                    android:text="Phone" />
+
+	                <TextView
+	                    android:id="@+id/card_flip_view_phone"
+	                    style="@style/detail_content"
+	                    android:layout_width="fill_parent"
+	                    android:layout_height="wrap_content" />
+	            </LinearLayout>
+
+	            <LinearLayout
+	                android:layout_width="match_parent"
+	                android:layout_height="match_parent" >
+
+	                <TextView
+	                    style="@style/detail_title"
+	                    android:layout_width="wrap_content"
+	                    android:layout_height="wrap_content"
+	                    android:text="Address" />
+
+	                <TextView
+	                    android:id="@+id/card_flip_view_address"
+	                    style="@style/detail_content"
+	                    android:layout_width="fill_parent"
+	                    android:layout_height="wrap_content" />
+	            </LinearLayout>
+	        </LinearLayout>
+	
+	        <!-- 
+	        <View
+	            android:layout_width="fill_parent"
+	            android:layout_height="@dimen/divider_height"
+	            android:background="@color/light_grey" />
+	        
+	        <LinearLayout
+	             style="@style/detail_layout"
+			    android:layout_width="fill_parent"
+			    android:layout_height="wrap_content" >
+	            
+	            <TextView
+	                style="@style/detail_title"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:text="Phone"
+	                 />
+	            
+	            <TextView
+	                android:id="@+id/card_flip_view_phone"
+	                android:layout_width="fill_parent"
+	                android:layout_height="wrap_content"
+	                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+	        </LinearLayout>
+	        
+	        <View
+	            android:layout_width="fill_parent"
+	            android:layout_height="@dimen/divider_height"
+	            android:background="@color/light_grey" />
+	        
+	        <LinearLayout
+	             style="@style/detail_layout"
+			    android:layout_width="fill_parent"
+			    android:layout_height="wrap_content" >
+	
+	            <TextView
+	                style="@style/detail_title"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:text="Address"
+	                 />
+	            
+	            <TextView
+	                android:id="@+id/card_flip_view_address"
+	                android:layout_width="fill_parent"
+	                android:layout_height="wrap_content"
+	                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+	        </LinearLayout>
+	         -->
+	    </LinearLayout>
+ 
+</RelativeLayout>

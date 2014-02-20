@@ -48,7 +48,12 @@ public class CardFlipView extends Activity implements CreateNdefMessageCallback,
 
         mImageLoader = ImageLoader.buildImageLoaderForActivity(this);
 
-		if (cardViewMode == null || cardViewMode.equals("contact")) {
+        
+        /*
+         * TODO IS THERE ANOTHER MODE? I can't find any.
+         * TODO Is a user allowed to have more than 1 card?
+         */
+        if (cardViewMode == null || cardViewMode.equals("contact")) {
             ArrayList<SimpleCard> list = new ArrayList<SimpleCard>();
             list.addAll(Arrays.asList(App.myContacts));
 			adapter = new CardAdapter(this, R.layout.card_flip_view, list, mImageLoader);

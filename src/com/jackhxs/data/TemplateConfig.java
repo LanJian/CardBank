@@ -2,8 +2,8 @@ package com.jackhxs.data;
 
 public class TemplateConfig {
 	public class TextConfig {
-		public int left;
-		public int top;
+		public float left;
+		public float top;
 		public String color;
 	}
 

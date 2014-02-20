@@ -9,7 +9,7 @@
 	
     <string-array name="fragment_icon_array">
         <item>@drawable/ic_card</item>
-        <item>@drawable/ic_ccontacts</item>
+        <item>@drawable/ic_contacts</item>
         <item>@drawable/ic_referral</item>
         <item>@drawable/ic_events</item>
 	</string-array>

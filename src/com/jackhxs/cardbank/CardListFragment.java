@@ -36,7 +36,7 @@ public class CardListFragment extends ProgressFragment implements JSONResultRece
     
 	private TextView emptyMsg;
 	private ListView myListView;
-	private CardAdapter myAdapter;
+	private TEMPCardAdapter myAdapter;
 	private ImageLoader mImageLoader;
 	private boolean mIsRefer;
 	private Integer toRefer;
@@ -152,7 +152,7 @@ public class CardListFragment extends ProgressFragment implements JSONResultRece
 		ArrayList<SimpleCard> list = new ArrayList<SimpleCard>();
 		list.addAll(Arrays.asList(App.myContacts));
 		
-		myAdapter = new CardAdapter(getActivity(), R.layout.list_view_row, list, mImageLoader);
+		myAdapter = new TEMPCardAdapter(getActivity(), R.layout.list_view_row, list, mImageLoader);
 		myListView.setAdapter(myAdapter);
 
 		myListView.setOnItemClickListener(new OnItemClickListener() {

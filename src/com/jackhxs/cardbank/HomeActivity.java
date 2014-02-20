@@ -2,17 +2,12 @@ package com.jackhxs.cardbank;
 
 
 import java.util.ArrayList;
-import java.util.Locale;
-
 import com.jackhxs.cardbank.navdrawer.NavDrawerItem;
 import com.jackhxs.cardbank.navdrawer.NavDrawerListAdapter;
 
-import android.app.Activity;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
-import android.app.SearchManager;
-import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.os.Bundle;
@@ -21,15 +16,11 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.Toast;
 
 /**
  * This example illustrates a common usage of the DrawerLayout widget
@@ -172,7 +163,7 @@ public class HomeActivity extends FragmentActivity {
     	// // My Contact
     	switch(position){
 	    	case 0:
-				fragment = new CardFragment();
+				fragment = new MyCardFragment();
 				break;
 			case 1:
 				fragment = new CardListFragment();

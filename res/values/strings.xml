@@ -45,5 +45,11 @@
     <string name="appName">CardBeam</string>
     
     <string name="remember_me">Remember me</string>
-
+    
+    <!-- This is used in the card flip view more button -->
+    <string name="card_flip_view_more">More</string>
+    
+    <!--  This is used when sending out and email -->
+    <string name="email_option">Send email using</string>
+    
 </resources>

@@ -1,37 +1,28 @@
 package com.jackhxs.cardbank;
 
 import java.util.ArrayList;
-import java.util.Locale;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Parcelable;
+import android.net.Uri;
+import android.telephony.PhoneNumberUtils;
 import android.text.util.Linkify;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
 import com.jackhxs.data.SimpleCard;
-import com.jackhxs.remote.Constants.Operation;
-import com.jackhxs.remote.JSONResultReceiver;
-import com.jackhxs.remote.RemoteService;
 import com.jackhxs.util.ImageUtil;
 import com.xtremelabs.imageutils.ImageLoader;
 
 public class CardAdapter extends ArrayAdapter<SimpleCard> {
-
-    private static final int[] ICON_BG_COLORS = { 0xff1b7c59, 0xffe76e66,
-            0xffdca46b, 0xff5699a9, 0xff695b8e, 0xff8c5e7a };
 
     private ArrayList<SimpleCard> myData;
     private int myResourceId;
@@ -47,180 +38,91 @@ public class CardAdapter extends ArrayAdapter<SimpleCard> {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        switch (myResourceId) {
-        case R.layout.list_view_row:
-            return getRowView(position, convertView, parent);
-        case R.layout.card_flip_view:
-            return getFlipItemView(position, convertView, parent);
-        case R.layout.refer_list_row:
-            return getReferListRowView(position, convertView, parent);
-        }
-
-        return null;
-    }
-
-    public View getRowView(int position, View convertView, ViewGroup parent) {
-        View row = convertView;
-
-        LayoutInflater inflater = ((Activity) myContext).getLayoutInflater();
-        row = inflater.inflate(myResourceId, parent, false);
-
-        TextView txtView = (TextView) row.findViewById(R.id.txtTitle);
-        txtView.setText(myData.get(position).firstName + " "
-                + myData.get(position).lastName);
-
-        txtView = (TextView) row.findViewById(R.id.imgIcon);
-        txtView.setText(myData.get(position).lastName.substring(0, 1).toUpperCase(Locale.US));
-        int rand = (int) (Math.random() * ICON_BG_COLORS.length);
-        txtView.setBackgroundColor(ICON_BG_COLORS[rand]);
-
-        return row;
-    }
-
-    public View getReferListRowView(int position, View convertView,
-            ViewGroup parent) {
-        View row = convertView;
-
-        LayoutInflater inflater = ((Activity) myContext).getLayoutInflater();
-        row = inflater.inflate(myResourceId, parent, false);
-
-        String name, phone, email, companyName, jobTitle, address;
-
-        name = myData.get(position).firstName + " "
-                + myData.get(position).lastName;
-        phone = myData.get(position).phone;
-        email = myData.get(position).email;
-        companyName = myData.get(position).companyName;
-        address = myData.get(position).address;
-        jobTitle = myData.get(position).jobTitle;
-
-        ImageView imgView = (ImageView) row
-                .findViewById(R.id.refer_list_row_image);
-        int index = Integer.parseInt(myData.get(position).imageUrl);
-        Bitmap newCard = ImageUtil.GenerateCardImage((Activity) myContext,
-                App.templateConfig[index], name, email, phone, companyName, address, jobTitle);
-        imgView.setImageBitmap(newCard);
-
-        final int positionCopy = position;
-        Button addButton = (Button) row
-                .findViewById(R.id.refer_list_row_button_add);
-        addButton.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                Log.e("paul", "click add refer");
-                addReferral(positionCopy);
-            }
-        });
-
-        Button ignoreButton = (Button) row
-                .findViewById(R.id.refer_list_row_button_ignore);
-        ignoreButton.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                Log.e("paul", "click ignore refer");
-                // TODO: add backend support to remove card from referral list
-                removeCard(positionCopy);
-            }
-        });
-
-        return row;
-    }
-
-    public View getFlipItemView(int position, View convertView, ViewGroup parent) {
-        View item = convertView;
-        String name, phone, email, companyName, jobTitle, address;
-
-        LayoutInflater inflater = ((Activity) myContext).getLayoutInflater();
-        item = inflater.inflate(myResourceId, parent, false);
-
-        TextView txtView = (TextView) item
-                .findViewById(R.id.card_flip_view_name);
-        txtView.setText(myData.get(position).firstName + " "
-                + myData.get(position).lastName);
-        name = txtView.getText().toString();
-
-        txtView = (TextView) item.findViewById(R.id.card_flip_view_phone);
-        txtView.setText(myData.get(position).phone);
-        phone = txtView.getText().toString();
-        Linkify.addLinks(txtView, Linkify.PHONE_NUMBERS);
-
-        txtView = (TextView) item.findViewById(R.id.card_flip_view_email);
-        txtView.setText(myData.get(position).email);
-        email = txtView.getText().toString();
-        Linkify.addLinks(txtView, Linkify.EMAIL_ADDRESSES);
         
-        txtView = (TextView) item.findViewById(R.id.card_flip_view_companyName);
-        txtView.setText(myData.get(position).companyName);
-        companyName = txtView.getText().toString();
+    	LayoutInflater inflater = ((Activity) myContext).getLayoutInflater();
+        convertView = inflater.inflate(myResourceId, parent, false);
 
-        txtView = (TextView) item.findViewById(R.id.card_flip_view_jobTitle);
-        txtView.setText(myData.get(position).jobTitle);
-        jobTitle = txtView.getText().toString();
-
-        txtView = (TextView) item.findViewById(R.id.card_flip_view_address);
-        txtView.setText(myData.get(position).address);
-        address = txtView.getText().toString();
+        View phoneLayout = (RelativeLayout) convertView.findViewById(R.id.card_flip_view_phone_layout);
+        TextView phoneNumber = (TextView) convertView.findViewById(R.id.card_flip_view_phone);
         
-        ImageView imgView = (ImageView) item
+        View emailLayout = (RelativeLayout) convertView.findViewById(R.id.card_flip_view_email_layout);
+        TextView emailAddress = (TextView) convertView.findViewById(R.id.card_flip_view_email);
+        
+        TextView streetAddress = (TextView) convertView.findViewById(R.id.card_flip_view_address);
+        
+        
+        phoneNumber.setText(PhoneNumberUtils.formatNumber(myData.get(position).phone));
+        phoneLayout.setOnClickListener(new PhoneClickListener(myData.get(position).phone, myContext));
+        
+        emailAddress.setText(myData.get(position).email);
+        emailLayout.setOnClickListener(new EmailClickListener(myData.get(position).email, myContext));
+        
+        streetAddress.setText(myData.get(position).address);
+        Linkify.addLinks(streetAddress, Linkify.MAP_ADDRESSES);
+        
+        ImageView imgView = (ImageView) convertView
                 .findViewById(R.id.card_flip_view_image);
         //myImageLoader.loadImage(imgView, myData[position].imageUrl);
         int index = Integer.parseInt(myData.get(position).imageUrl);
         Bitmap newCard = ImageUtil.GenerateCardImage((Activity) myContext,
-                App.templateConfig[index], name, email, phone, companyName, address, jobTitle);
+                App.templateConfig[index],
+                myData.get(position).firstName + " " + myData.get(position).lastName, 
+                myData.get(position).email, 
+                myData.get(position).phone, 
+                myData.get(position).companyName, 
+                myData.get(position).address, 
+                myData.get(position).jobTitle);
         imgView.setImageBitmap(newCard);
 
-        return item;
+        return convertView;
     }
 
-    public void addReferral(int position) {
-        final Intent serviceIntent = new Intent(Intent.ACTION_SYNC, null,
-                getContext(), RemoteService.class);
+   
+    private class PhoneClickListener implements OnClickListener {
 
-        JSONResultReceiver receiver = new JSONResultReceiver(new Handler());
-        receiver.setReceiver(new JSONResultReceiver.Receiver() {
-
-            @Override
-            public void onReceiveResult(int resultCode, Bundle resultData) {
-                Log.e("paul", "receive result add referal");
-                Log.e("add referral", Integer.toString(resultCode));
-                Log.e("add referral", resultData.toString());
-            }
-        });
-
-        serviceIntent.putExtra("receiver", receiver);
-        serviceIntent.putExtra("operation", (Parcelable) Operation.POST_CONTACT);
-        serviceIntent.putExtra("newContactJSON", new Gson().toJson(myData.get(position)));
-
-        getContext().startService(serviceIntent);
-        removeCard(position);
-    }
-
-    public void removeCard(int position) {
-    	String referralId = myData.get(position).referralId;
+    	private String mPhoneNumber;
+    	private Context mContext;
     	
-        this.remove(myData.get(position));
-        this.notifyDataSetChanged();
-        
-        final Intent serviceIntent = new Intent(Intent.ACTION_SYNC, null,
-                getContext(), RemoteService.class);
+    	
+		public PhoneClickListener(String phone, Context mContext) {
+			this.mPhoneNumber = phone;
+			this.mContext = mContext;
+		}
 
-        JSONResultReceiver receiver = new JSONResultReceiver(new Handler());
-        receiver.setReceiver(new JSONResultReceiver.Receiver() {
+		@Override
+		public void onClick(View v) {
+			Intent intent = new Intent(Intent.ACTION_CALL);
 
-            @Override
-            public void onReceiveResult(int resultCode, Bundle resultData) {
-                Log.e("paul", "receive result add referal");
-                Log.e("add referral", Integer.toString(resultCode));
-                Log.e("add referral", resultData.toString());
-            }
-        });
-
-        serviceIntent.putExtra("receiver", receiver);
-        serviceIntent.putExtra("operation", (Parcelable) Operation.DEL_REFER);
-        serviceIntent.putExtra("referralId", referralId);
-        
-        getContext().startService(serviceIntent);
+			intent.setData(Uri.parse("tel:" + mPhoneNumber));
+			mContext.startActivity(intent);
+		}
+    	
     }
+    
+    
+    private class EmailClickListener implements OnClickListener {
+
+    	private String mEmailAdress;
+    	private Context mContext;
+    	
+    	
+		public EmailClickListener(String email, Context mContext) {
+			this.mEmailAdress = email;
+			this.mContext = mContext;
+		}
+
+		@Override
+		public void onClick(View v) {
+			final Intent emailIntent = new Intent( android.content.Intent.ACTION_SEND);
+
+		    emailIntent.setType("plain/text");
+
+		    emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL,
+		            new String[] { mEmailAdress });
+
+		    mContext.startActivity(Intent.createChooser(emailIntent, mContext.getResources().getString(R.string.email_option)));
+		}
+    	
+    }
+    
 }

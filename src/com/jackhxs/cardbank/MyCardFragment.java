@@ -27,7 +27,7 @@ import com.jackhxs.remote.Constants.Operation;
 import com.jackhxs.util.ImageUtil;
 
 @SuppressLint("ValidFragment")
-public class CardFragment extends ProgressFragment implements JSONResultReceiver.Receiver{
+public class MyCardFragment extends ProgressFragment implements JSONResultReceiver.Receiver{
 	private static final String TAG = "CardFragment";
 	
 	private View mContentView;
@@ -38,12 +38,12 @@ public class CardFragment extends ProgressFragment implements JSONResultReceiver
     
 	
     @SuppressLint("ValidFragment")
-	public CardFragment(SimpleCard card) {
+	public MyCardFragment(SimpleCard card) {
 		myCard = card;
 		//this.setHasOptionsMenu(true);
 	}
 
-    public CardFragment() {
+    public MyCardFragment() {
 		
 	}
 
@@ -65,7 +65,7 @@ public class CardFragment extends ProgressFragment implements JSONResultReceiver
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, 
 			Bundle savedInstanceState) {
 
-		mContentView = inflater.inflate(R.layout.card_flip_view, container, false);
+		mContentView = inflater.inflate(R.layout.my_card_fragment, container, false);
 		
 		mReceiver = new JSONResultReceiver(new Handler());
 		mReceiver.setReceiver(this);
