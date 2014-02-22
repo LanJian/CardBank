@@ -5,21 +5,27 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.CheckBox;
 import android.widget.EditText;
 
 import com.jackhxs.remote.Constants;
 import com.jackhxs.remote.Constants.Operation;
 import com.jackhxs.remote.JSONResultReceiver;
+import com.jackhxs.remote.LinkedInAPI;
 import com.jackhxs.remote.RemoteService;
 
-public class LoginActivity extends Activity implements JSONResultReceiver.Receiver {
+public class LoginActivity extends Activity implements
+		JSONResultReceiver.Receiver {
+	
 	public static final String PREFS_NAME = "MyPrefsFile";
 
 	private EditText emailField, passwordField;
@@ -50,7 +56,7 @@ public class LoginActivity extends Activity implements JSONResultReceiver.Receiv
 			App.userId = settings.getString("userId", "none");
 
 			if (!App.sessionId.equals("none") && !App.userId.equals("none")) {
-				onReceiveResult(-1, null);	
+				onReceiveResult(-1, null);
 			}
 		}
 	}
@@ -102,19 +108,44 @@ public class LoginActivity extends Activity implements JSONResultReceiver.Receiv
 		}
 	}
 
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent intent)
-	{
-		super.onActivityResult(requestCode, resultCode, intent);
-		if (requestCode == 0) {
-			finish();	
-		}
-	}
-
 	public void signup(View view) {
 		Intent intent = new Intent(this, SignupActivity.class);
 		intent.putExtra("mode", "contact");
 		startActivityForResult(intent, 1);
+	}
+
+	public void signInWithLNKD(View view) {
+		String authUrl = LinkedInAPI.getInstance().getAuthUrl();
+		
+		WebView webview = (WebView) findViewById(R.id.webview);
+		webview.setVisibility(View.VISIBLE);
+		
+		webview.setWebViewClient(new WebViewClient() {
+			@Override
+			public boolean shouldOverrideUrlLoading(WebView webView, String url) {
+				if (url != null && url.startsWith(LinkedInAPI.CALL_BACK_URL)) {
+					System.out.println("TWEET TWEET TWEET");
+					Uri uri = Uri.parse(url);
+					LinkedInAPI.getInstance().initAccessToken(uri.getQueryParameter("code")); // added this
+					webView.setVisibility(View.GONE); // added this
+					return true;
+				}
+				else {
+					return false;
+				}
+			}
+		});
+		
+		webview.loadUrl(authUrl);
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode,
+			Intent intent) {
+		super.onActivityResult(requestCode, resultCode, intent);
+		if (requestCode == 0) {
+			finish();
+		}
 	}
 
 	@Override
@@ -154,8 +185,8 @@ public class LoginActivity extends Activity implements JSONResultReceiver.Receiv
 		}
 		}
 
-		if (App.userId != null && !App.userId.equals("") &&
-				App.sessionId != null && !App.sessionId.equals("")) {
+		if (App.userId != null && !App.userId.equals("")
+				&& App.sessionId != null && !App.sessionId.equals("")) {
 
 			Log.e("Success", "logged in");
 
@@ -164,7 +195,7 @@ public class LoginActivity extends Activity implements JSONResultReceiver.Receiv
 
 			startActivity(intent);
 			this.finish();
-			
+
 		} else {
 			Log.e("Failed", "logged in");
 		}
