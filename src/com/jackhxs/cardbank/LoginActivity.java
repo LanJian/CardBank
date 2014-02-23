@@ -1,5 +1,8 @@
 package com.jackhxs.cardbank;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -21,11 +24,13 @@ import com.jackhxs.remote.Constants;
 import com.jackhxs.remote.Constants.Operation;
 import com.jackhxs.remote.JSONResultReceiver;
 import com.jackhxs.remote.LinkedInAPI;
+import com.jackhxs.remote.OnTaskCompleted;
 import com.jackhxs.remote.RemoteService;
 
 public class LoginActivity extends Activity implements
-		JSONResultReceiver.Receiver {
-	
+JSONResultReceiver.Receiver, 
+OnTaskCompleted {
+
 	public static final String PREFS_NAME = "MyPrefsFile";
 
 	private EditText emailField, passwordField;
@@ -115,19 +120,19 @@ public class LoginActivity extends Activity implements
 	}
 
 	public void signInWithLNKD(View view) {
+		final OnTaskCompleted that = this;
 		String authUrl = LinkedInAPI.getInstance().getAuthUrl();
-		
 		WebView webview = (WebView) findViewById(R.id.webview);
 		webview.setVisibility(View.VISIBLE);
-		
+
 		webview.setWebViewClient(new WebViewClient() {
 			@Override
 			public boolean shouldOverrideUrlLoading(WebView webView, String url) {
 				if (url != null && url.startsWith(LinkedInAPI.CALL_BACK_URL)) {
-					System.out.println("TWEET TWEET TWEET");
 					Uri uri = Uri.parse(url);
-					LinkedInAPI.getInstance().initAccessToken(uri.getQueryParameter("code")); // added this
-					webView.setVisibility(View.GONE); // added this
+					LinkedInAPI.getInstance().initAccessToken(uri.getQueryParameter("oauth_verifier")); // added this
+					LinkedInAPI.getInstance().getUserinfo(that);
+					LinkedInAPI.getInstance().getUserConnection(that);
 					return true;
 				}
 				else {
@@ -135,7 +140,7 @@ public class LoginActivity extends Activity implements
 				}
 			}
 		});
-		
+
 		webview.loadUrl(authUrl);
 	}
 
@@ -147,6 +152,7 @@ public class LoginActivity extends Activity implements
 			finish();
 		}
 	}
+
 
 	@Override
 	public void onReceiveResult(int resultCode, Bundle resultData) {
@@ -198,6 +204,39 @@ public class LoginActivity extends Activity implements
 
 		} else {
 			Log.e("Failed", "logged in");
+		}
+	}
+	
+	@Override
+	public void onBackPressed() {
+		WebView webview = (WebView) findViewById(R.id.webview);
+		if (webview.getVisibility() == View.VISIBLE) {
+			webview.setVisibility(View.GONE);
+		} else {
+			super.onBackPressed();
+		}
+	}
+
+
+	@Override
+	public void onTaskCompleted(String responseJSON) {
+		// Received the user info
+		try {
+			JSONObject jObject = new JSONObject(responseJSON);
+			
+			final Intent intent = new Intent(Intent.ACTION_SYNC, null, this,
+					RemoteService.class);
+
+			intent.putExtra("receiver", mReceiver);
+			intent.putExtra("operation", (Parcelable) Operation.POST_SIGNUP);
+			intent.putExtra("email", jObject.getString("email"));
+			intent.putExtra("password", password);
+
+			startService(intent);
+			
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 }
