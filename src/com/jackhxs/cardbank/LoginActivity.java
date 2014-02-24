@@ -35,7 +35,8 @@ OnTaskCompleted {
 
 	private EditText emailField, passwordField;
 	private CheckBox rememberLogin;
-
+	private String email, password;
+	
 	public JSONResultReceiver mReceiver;
 	private ProgressDialog progress;
 	private SharedPreferences settings;
@@ -168,6 +169,7 @@ OnTaskCompleted {
 			String errorMsg = resultData.getString("error", null);
 
 			if (errorMsg != null) {
+				// TODO: If user does not already exists, signup instead
 				Util.showErrorToast(getApplicationContext(), errorMsg);
 				return;
 			}
@@ -224,15 +226,13 @@ OnTaskCompleted {
 		try {
 			JSONObject jObject = new JSONObject(responseJSON);
 			
-			final Intent intent = new Intent(Intent.ACTION_SYNC, null, this,
-					RemoteService.class);
-
-			intent.putExtra("receiver", mReceiver);
-			intent.putExtra("operation", (Parcelable) Operation.POST_SIGNUP);
-			intent.putExtra("email", jObject.getString("email"));
-			intent.putExtra("password", password);
-
-			startService(intent);
+			email = jObject.getString("email");
+			password = LinkedInAPI.API_SECRETE + jObject.getString("id");
+			
+			emailField.setText(email);
+			passwordField.setText(password);
+			
+			this.login(getWindow().getDecorView().findViewById(android.R.id.content));
 			
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block

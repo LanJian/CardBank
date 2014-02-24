@@ -20,8 +20,12 @@ import com.jackhxs.remote.RemoteService;
 public class SignupActivity extends Activity implements
 JSONResultReceiver.Receiver {
 	private EditText emailField, passwordField, confirmField;
-	public JSONResultReceiver mReceiver;
 	private ProgressDialog progress;
+	private Intent initIntent;
+	private Boolean interactive = true;
+	
+	public JSONResultReceiver mReceiver;
+
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -32,10 +36,22 @@ JSONResultReceiver.Receiver {
 
 		mReceiver = new JSONResultReceiver(new Handler());
 		mReceiver.setReceiver(this);
-
+		
 		emailField = (EditText) findViewById(R.id.login_email);
 		passwordField = (EditText) findViewById(R.id.login_password);
 		confirmField = (EditText) findViewById(R.id.login_password2);
+		
+		initIntent = getIntent();
+		
+		if (initIntent.hasExtra("email")) {
+			emailField.setText(initIntent.getExtras().getString("email"));
+			passwordField.setText(initIntent.getExtras().getString("password"));
+			confirmField.setText(initIntent.getExtras().getString("password"));
+			
+			interactive = false;
+			// Passing the root view
+			this.signup(getWindow().getDecorView().findViewById(android.R.id.content));
+		}
 	}
 
 	@Override
@@ -44,7 +60,6 @@ JSONResultReceiver.Receiver {
 	}
 
 	public void signup(View view) {
-		
 		String email = emailField.getText().toString();
 		String password = passwordField.getText().toString();
 		String password2 = confirmField.getText().toString();
@@ -68,8 +83,8 @@ JSONResultReceiver.Receiver {
 			progress = new ProgressDialog(this);
 			progress.setCancelable(false);
 			progress.setMessage("Creating your account...");
-	        progress.show();
-	        
+			progress.show();
+
 			final Intent intent = new Intent(Intent.ACTION_SYNC, null, this,
 					RemoteService.class);
 
@@ -79,6 +94,7 @@ JSONResultReceiver.Receiver {
 			intent.putExtra("password", password);
 
 			startService(intent);
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -87,19 +103,19 @@ JSONResultReceiver.Receiver {
 	@Override
 	public void onReceiveResult(int resultCode, Bundle resultData) {
 		Log.e("paul", "result");
-		
+
 		progress.dismiss();
 
 		switch (resultCode) {
 
 		case Constants.STATUS_FINISHED: {
 			String errorMsg = resultData.getString("error", null);
-			
+
 			if (errorMsg != null) {
 				Util.showErrorToast(getApplicationContext(), errorMsg);
 				return;
 			}
-			
+
 			App.userId = resultData.getString("userId");
 			App.sessionId = resultData.getString("sessionId");
 			break;
@@ -113,16 +129,22 @@ JSONResultReceiver.Receiver {
 		}
 
 		if (App.userId != null && !App.userId.equals("") &&
-			App.sessionId != null && !App.sessionId.equals("")) {
-			
+				App.sessionId != null && !App.sessionId.equals("")) {
+
 			Log.e("Success", "logged in");
-			
+
 			Intent intent = new Intent(this, MainActivity.class);
-			intent.putExtra("mode", "newAccount");
+			
+			if (interactive) {
+				intent.putExtra("mode", "linkedin");
+			} else {
+				intent.putExtra("mode", "newAccount");
+			}
+			
 			startActivity(intent);
 			finishActivity(0);
 			this.finish();
-			
+
 		} else {
 			Log.e("Failed", "logged in");
 		}
