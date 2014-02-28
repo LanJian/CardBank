@@ -39,25 +39,15 @@
   </style>
   
   
-  <style name="detail_header" >
-	<item name="android:textColor">@color/detail_header_color</item>
-    <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
-    <item name="android:textStyle">bold|italic</item>
-  </style>
-  
-  
-  <style name="detail_title" >
+  <style name="my_card_headers" >
 	<item name="android:gravity" >center_vertical</item>
-    <item name="android:textColor">@color/detail_title_color</item>
+    <item name="android:textColor">@color/my_card_header_color</item>
     <item name="android:textAppearance">?android:attr/textAppearanceSmall</item>
-    <item name="android:textStyle">italic</item>
+    <item name="android:textStyle">bold</item>
+    <item name="android:layout_width">wrap_content</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:textAllCaps">true</item>
   </style>
-  
-  <style name="detail_content" >
-	<item name="android:gravity" >right</item>
-    <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
-  </style>
-  
   
   <style name="card_flip_view_layout" >
 	<!-- Nothing yet. maybe some padding -->

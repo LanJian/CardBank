@@ -1,7 +1,10 @@
 package com.jackhxs.cardbank;
 
 
+import java.nio.charset.Charset;
 import java.util.ArrayList;
+
+import com.google.gson.Gson;
 import com.jackhxs.cardbank.navdrawer.NavDrawerItem;
 import com.jackhxs.cardbank.navdrawer.NavDrawerListAdapter;
 
@@ -10,10 +13,16 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
+import android.nfc.NdefMessage;
+import android.nfc.NdefRecord;
+import android.nfc.NfcAdapter;
+import android.nfc.NfcAdapter.CreateNdefMessageCallback;
+import android.nfc.NfcEvent;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,6 +30,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 /**
  * This example illustrates a common usage of the DrawerLayout widget
@@ -49,8 +59,9 @@ import android.widget.ListView;
  * An action should be an operation performed on the current contents of the window,
  * for example enabling or disabling a data overlay on top of the current content.</p>
  */
-public class HomeActivity extends FragmentActivity {
-    private DrawerLayout mDrawerLayout;
+public class HomeActivity extends FragmentActivity implements CreateNdefMessageCallback {
+	private NfcAdapter mNfcAdapter;
+	private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
     private ActionBarDrawerToggle mDrawerToggle;
 
@@ -115,6 +126,19 @@ public class HomeActivity extends FragmentActivity {
         if (savedInstanceState == null) {
             displayView(0);
         }
+        
+        // Setup NFC callbacks
+ 		mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
+
+ 		if (mNfcAdapter == null) {
+ 			/*
+ 			 * TODO do we need to display this every single time???
+ 			 */
+ 			Toast.makeText(this, "NFC not available", Toast.LENGTH_LONG).show();
+ 			return;
+ 		}
+ 		
+ 		mNfcAdapter.setNdefPushMessageCallback(this, this);
     }
 
     /*
@@ -252,4 +276,40 @@ public class HomeActivity extends FragmentActivity {
 		return navDrawerItems;
     	
     }
+    
+    /**
+	 * Creates a custom MIME type encapsulated in an NDEF record
+	 */
+	public NdefRecord createMimeRecord(String mimeType, byte[] payload) {
+		byte[] mimeBytes = mimeType.getBytes(Charset.forName("US-ASCII"));
+
+		NdefRecord mimeRecord = new NdefRecord(
+				NdefRecord.TNF_MIME_MEDIA, mimeBytes, new byte[0], payload);
+
+		
+		return mimeRecord;
+	}
+
+	// This creates the message, but doesn't send it yet. It's handed to the NFC Manager 
+	//it only gets sent when the user clicks again
+	@Override
+	public NdefMessage createNdefMessage(NfcEvent event) {
+		Log.e("NFC detected", "Working");
+		
+		String serializedCard = (new Gson()).toJson(App.myCards[0]);
+
+		Log.e("Serialized JSON", serializedCard);
+		NdefMessage msg = new NdefMessage(
+				new NdefRecord[] {
+						createMimeRecord("application/com.jackhxs.cardbank", serializedCard.getBytes()),
+				});
+		
+		/*
+		 *  This refreshes the contact list.
+		 *  a better solution is to check if the contact list is what's being displayed. if it is download the list again after 5 seconds 
+		 */
+		
+		//startLongPollingGetContact();
+		return msg;
+	}
 }

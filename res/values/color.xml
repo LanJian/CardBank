@@ -20,8 +20,7 @@
     
     <color name="card_background">#333</color>
     
-    <color name="detail_title_color">@color/black</color>
-    <color name="detail_header_color">@color/dark_blue</color>
+    <color name="my_card_header_color">@color/dark_blue</color>
     
     <color name="card_flip_view_link_color">@color/dark_blue</color>
     

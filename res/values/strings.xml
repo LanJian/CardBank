@@ -52,4 +52,18 @@
     <!--  This is used when sending out and email -->
     <string name="email_option">Send email using</string>
     
+    <!-- These are are used when editing the card -->
+    <string name="name_title"><u>Your name:</u></string>
+    <string name="edit_name_hint">Steve Jobs</string>
+    <string name="company_title"><u>Company name:</u></string>
+    <string name="edit_company_hint">Apple Inc</string>
+    <string name="job_title_title"><u>Position title:</u></string>
+    <string name="edit_job_title_hint">CEO</string>
+    <string name="email_title"><u>Email address:</u></string>
+    <string name="edit_email_hint">sj@apple.com</string>
+    <string name="phone_title"><u>Phone number:</u></string>
+    <string name="edit_phone_hint">408-555-2775</string>
+    <string name="address_title"><u>Address:</u></string>
+    <string name="edit_address_hint">1 Infinity Loop</string>
+    
 </resources>

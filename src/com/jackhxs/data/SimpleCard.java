@@ -18,6 +18,8 @@ public class SimpleCard implements Parcelable {
 	public String userId;
 	public String _id;
 	
+	public Template template;
+	
 	public SimpleCard() {
 		firstName = "Your"; 
 		lastName = "Name";
@@ -34,49 +36,52 @@ public class SimpleCard implements Parcelable {
 		_id = "null";
 	};
 	
-	public SimpleCard(Parcel in) {
-		readFromParcel(in);
-	}
-	
-	public int describeContents() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-	
-	public void writeToParcel(Parcel dst, int flags) {
-		dst.writeString(firstName);
-		dst.writeString(lastName);
-		dst.writeString(phone);
-		dst.writeString(email);
-		dst.writeString(companyName);
-		dst.writeString(jobTitle);
-		dst.writeString(address);
-		dst.writeString(imageUrl);
-		dst.writeString(userId);
-		dst.writeString(referralId);
-		dst.writeString(_id);
-	}
-	
-	private void readFromParcel(Parcel in) {
-		firstName = in.readString();
-		lastName = in.readString();
-		phone = in.readString();
-		email = in.readString();
-		companyName = in.readString();
-		jobTitle = in.readString();
-		address = in.readString();
-		imageUrl = in.readString();
-		userId = in.readString();
-		referralId = in.readString();
-		_id = in.readString();
-	}
-	
-	public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
-		public SimpleCard createFromParcel(Parcel in) {
-			return new SimpleCard(in);
-		}
-		public SimpleCard[] newArray(int size) {
-			return new SimpleCard[size];
-		}
-	};
+	protected SimpleCard(Parcel in) {
+        firstName = in.readString();
+        lastName = in.readString();
+        phone = in.readString();
+        email = in.readString();
+        companyName = in.readString();
+        address = in.readString();
+        jobTitle = in.readString();
+        imageUrl = in.readString();
+        referralId = in.readString();
+        userId = in.readString();
+        _id = in.readString();
+        template = (Template) in.readValue(Template.class.getClassLoader());
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(firstName);
+        dest.writeString(lastName);
+        dest.writeString(phone);
+        dest.writeString(email);
+        dest.writeString(companyName);
+        dest.writeString(address);
+        dest.writeString(jobTitle);
+        dest.writeString(imageUrl);
+        dest.writeString(referralId);
+        dest.writeString(userId);
+        dest.writeString(_id);
+        dest.writeValue(template);
+    }
+
+    @SuppressWarnings("unused")
+    public static final Parcelable.Creator<SimpleCard> CREATOR = new Parcelable.Creator<SimpleCard>() {
+        @Override
+        public SimpleCard createFromParcel(Parcel in) {
+            return new SimpleCard(in);
+        }
+
+        @Override
+        public SimpleCard[] newArray(int size) {
+            return new SimpleCard[size];
+        }
+    };
 }

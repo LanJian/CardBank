@@ -10,242 +10,139 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:background="@color/card_background"
-        android:padding="16dp" >
-
+        android:paddingTop="8dp"
+		android:paddingBottom="8dp" >
+        
         <ImageView
             android:id="@+id/card_flip_view_image"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:adjustViewBounds="true"
             android:scaleType="centerCrop" />
-
+		
+        <com.jackhxs.cardbank.PagerContainer
+	        android:id="@+id/pager_container"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_marginTop="8dp"
+	        android:layout_marginBottom="8dp"
+	         >
+        
+	        <android.support.v4.view.ViewPager
+	            xmlns:android="http://schemas.android.com/apk/res/android"
+	            android:id="@+id/pager"
+	            android:layout_width="328dp"
+	            android:layout_height="184dp"
+	            android:layout_gravity="center_horizontal"  />
+        </com.jackhxs.cardbank.PagerContainer>
+        
     </RelativeLayout>
 
-   <LinearLayout
+    <ScrollView
+        android:id="@+id/card_details_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+		android:layout_below="@id/card_wrapper_layout"
+		android:background="@color/light_grey"  >
+        
+		<LinearLayout
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:orientation="vertical"
+			android:padding="16dp" >
+
+			<TextView
+			    android:id="@+id/name_title"
+			    style="@style/my_card_headers"
+			    android:text="@string/name_title" />
+			
+			<EditText
+				android:id="@+id/edit_name"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:ems="10"
+				android:hint="@string/edit_name_hint"
+				android:imeOptions="actionNext"
+				android:inputType="textPersonName" />
+
+			<TextView
+			    android:id="@+id/company_title"
+			    style="@style/my_card_headers"
+			    android:text="@string/company_title" />
+
+			<EditText
+			    android:id="@+id/edit_company"
+			    android:layout_width="match_parent"
+			    android:layout_height="wrap_content"
+			    android:ems="10"
+			    android:imeOptions="actionNext"
+			    android:hint="@string/edit_company_hint" />
+
+			<TextView
+			    android:id="@+id/job_title_title"
+			    style="@style/my_card_headers"
+			    android:text="@string/job_title_title" />
+
+			<EditText
+				android:id="@+id/edit_job_title"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:ems="10"
+				android:imeOptions="actionNext"
+				android:hint="@string/edit_job_title_hint" />
+
+			<TextView
+			    android:id="@+id/email_title"
+			    style="@style/my_card_headers"
+			    android:text="@string/email_title" />
+
+			<EditText
+			    android:id="@+id/edit_email"
+			    android:layout_width="match_parent"
+			    android:layout_height="wrap_content"
+			    android:ems="10"
+			    android:hint="@string/edit_email_hint"
+			    android:inputType="textEmailAddress" />
+
+			<TextView
+			    android:id="@+id/phone_title"
+			    style="@style/my_card_headers"
+			    android:text="@string/phone_title" />
+			
+			<EditText
+			    android:id="@+id/edit_phone"
+			    android:layout_width="match_parent"
+			    android:layout_height="wrap_content"
+			    android:ems="10"
+			    android:hint="@string/edit_phone_hint"
+			    android:inputType="phone" />
+
+			<TextView
+			    android:id="@+id/address_title"
+			    style="@style/my_card_headers"
+			    android:text="@string/address_title" />
+			
+			<EditText
+			    android:id="@+id/edit_address"
+			    android:layout_width="match_parent"
+			    android:layout_height="wrap_content"
+			    android:ems="10"
+			    android:imeOptions="actionDone"
+			    android:hint="@string/edit_address_hint" />
+
+			
+		</LinearLayout>
+   
+    </ScrollView>
+ 
+    <ImageView
+       android:id="@+id/imageView1"
        android:layout_width="fill_parent"
        android:layout_height="wrap_content"
-       android:layout_alignParentBottom="true"
-       android:layout_below="@id/card_wrapper_layout"
-       android:background="@color/light_grey"
-       android:orientation="vertical"
-       android:padding="16dp" >
-        
-            <TextView
-                android:id="@+id/card_flip_view_name"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="2dp"
-                android:gravity="center_vertical"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                android:text="test"
-                android:textColor="#33b5e5"
-                android:textSize="40sp"
-                android:visibility="gone" />
-            
-			<LinearLayout
-			    style="@style/detail_layout"
-			    android:layout_width="fill_parent"
-			    android:layout_height="wrap_content" >
-
-			    <TextView
-			        style="@style/detail_header"
-			        android:id="@+id/position"
-			        android:layout_width="wrap_content"
-			        android:layout_height="wrap_content"
-			        android:text="Position" />
-
-			    <View
-			        android:layout_width="fill_parent"
-			        android:layout_height="1dp"
-			        android:background="@color/light_grey" />
-
-			    <LinearLayout
-			        android:layout_width="match_parent"
-			        android:layout_height="match_parent" >
-
-			        <TextView
-			            style="@style/detail_title"
-			            android:layout_width="wrap_content"
-			            android:layout_height="wrap_content"
-			            android:text="Company" />
-
-			        <TextView
-			            android:id="@+id/card_flip_view_companyName"
-			            style="@style/detail_content"
-			            android:layout_width="fill_parent"
-			            android:layout_height="wrap_content" />
-			    </LinearLayout>
-
-			    <LinearLayout
-			        android:layout_width="match_parent"
-			        android:layout_height="match_parent" >
-
-			        <TextView
-			            style="@style/detail_title"
-			            android:layout_width="wrap_content"
-			            android:layout_height="wrap_content"
-			            android:text="Job Title" />
-
-			        <TextView
-			            android:id="@+id/card_flip_view_jobTitle"
-			            style="@style/detail_content"
-			            android:layout_width="fill_parent"
-			            android:layout_height="wrap_content" />
-			    </LinearLayout>
-			</LinearLayout>
-			
-			<View
-			    android:layout_width="fill_parent"
-			    android:layout_height="@dimen/divider_height"
-			    android:background="@color/light_grey" />
-			<!-- 	
-	        <LinearLayout
-	            style="@style/detail_layout"
-			    android:layout_width="fill_parent"
-			    android:layout_height="wrap_content" >
-	
-	            <TextView
-	                style="@style/detail_title"
-	                android:layout_width="wrap_content"
-	                android:layout_height="wrap_content"
-	                android:text="Job Title"
-	                 />
-	
-	            <TextView
-	                android:id="@+id/card_flip_view_jobTitle"
-	                android:layout_width="fill_parent"
-	                android:layout_height="wrap_content"
-	                android:textAppearance="?android:attr/textAppearanceMedium" />
-
-	        </LinearLayout>
-	        
-	        <View
-	            android:layout_width="fill_parent"
-	            android:layout_height="@dimen/divider_height"
-	            android:background="@color/light_grey" />
-				 -->
-				 
-	        <LinearLayout
-	            style="@style/detail_layout"
-	            android:layout_width="fill_parent"
-	            android:layout_height="wrap_content" >
-
-	            <TextView
-	                style="@style/detail_header"
-			        android:id="@+id/Contact"
-	                android:layout_width="wrap_content"
-	                android:layout_height="wrap_content"
-	                android:text="Contact"  />
-
-	            <View
-	                android:layout_width="fill_parent"
-	                android:layout_height="1dp"
-	                android:background="@color/dark_grey" />
-
-	            <LinearLayout
-	                android:layout_width="match_parent"
-	                android:layout_height="match_parent" >
-
-	                <TextView
-	                    style="@style/detail_title"
-	                    android:layout_width="wrap_content"
-	                    android:layout_height="wrap_content"
-	                    android:text="Email" />
-
-	                <TextView
-	                    android:id="@+id/card_flip_view_email"
-	                    style="@style/detail_content"
-	                    android:layout_width="fill_parent"
-	                    android:layout_height="wrap_content" />
-	            </LinearLayout>
-
-	            <LinearLayout
-	                android:layout_width="match_parent"
-	                android:layout_height="match_parent" >
-
-	                <TextView
-	                    style="@style/detail_title"
-	                    android:layout_width="wrap_content"
-	                    android:layout_height="wrap_content"
-	                    android:text="Phone" />
-
-	                <TextView
-	                    android:id="@+id/card_flip_view_phone"
-	                    style="@style/detail_content"
-	                    android:layout_width="fill_parent"
-	                    android:layout_height="wrap_content" />
-	            </LinearLayout>
-
-	            <LinearLayout
-	                android:layout_width="match_parent"
-	                android:layout_height="match_parent" >
-
-	                <TextView
-	                    style="@style/detail_title"
-	                    android:layout_width="wrap_content"
-	                    android:layout_height="wrap_content"
-	                    android:text="Address" />
-
-	                <TextView
-	                    android:id="@+id/card_flip_view_address"
-	                    style="@style/detail_content"
-	                    android:layout_width="fill_parent"
-	                    android:layout_height="wrap_content" />
-	            </LinearLayout>
-	        </LinearLayout>
-	
-	        <!-- 
-	        <View
-	            android:layout_width="fill_parent"
-	            android:layout_height="@dimen/divider_height"
-	            android:background="@color/light_grey" />
-	        
-	        <LinearLayout
-	             style="@style/detail_layout"
-			    android:layout_width="fill_parent"
-			    android:layout_height="wrap_content" >
-	            
-	            <TextView
-	                style="@style/detail_title"
-	                android:layout_width="wrap_content"
-	                android:layout_height="wrap_content"
-	                android:text="Phone"
-	                 />
-	            
-	            <TextView
-	                android:id="@+id/card_flip_view_phone"
-	                android:layout_width="fill_parent"
-	                android:layout_height="wrap_content"
-	                android:textAppearance="?android:attr/textAppearanceMedium" />
-
-	        </LinearLayout>
-	        
-	        <View
-	            android:layout_width="fill_parent"
-	            android:layout_height="@dimen/divider_height"
-	            android:background="@color/light_grey" />
-	        
-	        <LinearLayout
-	             style="@style/detail_layout"
-			    android:layout_width="fill_parent"
-			    android:layout_height="wrap_content" >
-	
-	            <TextView
-	                style="@style/detail_title"
-	                android:layout_width="wrap_content"
-	                android:layout_height="wrap_content"
-	                android:text="Address"
-	                 />
-	            
-	            <TextView
-	                android:id="@+id/card_flip_view_address"
-	                android:layout_width="fill_parent"
-	                android:layout_height="wrap_content"
-	                android:textAppearance="?android:attr/textAppearanceMedium" />
-
-	        </LinearLayout>
-	         -->
-	    </LinearLayout>
- 
+       android:layout_alignTop="@id/card_details_layout"
+       android:scaleType="fitXY"
+       android:src="@drawable/horizontal_shadow" />
+    
+    
 </RelativeLayout>

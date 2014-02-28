@@ -1,5 +1,7 @@
 package com.jackhxs.remote;
 
+import java.util.List;
+
 import retrofit.http.Body;
 import retrofit.http.DELETE;
 import retrofit.http.Field;
@@ -14,6 +16,7 @@ import com.google.gson.JsonObject;
 import com.jackhxs.data.APIResult;
 import com.jackhxs.data.LoginSignupResponse;
 import com.jackhxs.data.SimpleCard;
+import com.jackhxs.data.Template;
 
 /**
  * Created by moomou on 8/4/13.
@@ -74,4 +77,10 @@ public interface RestInterface {
 	@FormUrlEncoded
 	@POST("/sessions")
 	LoginSignupResponse login(@Field("email") String email, @Field("password") String password);
+	
+	/** Contacts */
+	@GET("/templates") // get templates
+	List<Template> getTemplates();
+
+	
 }

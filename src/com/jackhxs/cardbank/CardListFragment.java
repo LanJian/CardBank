@@ -106,7 +106,7 @@ public class CardListFragment extends ProgressFragment implements JSONResultRece
 	@Override
 	public void onDestroyView() {
 		super.onDestroy();
-		mImageLoader.destroy();
+		if (mImageLoader != null) mImageLoader.destroy();
 	}
 
 	@Override
