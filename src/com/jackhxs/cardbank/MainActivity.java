@@ -22,6 +22,7 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.jackhxs.data.AccountType;
 import com.jackhxs.data.SimpleCard;
 import com.jackhxs.remote.Constants;
 import com.jackhxs.remote.Constants.Operation;
@@ -29,9 +30,10 @@ import com.jackhxs.remote.JSONResultReceiver;
 import com.jackhxs.remote.RemoteService;
 
 public class MainActivity extends Activity implements CreateNdefMessageCallback, JSONResultReceiver.Receiver {
-	
+
 	private NfcAdapter mNfcAdapter;
-	private Boolean editCardImmediately;
+	private AccountType accountType;
+	private Boolean edited;
 	private Boolean networkFinished;
 	private Boolean startedPolling;
 	private Boolean pollingInProgress;
@@ -70,10 +72,11 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback,
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
-		editCardImmediately = getIntent().getExtras().getString("mode", "oldAccount").equals("newAccount");
+
+		accountType = App.accounType;
 		startedPolling = pollingInProgress = networkFinished = false;
 		longPollCount = 0;
+		edited = false;
 
 		if (!Util.isTablet(getApplicationContext())) {
 			getActionBar().setDisplayShowTitleEnabled(false);
@@ -223,8 +226,8 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback,
 			addTab("Referrals", fragment, "referrals");
 
 			// this is always the last call
-			if (editCardImmediately) {
-				editCardImmediately = !editCardImmediately;
+			if (!edited && accountType == AccountType.NEW_ACCOUNT) {
+				edited = true;
 				Intent intent = new Intent(
 						getApplicationContext(),
 						CardEditActivity.class);

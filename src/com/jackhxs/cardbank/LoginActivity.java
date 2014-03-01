@@ -20,6 +20,7 @@ import android.webkit.WebViewClient;
 import android.widget.CheckBox;
 import android.widget.EditText;
 
+import com.jackhxs.data.AccountType;
 import com.jackhxs.remote.Constants;
 import com.jackhxs.remote.Constants.Operation;
 import com.jackhxs.remote.JSONResultReceiver;
@@ -33,6 +34,7 @@ OnTaskCompleted {
 
 	public static final String PREFS_NAME = "MyPrefsFile";
 
+	private Boolean viaLinkedIn = false;
 	private EditText emailField, passwordField;
 	private CheckBox rememberLogin;
 	private String email, password;
@@ -123,7 +125,7 @@ OnTaskCompleted {
 	public void signInWithLNKD(View view) {
 		final OnTaskCompleted that = this;
 		String authUrl = LinkedInAPI.getInstance().getAuthUrl();
-		WebView webview = (WebView) findViewById(R.id.webview);
+		final WebView webview = (WebView) findViewById(R.id.webview);
 		webview.setVisibility(View.VISIBLE);
 
 		webview.setWebViewClient(new WebViewClient() {
@@ -133,7 +135,9 @@ OnTaskCompleted {
 					Uri uri = Uri.parse(url);
 					LinkedInAPI.getInstance().initAccessToken(uri.getQueryParameter("oauth_verifier")); // added this
 					LinkedInAPI.getInstance().getUserinfo(that);
-					LinkedInAPI.getInstance().getUserConnection(that);
+					webview.setVisibility(View.INVISIBLE);
+
+					//LinkedInAPI.getInstance().getUserConnection(that);
 					return true;
 				}
 				else {
@@ -143,70 +147,6 @@ OnTaskCompleted {
 		});
 
 		webview.loadUrl(authUrl);
-	}
-
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode,
-			Intent intent) {
-		super.onActivityResult(requestCode, resultCode, intent);
-		if (requestCode == 0) {
-			finish();
-		}
-	}
-
-
-	@Override
-	public void onReceiveResult(int resultCode, Bundle resultData) {
-		Log.e("paul", "result");
-
-		if (progress != null) {
-			progress.dismiss();
-		}
-
-		switch (resultCode) {
-
-		case Constants.STATUS_FINISHED: {
-			String errorMsg = resultData.getString("error", null);
-
-			if (errorMsg != null) {
-				// TODO: If user does not already exists, signup instead
-				Util.showErrorToast(getApplicationContext(), errorMsg);
-				return;
-			}
-
-			App.sessionId = resultData.getString("sessionId");
-			App.userId = resultData.getString("userId");
-
-			if (rememberLogin.isChecked()) {
-				settings.edit().putBoolean("authenticated", true).commit();
-				settings.edit().putString("sessionId", App.sessionId).commit();
-				settings.edit().putString("userId", App.userId).commit();
-			}
-
-			break;
-		}
-		case Constants.STATUS_ERROR: {
-			Context context = getApplicationContext();
-			Util.showWifiErrorToast(context);
-			Log.e("Network Error", "Error logging in");
-			break;
-		}
-		}
-
-		if (App.userId != null && !App.userId.equals("")
-				&& App.sessionId != null && !App.sessionId.equals("")) {
-
-			Log.e("Success", "logged in");
-
-			Intent intent = new Intent(this, MainActivity.class);
-			intent.putExtra("mode", "oldAccount");
-
-			startActivity(intent);
-			this.finish();
-
-		} else {
-			Log.e("Failed", "logged in");
-		}
 	}
 	
 	@Override
@@ -219,6 +159,86 @@ OnTaskCompleted {
 		}
 	}
 
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode,
+			Intent intent) {
+		super.onActivityResult(requestCode, resultCode, intent);
+		if (requestCode == 0) {
+			finish();
+		}
+	}
+
+	@Override
+	public void onReceiveResult(int resultCode, Bundle resultData) {
+		Integer errorCode = resultData.getInt("errorCode", 0);
+		String errorMsg = resultData.getString("errorMsg", "");
+
+		if (progress != null) {
+			progress.dismiss();
+		}
+
+		switch (resultCode) {
+
+		case Constants.STATUS_FINISHED: {
+			App.sessionId = resultData.getString("sessionId");
+			App.userId = resultData.getString("userId");
+
+			if (rememberLogin.isChecked()) {
+				settings.edit().putBoolean("authenticated", true).commit();
+				settings.edit().putString("sessionId", App.sessionId).commit();
+				settings.edit().putString("userId", App.userId).commit();
+			}
+
+			break;
+		}
+		case Constants.STATUS_ERROR: {
+			if (App.accounType == AccountType.LINKED_ACCOUNT &&
+					errorCode == 403) { 
+
+				final Intent intent = new Intent(Intent.ACTION_SYNC, null, this,
+						RemoteService.class);
+
+				App.accounType = AccountType.NEW_ACCOUNT;
+				
+				intent.putExtra("receiver", mReceiver);
+				intent.putExtra("operation", (Parcelable) Operation.POST_SIGNUP);
+				
+				intent.putExtra("email", email);
+				intent.putExtra("password", password);
+				startService(intent);
+
+				return;
+			}
+			
+			if (!errorMsg.equals("")) {
+				// TODO: If user does not already exists, signup instead
+				Util.showErrorToast(getApplicationContext(), errorMsg);
+				return;
+			}
+		
+			Context context = getApplicationContext();
+			Util.showWifiErrorToast(context);
+			
+			Log.e("Network Error", "Error logging in");
+			
+			break;
+		}
+		}
+
+		if (App.userId != null && !App.userId.equals("")
+				&& App.sessionId != null && !App.sessionId.equals("")) {
+
+			Log.e("Success", "logged in");
+
+			Intent intent = new Intent(this, MainActivity.class);
+			startActivity(intent);
+			
+			this.finish();
+
+		} else {
+			Log.e("Failed", "logged in");
+		}
+	}
 
 	@Override
 	public void onTaskCompleted(String responseJSON) {
@@ -226,9 +246,10 @@ OnTaskCompleted {
 		try {
 			JSONObject jObject = new JSONObject(responseJSON);
 			
-			email = jObject.getString("email");
+			email = jObject.getString("emailAddress");
 			password = LinkedInAPI.API_SECRETE + jObject.getString("id");
 			
+			App.accounType = AccountType.LINKED_ACCOUNT;
 			emailField.setText(email);
 			passwordField.setText(password);
 			

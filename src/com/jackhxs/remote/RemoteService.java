@@ -56,6 +56,10 @@ public class RemoteService extends IntentService {
         	switch (command) {
             case POST_SIGNUP:
             case POST_LOGIN: {
+            	if (command == Operation.POST_SIGNUP) {
+            		App.newAccount = true;
+            	}
+            	
                 String email = intent.getStringExtra("email");
                 String password = intent.getStringExtra("password");
                 
@@ -185,10 +189,12 @@ public class RemoteService extends IntentService {
             }
         }
         catch (RetrofitError re) {
-        	if (re.getResponse() != null && re.getResponse().getStatus() == 403) { // token expired
-        	}
-        	
         	success = false;
+        	
+        	if (re.getResponse() != null) { // && re.getResponse().getStatus() == 403) { // token expired
+        		b.putInt("errorCode", re.getResponse().getStatus());
+        		b.putString("errorMsg", re.getResponse().getReason());
+        	}
         }
         finally {
         	if (success) {

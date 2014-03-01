@@ -26,7 +26,6 @@ JSONResultReceiver.Receiver {
 	
 	public JSONResultReceiver mReceiver;
 
-
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -49,6 +48,7 @@ JSONResultReceiver.Receiver {
 			confirmField.setText(initIntent.getExtras().getString("password"));
 			
 			interactive = false;
+			
 			// Passing the root view
 			this.signup(getWindow().getDecorView().findViewById(android.R.id.content));
 		}
@@ -105,7 +105,6 @@ JSONResultReceiver.Receiver {
 		Log.e("paul", "result");
 
 		progress.dismiss();
-
 		switch (resultCode) {
 
 		case Constants.STATUS_FINISHED: {

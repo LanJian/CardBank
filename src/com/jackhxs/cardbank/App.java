@@ -11,11 +11,14 @@ import android.content.res.AssetManager;
 import android.content.res.Configuration;
 
 import com.google.gson.Gson;
+import com.jackhxs.data.AccountType;
 import com.jackhxs.data.SimpleCard;
 import com.jackhxs.data.TemplateConfig;
 import com.jackhxs.remote.LinkedInAPI;
 
 public class App extends Application {
+	public static AccountType accounType;
+	public static Boolean newAccount;
 	public static String sessionId;
 	public static String userId;
 

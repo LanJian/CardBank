@@ -1,7 +1,5 @@
 package com.jackhxs.remote;
 
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.scribe.builder.ServiceBuilder;
 import org.scribe.builder.api.LinkedInApi;
 import org.scribe.model.OAuthRequest;
@@ -54,6 +52,15 @@ public class LinkedInAPI {
 
 		@Override
 		protected String doInBackground(String... urls) {
+			while (accessToken == null) {
+				try {
+					Thread.sleep(100, 0);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			
 			if (cache == null) {
 				OAuthRequest request = new OAuthRequest(Verb.GET, urls[0]);
 				service.signRequest(accessToken, request);
@@ -85,7 +92,6 @@ public class LinkedInAPI {
 				"r_emailaddress", "r_fullprofile"))
 				.apiKey(API_KEY).apiSecret(API_SECRETE)
 				.callback(CALL_BACK_URL).build();
-
 		new RequestTokenInit().execute();
 	}
 
@@ -104,8 +110,6 @@ public class LinkedInAPI {
 	}
 
 	public String getAuthUrl() {
-		while (authUrl == null) {
-		}
 		return authUrl;
 	}
 
