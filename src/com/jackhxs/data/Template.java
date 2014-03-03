@@ -41,4 +41,17 @@ public class Template implements Parcelable {
             return new Template[size];
         }
     };
+
+
+
+
+	@Override
+	public String toString() {
+		// TODO Auto-generated method stub
+		return "imageUrl: " + imageUrl + " templateName: " + templateName + " properties: " + properties.toString();
+		
+		
+	}
+    
+    
 }

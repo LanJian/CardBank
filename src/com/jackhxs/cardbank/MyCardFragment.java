@@ -25,10 +25,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.devspark.progressfragment.ProgressFragment;
 import com.google.gson.Gson;
-import com.jackhxs.data.SimpleCard;
+import com.jackhxs.data.BusinessCard;
 import com.jackhxs.data.Template;
 import com.jackhxs.remote.JSONResultReceiver;
 import com.jackhxs.remote.RemoteService;
@@ -41,7 +42,7 @@ public class MyCardFragment extends ProgressFragment implements JSONResultReceiv
 	
 	private View mContentView;
     
-	private SimpleCard myCard;
+	private BusinessCard myCard;
 	
 	public JSONResultReceiver mReceiver;
     
@@ -75,7 +76,7 @@ public class MyCardFragment extends ProgressFragment implements JSONResultReceiv
 	 * TODO This isn't needed. needs to be removed in future
 	 */
     @SuppressLint("ValidFragment")
-	public MyCardFragment(SimpleCard card) {
+	public MyCardFragment(BusinessCard card) {
 		myCard = card;
 		//this.setHasOptionsMenu(true);
 	}
@@ -111,32 +112,33 @@ public class MyCardFragment extends ProgressFragment implements JSONResultReceiv
 		mReceiver.setReceiver(this);
 		
 		
-		final Intent intentTemplates = new Intent(Intent.ACTION_SYNC, null, getActivity(), RemoteService.class);
-		
-		intentTemplates.putExtra("receiver", mReceiver);
-		intentTemplates.putExtra("operation",(Parcelable) Operation.GET_TEMPLATES);
-		
-		getActivity().startService(intentTemplates);
-		
-		
 		final Intent intentCards = new Intent(Intent.ACTION_SYNC, null, getActivity(), RemoteService.class);
 		
 		intentCards.putExtra("receiver", mReceiver);
 		intentCards.putExtra("operation",(Parcelable) Operation.GET_CARDS);
 		
+		Log.i(TAG, "Loading my cards");
 		getActivity().startService(intentCards);
 		
+		final Intent intentTemplates = new Intent(Intent.ACTION_SYNC, null, getActivity(), RemoteService.class);
+		
+		intentTemplates.putExtra("receiver", mReceiver);
+		intentTemplates.putExtra("operation",(Parcelable) Operation.GET_TEMPLATES);
+		
+		Log.i(TAG, "Loading templates");
+		getActivity().startService(intentTemplates);
 		
 		mContainer = (PagerContainer) mContentView.findViewById(R.id.pager_container);
 
         // Instantiate a ViewPager and a PagerAdapter.
         mPager = mContainer.getViewPager();
-        //mPagerAdapter = new BusinessTemplateAdapter(getFragmentManager());
-        //mPager.setAdapter(mPagerAdapter);
-		
-        mPager.setPageMargin(30);
         
-		return super.onCreateView(inflater, container, savedInstanceState);
+        // Add some spacing between cards
+        mPager.setPageMargin(30); 
+        
+        mPager.setOnPageChangeListener(new SelectorChangeListener());
+		
+        return super.onCreateView(inflater, container, savedInstanceState);
 		
 	}
 	
@@ -152,35 +154,8 @@ public class MyCardFragment extends ProgressFragment implements JSONResultReceiv
     }
 	
 	private void updateCardUI(View rootView) {
-		int index = 0;
-		
-		// Only run this when the card data is ready
 		if (myCard != null){
-			if (!myCard.imageUrl.equals("")) {
-				index = Integer.parseInt(myCard.imageUrl);
-			}
-			
-			// Inflate the layout for this fragment
-			Log.e("paul", "create fragment");
-			
-			
-			/////// start delete here
-			/*
-			ImageView imgView = (ImageView) rootView.findViewById(R.id.card_flip_view_image);
-			
-			Bitmap newCard = ImageUtil.GenerateCardImage(getActivity(), 
-					App.templateConfig[index], 
-					myCard.firstName + " " + myCard.lastName, 
-					myCard.email, 
-					myCard.phone, 
-					myCard.companyName, 
-					myCard.address, 
-					myCard.jobTitle);
-			
-			imgView.setImageBitmap(newCard);
-			*/
-			///////// Finish delete here
-			
+			Log.e(TAG, "Updating Card elements");
 			
 			mPagerAdapter = new BusinessTemplateAdapter(getFragmentManager(), templates, myCard);
 	        mPager.setAdapter(mPagerAdapter);
@@ -229,9 +204,10 @@ public class MyCardFragment extends ProgressFragment implements JSONResultReceiv
 			// card saved successfully
 			Log.d(TAG, "card saved successfully");
 			updatePending = false;
+			
 		}
 		else if (resultData.getString("action") != null && resultData.getString("action").equals(Operation.GET_CARDS.toString())){
-			SimpleCard[] myCards = (SimpleCard[]) resultData.getParcelableArray("cards");
+			BusinessCard[] myCards = (BusinessCard[]) resultData.getParcelableArray("cards");
 			
 			App.myCards = myCards;
 			/*
@@ -239,7 +215,7 @@ public class MyCardFragment extends ProgressFragment implements JSONResultReceiv
 			 */
 			myCard = App.myCards[0];
 			
-			Template currentTemplate = myCard.template;
+			Template currentTemplate = myCard.getTemplate();
 			
 			templates.add(0,currentTemplate);
 			
@@ -270,30 +246,30 @@ public class MyCardFragment extends ProgressFragment implements JSONResultReceiv
 	}
 	
 
-	private void setupInitialFields(SimpleCard myCard2) {
+	private void setupInitialFields(BusinessCard myCard2) {
 		
 		editTextName = (EditText) mContentView.findViewById(R.id.edit_name);
-		editTextName.setText(myCard.firstName + " " + myCard.lastName);
+		editTextName.setText(myCard.getFirstName() + " " + myCard.getLastName());
 		editTextName.addTextChangedListener(new cardChangeListener(FieldName.NAME));
 		
 		editCompanyName = (EditText) mContentView.findViewById(R.id.edit_company);
-		editCompanyName.setText(myCard.companyName);
+		editCompanyName.setText(myCard.getCompanyName());
 		editCompanyName.addTextChangedListener(new cardChangeListener(FieldName.COMPANY));
 		
 		editJobTitle = (EditText) mContentView.findViewById(R.id.edit_job_title);
-		editJobTitle.setText(myCard.jobTitle);
+		editJobTitle.setText(myCard.getJobTitle());
 		editJobTitle.addTextChangedListener(new cardChangeListener(FieldName.TITLE));
 		
 		editEmail = (EditText) mContentView.findViewById(R.id.edit_email);
-		editEmail.setText(myCard.email);
+		editEmail.setText(myCard.getEmail());
 		editEmail.addTextChangedListener(new cardChangeListener(FieldName.EMAIL));
 		
 		editPhone = (EditText) mContentView.findViewById(R.id.edit_phone);
-		editPhone.setText(PhoneNumberUtils.formatNumber(myCard.phone));
+		editPhone.setText(PhoneNumberUtils.formatNumber(myCard.getPhone()));
 		editPhone.addTextChangedListener(new cardChangeListener(FieldName.PHONE));
 		
 		editAddress = (EditText) mContentView.findViewById(R.id.edit_address);
-		editAddress.setText(myCard.address);
+		editAddress.setText(myCard.getAddress());
 		editAddress.addTextChangedListener(new cardChangeListener(FieldName.ADDRESS));
 		
 		
@@ -338,7 +314,7 @@ public class MyCardFragment extends ProgressFragment implements JSONResultReceiv
 
 		@Override
 		public void onTextChanged(CharSequence s, int start, int before, int count) {
-			myCard = App.myCards[0];
+			//myCard = App.myCards[0];
 			
 			switch (mFieldName) {
 				case NAME:
@@ -346,33 +322,33 @@ public class MyCardFragment extends ProgressFragment implements JSONResultReceiv
 				Log.i(TAG, name.toString());
 				
 				if (name.length > 1) {
-					App.myCards[0].firstName = name[0];
-					App.myCards[0].lastName = name[1];
+					myCard.setFirstName(name[0]);
+					myCard.setLastName(name[1]);
 				}
 				else {
-					App.myCards[0].firstName = name[0];
-					App.myCards[0].lastName = ""; // clear last name if not present
+					myCard.setFirstName(name[0]);
+					myCard.setLastName(""); // clear last name if not present
 				}
 				break;
 				case COMPANY:
 					String company = s.toString();
-					App.myCards[0].companyName = company;
+					myCard.setCompanyName(company);
 					break;
 				case TITLE:
 					String jobTitle = s.toString();
-					App.myCards[0].jobTitle = jobTitle;
+					myCard.setJobTitle(jobTitle);
 					break;
 				case EMAIL:
 					String email = s.toString();
-					App.myCards[0].email = email;
+					myCard.setEmail(email);
 					break;
 				case PHONE:
 					String phone = s.toString();
-					App.myCards[0].phone = phone;
+					myCard.setPhone(phone);
 					break;
 				case ADDRESS:
 					String address = s.toString();
-					App.myCards[0].address = address;
+					myCard.setAddress(address);
 					break;
 				default:
 					break;
@@ -387,10 +363,7 @@ public class MyCardFragment extends ProgressFragment implements JSONResultReceiv
 				super.afterTextChanged(s);
 			}
 			
-			timer.cancel();
-			updatePending = true;
-			timer = new Timer();
-            timer.schedule(new saveCardTimer(), 5000); // 0.5s
+			delaySaveCard();
 		}
 		
 		// not used
@@ -399,6 +372,13 @@ public class MyCardFragment extends ProgressFragment implements JSONResultReceiv
 
 	} 
 	
+	private void delaySaveCard() {
+		timer.cancel();
+		updatePending = true;
+		timer = new Timer();
+        timer.schedule(new saveCardTimer(), 2000); // 2s
+	}
+	
 	private class saveCardTimer extends TimerTask {
 
 		@Override
@@ -406,5 +386,24 @@ public class MyCardFragment extends ProgressFragment implements JSONResultReceiv
 			saveCard();
 		}
 		
+	}
+	
+	public class SelectorChangeListener implements ViewPager.OnPageChangeListener {
+		// unused
+		@Override public void onPageScrollStateChanged(int state) {}
+		@Override public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
+
+		@Override
+		public void onPageSelected(int position) {
+			Toast.makeText(getActivity(), "template " + position + " selected", Toast.LENGTH_SHORT).show();	
+			
+			myCard.setTemplate(templates.get(position));
+			
+			myCard.getTemplateConfig().setBaseTemplate(myCard.getTemplate().templateName);
+			
+			delaySaveCard();
+		}
+
+	    
 	}
 }

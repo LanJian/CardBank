@@ -16,7 +16,7 @@ import com.google.gson.JsonObject;
 import com.jackhxs.cardbank.App;
 import com.jackhxs.data.APIResult;
 import com.jackhxs.data.LoginSignupResponse;
-import com.jackhxs.data.SimpleCard;
+import com.jackhxs.data.BusinessCard;
 import com.jackhxs.data.Template;
 import com.jackhxs.remote.Constants.Operation;
 import com.squareup.okhttp.OkHttpClient;
@@ -112,7 +112,7 @@ public class RemoteService extends IntentService {
             case GET_CONTACTS: {
             	APIResult result = service.listContacts(userId, sessionId);
             	
-            	SimpleCard[] contacts = result.cards;
+            	BusinessCard[] contacts = result.cards;
             	
             	/*
                  *  TODO is dataType needed anymore? data is loaded in the fragments (only 1 datatype at a time) so is it really needed???
@@ -131,11 +131,11 @@ public class RemoteService extends IntentService {
             case POST_CARD: {
                 String simpleCardJSON = intent.getStringExtra("simpleCardJSON");
 
-                SimpleCard simpleCard = new Gson().fromJson(simpleCardJSON, SimpleCard.class);
+                BusinessCard simpleCard = new Gson().fromJson(simpleCardJSON, BusinessCard.class);
                 JsonObject res;
                 
                 if (command.equals(Operation.UPDATE_CARD)) {
-                	res = service.updateCard(userId, simpleCard._id, sessionId, simpleCard);
+                	res = service.updateCard(userId, simpleCard.get_id(), sessionId, simpleCard);
                 }
                 else {
                 	res = service.addCard(userId, sessionId, simpleCard);
@@ -149,7 +149,7 @@ public class RemoteService extends IntentService {
             case POST_CONTACT: {
                 String simpleCardJSON = intent.getStringExtra("newContactJSON");
 
-                SimpleCard simpleCard = new Gson().fromJson(simpleCardJSON, SimpleCard.class);
+                BusinessCard simpleCard = new Gson().fromJson(simpleCardJSON, BusinessCard.class);
                 JsonObject res = service.addContact(userId, sessionId, simpleCard);
                 Boolean result = res.get("status").getAsString().equals("success") ? true : false;
                 
@@ -190,7 +190,7 @@ public class RemoteService extends IntentService {
             }
             case LIST_REFERRALS: {
             	APIResult res = service.listReferrals(userId, sessionId);
-                SimpleCard[] referrals = res.cards;
+                BusinessCard[] referrals = res.cards;
 
                 resultBundle.putString("action", Operation.LIST_REFERRALS.toString());
                 resultBundle.putString("dataType", "referrals");

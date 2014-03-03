@@ -22,7 +22,7 @@ import android.util.LruCache;
 import android.util.TypedValue;
 import android.view.Display;
 
-import com.jackhxs.data.TemplateConfig;
+import com.jackhxs.data.TemplateConfig_old;
 
 public class ImageUtil {
 	final static int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
@@ -69,7 +69,7 @@ public class ImageUtil {
 	}
 	
 	static public Bitmap GenerateCardImage(Activity ref, 
-			TemplateConfig template, 
+			TemplateConfig_old template, 
 			String name, 
 			String email, 
 			String phone,
@@ -89,7 +89,7 @@ public class ImageUtil {
 		return res;
 	}
 	
-	static public Bitmap combineImages(TemplateConfig template, 
+	static public Bitmap combineImages(TemplateConfig_old template, 
 			Bitmap background, 
 			String name, 
 			String email, 

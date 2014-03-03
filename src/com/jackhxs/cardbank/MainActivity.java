@@ -22,7 +22,7 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.jackhxs.data.SimpleCard;
+import com.jackhxs.data.BusinessCard;
 import com.jackhxs.remote.Constants;
 import com.jackhxs.remote.Constants.Operation;
 import com.jackhxs.remote.JSONResultReceiver;
@@ -162,7 +162,7 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback,
 
 	private void dataUpdated(Bundle resultData) throws ParseException {
 		String dataType = resultData.getString("dataType");
-		SimpleCard[] data = (SimpleCard[]) resultData.getParcelableArray(dataType);
+		BusinessCard[] data = (BusinessCard[]) resultData.getParcelableArray(dataType);
 		
 		if (dataType.equals("cards")) {
 			App.myCards = data;
@@ -273,7 +273,7 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback,
 		Integer myContactLength = App.myContacts.length;
 
 		App.myContacts[myContactLength] = 
-				(new Gson()).fromJson(simpleCardJSON, SimpleCard.class);
+				(new Gson()).fromJson(simpleCardJSON, BusinessCard.class);
 		
 		Log.e("NFC Data", simpleCardJSON);
 		

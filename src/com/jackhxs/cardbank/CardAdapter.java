@@ -18,18 +18,18 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.jackhxs.data.SimpleCard;
+import com.jackhxs.data.BusinessCard;
 import com.jackhxs.util.ImageUtil;
 import com.xtremelabs.imageutils.ImageLoader;
 
-public class CardAdapter extends ArrayAdapter<SimpleCard> {
+public class CardAdapter extends ArrayAdapter<BusinessCard> {
 
-    private ArrayList<SimpleCard> myData;
+    private ArrayList<BusinessCard> myData;
     private int myResourceId;
     private Context myContext;
     
     public CardAdapter(Context context, int resourceId,
-            ArrayList<SimpleCard> objects, ImageLoader mImageLoader) {
+            ArrayList<BusinessCard> objects, ImageLoader mImageLoader) {
         super(context, resourceId, objects);
         myData = objects;
         myResourceId = resourceId;
@@ -51,27 +51,27 @@ public class CardAdapter extends ArrayAdapter<SimpleCard> {
         TextView streetAddress = (TextView) convertView.findViewById(R.id.card_flip_view_address);
         
         
-        phoneNumber.setText(PhoneNumberUtils.formatNumber(myData.get(position).phone));
-        phoneLayout.setOnClickListener(new PhoneClickListener(myData.get(position).phone, myContext));
+        phoneNumber.setText(PhoneNumberUtils.formatNumber(myData.get(position).getPhone()));
+        phoneLayout.setOnClickListener(new PhoneClickListener(myData.get(position).getPhone(), myContext));
         
-        emailAddress.setText(myData.get(position).email);
-        emailLayout.setOnClickListener(new EmailClickListener(myData.get(position).email, myContext));
+        emailAddress.setText(myData.get(position).getEmail());
+        emailLayout.setOnClickListener(new EmailClickListener(myData.get(position).getEmail(), myContext));
         
-        streetAddress.setText(myData.get(position).address);
+        streetAddress.setText(myData.get(position).getAddress());
         Linkify.addLinks(streetAddress, Linkify.MAP_ADDRESSES);
         
         ImageView imgView = (ImageView) convertView
                 .findViewById(R.id.card_flip_view_image);
         //myImageLoader.loadImage(imgView, myData[position].imageUrl);
-        int index = Integer.parseInt(myData.get(position).imageUrl);
+        int index = Integer.parseInt(myData.get(position).getImageUrl());
         Bitmap newCard = ImageUtil.GenerateCardImage((Activity) myContext,
                 App.templateConfig[index],
-                myData.get(position).firstName + " " + myData.get(position).lastName, 
-                myData.get(position).email, 
-                myData.get(position).phone, 
-                myData.get(position).companyName, 
-                myData.get(position).address, 
-                myData.get(position).jobTitle);
+                myData.get(position).getFirstName() + " " + myData.get(position).getLastName(), 
+                myData.get(position).getEmail(), 
+                myData.get(position).getPhone(),
+                myData.get(position).getCompanyName(),
+                myData.get(position).getAddress(),
+                myData.get(position).getJobTitle());
         imgView.setImageBitmap(newCard);
 
         return convertView;

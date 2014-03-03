@@ -20,7 +20,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 
 import com.google.gson.Gson;
-import com.jackhxs.data.SimpleCard;
+import com.jackhxs.data.BusinessCard;
 import com.jackhxs.remote.Constants;
 import com.jackhxs.remote.Constants.Operation;
 import com.jackhxs.remote.JSONResultReceiver;
@@ -132,14 +132,14 @@ public class CardEditActivity extends Activity implements JSONResultReceiver.Rec
 		addressField.setOnFocusChangeListener(stdEditTextOnFocusListener);
 		jobTitleField.setOnFocusChangeListener(stdEditTextOnFocusListener);
 		
-		SimpleCard myCard = App.myCards[0];
+		BusinessCard myCard = App.myCards[0];
 
-		nameField.setText(myCard.firstName + " " + myCard.lastName);
-		phoneField.setText(myCard.phone);
-		emailField.setText(myCard.email);
-		companyNameField.setText(myCard.companyName);
-		addressField.setText(myCard.address);
-		jobTitleField.setText(myCard.jobTitle);
+		nameField.setText(myCard.getFirstName() + " " + myCard.getLastName());
+		phoneField.setText(myCard.getPhone());
+		emailField.setText(myCard.getEmail());
+		companyNameField.setText(myCard.getCompanyName());
+		addressField.setText(myCard.getAddress());
+		jobTitleField.setText(myCard.getJobTitle());
 
 		// android.R.id.content as the container for each fragment
 		mReceiver = new JSONResultReceiver(new Handler());
@@ -158,7 +158,7 @@ public class CardEditActivity extends Activity implements JSONResultReceiver.Rec
 		
 		int index = 0;
 		try {
-			index= Integer.parseInt(myCard.imageUrl);
+			index= Integer.parseInt(myCard.getImageUrl());
 		}
 		catch(NumberFormatException nfe)  {  
 			index = 0;
@@ -200,14 +200,14 @@ public class CardEditActivity extends Activity implements JSONResultReceiver.Rec
 		final Intent intent = new Intent(Intent.ACTION_SYNC, null, this,
 				RemoteService.class);
 
-		App.myCards[0].email = email;
-		App.myCards[0].phone = phone;
-		App.myCards[0].firstName = name.split(" ")[0];
-		App.myCards[0].lastName = name.split(" ")[1];
-		App.myCards[0].companyName = companyName;
-		App.myCards[0].address = address;
-		App.myCards[0].jobTitle = jobTitle;
-		App.myCards[0].imageUrl = String.valueOf(templateIndex); 
+		App.myCards[0].setEmail(email);
+		App.myCards[0].setPhone(phone);
+		App.myCards[0].setFirstName(name.split(" ")[0]);
+		App.myCards[0].setLastName(name.split(" ")[1]);
+		App.myCards[0].setCompanyName(companyName);
+		App.myCards[0].setAddress(address);
+		App.myCards[0].setJobTitle(jobTitle);
+		App.myCards[0].setImageUrl(String.valueOf(templateIndex)); 
 
 		intent.putExtra("receiver", mReceiver);
 		intent.putExtra("operation", (Parcelable) Operation.UPDATE_CARD);

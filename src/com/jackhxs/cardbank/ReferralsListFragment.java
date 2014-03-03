@@ -15,7 +15,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.devspark.progressfragment.ProgressFragment;
-import com.jackhxs.data.SimpleCard;
+import com.jackhxs.data.BusinessCard;
 import com.jackhxs.remote.JSONResultReceiver;
 import com.jackhxs.remote.RemoteService;
 import com.jackhxs.remote.Constants.Operation;
@@ -75,7 +75,7 @@ public class ReferralsListFragment extends ProgressFragment implements JSONResul
 		// TODO Auto-generated method stub
 		
 		String dataType = resultData.getString("dataType");
-		SimpleCard[] data = (SimpleCard[]) resultData.getParcelableArray(dataType);
+		BusinessCard[] data = (BusinessCard[]) resultData.getParcelableArray(dataType);
 		
 		
 		App.myReferrals = data;
@@ -90,7 +90,7 @@ public class ReferralsListFragment extends ProgressFragment implements JSONResul
 			emptyMsg.setVisibility(View.GONE);
 		}
 		
-		ArrayList<SimpleCard> list = new ArrayList<SimpleCard>();
+		ArrayList<BusinessCard> list = new ArrayList<BusinessCard>();
         list.addAll(Arrays.asList(App.myReferrals));
 		myAdapter = new TEMPCardAdapter(getActivity(), R.layout.refer_list_row, list, mImageLoader);
 		myListView.setAdapter(myAdapter);

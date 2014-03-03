@@ -11,18 +11,18 @@ import android.content.res.AssetManager;
 import android.content.res.Configuration;
 
 import com.google.gson.Gson;
-import com.jackhxs.data.SimpleCard;
-import com.jackhxs.data.TemplateConfig;
+import com.jackhxs.data.BusinessCard;
+import com.jackhxs.data.TemplateConfig_old;
 
 public class App extends Application {
 	public static String sessionId;
 	public static String userId;
 
-	public static SimpleCard[] myCards;
-	public static SimpleCard[] myContacts;
-	public static SimpleCard[] myReferrals;
+	public static BusinessCard[] myCards;
+	public static BusinessCard[] myContacts;
+	public static BusinessCard[] myReferrals;
 	
-	public static TemplateConfig[] templateConfig;
+	public static TemplateConfig_old[] templateConfig;
 	public static Calendar lastUpdated;
 	
 	public Boolean addContact() {
@@ -61,7 +61,7 @@ public class App extends Application {
 		        sb.append(line + "\n");
 		    }
 		    
-		    templateConfig = new Gson().fromJson(sb.toString(), TemplateConfig[].class);
+		    templateConfig = new Gson().fromJson(sb.toString(), TemplateConfig_old[].class);
 		    
 		} catch (IOException e) {
 			e.printStackTrace();

@@ -21,24 +21,24 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
-import com.jackhxs.data.SimpleCard;
+import com.jackhxs.data.BusinessCard;
 import com.jackhxs.remote.Constants.Operation;
 import com.jackhxs.remote.JSONResultReceiver;
 import com.jackhxs.remote.RemoteService;
 import com.jackhxs.util.ImageUtil;
 import com.xtremelabs.imageutils.ImageLoader;
 
-public class TEMPCardAdapter extends ArrayAdapter<SimpleCard> {
+public class TEMPCardAdapter extends ArrayAdapter<BusinessCard> {
 
     private static final int[] ICON_BG_COLORS = { 0xff1b7c59, 0xffe76e66,
             0xffdca46b, 0xff5699a9, 0xff695b8e, 0xff8c5e7a };
 
-    private ArrayList<SimpleCard> myData;
+    private ArrayList<BusinessCard> myData;
     private int myResourceId;
     private Context myContext;
     
     public TEMPCardAdapter(Context context, int resourceId,
-            ArrayList<SimpleCard> objects, ImageLoader mImageLoader) {
+            ArrayList<BusinessCard> objects, ImageLoader mImageLoader) {
         super(context, resourceId, objects);
         myData = objects;
         myResourceId = resourceId;
@@ -66,11 +66,11 @@ public class TEMPCardAdapter extends ArrayAdapter<SimpleCard> {
         row = inflater.inflate(myResourceId, parent, false);
 
         TextView txtView = (TextView) row.findViewById(R.id.txtTitle);
-        txtView.setText(myData.get(position).firstName + " "
-                + myData.get(position).lastName);
+        txtView.setText(myData.get(position).getFirstName() + " "
+                + myData.get(position).getLastName());
 
         txtView = (TextView) row.findViewById(R.id.imgIcon);
-        txtView.setText(myData.get(position).lastName.substring(0, 1).toUpperCase(Locale.US));
+        txtView.setText(myData.get(position).getLastName().substring(0, 1).toUpperCase(Locale.US));
         int rand = (int) (Math.random() * ICON_BG_COLORS.length);
         txtView.setBackgroundColor(ICON_BG_COLORS[rand]);
 
@@ -86,17 +86,17 @@ public class TEMPCardAdapter extends ArrayAdapter<SimpleCard> {
 
         String name, phone, email, companyName, jobTitle, address;
 
-        name = myData.get(position).firstName + " "
-                + myData.get(position).lastName;
-        phone = myData.get(position).phone;
-        email = myData.get(position).email;
-        companyName = myData.get(position).companyName;
-        address = myData.get(position).address;
-        jobTitle = myData.get(position).jobTitle;
+        name = myData.get(position).getFirstName() + " "
+                + myData.get(position).getLastName();
+        phone = myData.get(position).getPhone();
+        email = myData.get(position).getEmail();
+        companyName = myData.get(position).getCompanyName();
+        address = myData.get(position).getAddress();
+        jobTitle = myData.get(position).getJobTitle();
 
         ImageView imgView = (ImageView) row
                 .findViewById(R.id.refer_list_row_image);
-        int index = Integer.parseInt(myData.get(position).imageUrl);
+        int index = Integer.parseInt(myData.get(position).getImageUrl());
         Bitmap newCard = ImageUtil.GenerateCardImage((Activity) myContext,
                 App.templateConfig[index], name, email, phone, companyName, address, jobTitle);
         imgView.setImageBitmap(newCard);
@@ -137,36 +137,36 @@ public class TEMPCardAdapter extends ArrayAdapter<SimpleCard> {
 
         TextView txtView = (TextView) item
                 .findViewById(R.id.card_flip_view_name);
-        txtView.setText(myData.get(position).firstName + " "
-                + myData.get(position).lastName);
+        txtView.setText(myData.get(position).getFirstName() + " "
+                + myData.get(position).getLastName());
         name = txtView.getText().toString();
 
         txtView = (TextView) item.findViewById(R.id.card_flip_view_phone);
-        txtView.setText(myData.get(position).phone);
+        txtView.setText(myData.get(position).getPhone());
         phone = txtView.getText().toString();
         Linkify.addLinks(txtView, Linkify.PHONE_NUMBERS);
 
         txtView = (TextView) item.findViewById(R.id.card_flip_view_email);
-        txtView.setText(myData.get(position).email);
+        txtView.setText(myData.get(position).getEmail());
         email = txtView.getText().toString();
         Linkify.addLinks(txtView, Linkify.EMAIL_ADDRESSES);
         
         txtView = (TextView) item.findViewById(R.id.card_flip_view_companyName);
-        txtView.setText(myData.get(position).companyName);
+        txtView.setText(myData.get(position).getCompanyName());
         companyName = txtView.getText().toString();
 
         txtView = (TextView) item.findViewById(R.id.card_flip_view_jobTitle);
-        txtView.setText(myData.get(position).jobTitle);
+        txtView.setText(myData.get(position).getJobTitle());
         jobTitle = txtView.getText().toString();
 
         txtView = (TextView) item.findViewById(R.id.card_flip_view_address);
-        txtView.setText(myData.get(position).address);
+        txtView.setText(myData.get(position).getAddress());
         address = txtView.getText().toString();
         
         ImageView imgView = (ImageView) item
                 .findViewById(R.id.card_flip_view_image);
         //myImageLoader.loadImage(imgView, myData[position].imageUrl);
-        int index = Integer.parseInt(myData.get(position).imageUrl);
+        int index = Integer.parseInt(myData.get(position).getImageUrl());
         Bitmap newCard = ImageUtil.GenerateCardImage((Activity) myContext,
                 App.templateConfig[index], name, email, phone, companyName, address, jobTitle);
         imgView.setImageBitmap(newCard);
@@ -198,7 +198,7 @@ public class TEMPCardAdapter extends ArrayAdapter<SimpleCard> {
     }
 
     public void removeCard(int position) {
-    	String referralId = myData.get(position).referralId;
+    	String referralId = myData.get(position).getReferralId();
     	
         this.remove(myData.get(position));
         this.notifyDataSetChanged();

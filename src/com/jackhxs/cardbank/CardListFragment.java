@@ -21,7 +21,7 @@ import android.widget.TextView;
 
 import com.devspark.progressfragment.ProgressFragment;
 import com.jackhxs.data.APIResult;
-import com.jackhxs.data.SimpleCard;
+import com.jackhxs.data.BusinessCard;
 import com.jackhxs.remote.Constants.Operation;
 import com.jackhxs.remote.JSONResultReceiver;
 import com.jackhxs.remote.RemoteService;
@@ -60,8 +60,8 @@ public class CardListFragment extends ProgressFragment implements JSONResultRece
 					RemoteService.class);
 
 			serviceIntent.putExtra("operation", (Parcelable) Operation.REFER);
-			serviceIntent.putExtra("referredTo", App.myContacts[position].userId); 
-			serviceIntent.putExtra("cardId", App.myContacts[toRefer]._id);
+			serviceIntent.putExtra("referredTo", App.myContacts[position].getUserId()); 
+			serviceIntent.putExtra("cardId", App.myContacts[toRefer].get_id());
 			
 			getActivity().startService(serviceIntent);
 
@@ -115,7 +115,7 @@ public class CardListFragment extends ProgressFragment implements JSONResultRece
 	
 		Log.d(TAG, "recieved Result in CardListFragment");
 		
-		SimpleCard[] data = (SimpleCard[]) resultData.getParcelableArray("contacts");
+		BusinessCard[] data = (BusinessCard[]) resultData.getParcelableArray("contacts");
 		
 
 		App.myContacts = data;
@@ -149,7 +149,7 @@ public class CardListFragment extends ProgressFragment implements JSONResultRece
 			emptyMsg.setVisibility(View.GONE);
 		}
 		
-		ArrayList<SimpleCard> list = new ArrayList<SimpleCard>();
+		ArrayList<BusinessCard> list = new ArrayList<BusinessCard>();
 		list.addAll(Arrays.asList(App.myContacts));
 		
 		myAdapter = new TEMPCardAdapter(getActivity(), R.layout.list_view_row, list, mImageLoader);

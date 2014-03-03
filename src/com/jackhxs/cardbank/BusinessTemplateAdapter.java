@@ -2,7 +2,7 @@ package com.jackhxs.cardbank;
 
 import java.util.List;
 
-import com.jackhxs.data.SimpleCard;
+import com.jackhxs.data.BusinessCard;
 import com.jackhxs.data.Template;
 
 import android.support.v4.app.Fragment;
@@ -11,9 +11,9 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 
 public class BusinessTemplateAdapter extends FragmentStatePagerAdapter {
 	private List<Template> templates;
-	private SimpleCard cardDetails;
+	private BusinessCard cardDetails;
 	
-	public BusinessTemplateAdapter(FragmentManager fm, List<Template> templates, SimpleCard myCard) {
+	public BusinessTemplateAdapter(FragmentManager fm, List<Template> templates, BusinessCard myCard) {
     	super(fm);
     	this.templates = templates;
     	this.cardDetails = myCard;

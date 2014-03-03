@@ -1,17 +1,50 @@
 package com.jackhxs.data;
 
-public class TemplateConfig {
-	public class TextConfig {
-		public float left;
-		public float top;
-		public String color;
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class TemplateConfig implements Parcelable {
+
+	private String baseTemplate;
+
+	public String getBaseTemplate() {
+		return baseTemplate;
 	}
 
-	public TextConfig name;
-	public TextConfig phone;
-	public TextConfig email;
-	public TextConfig company;
-	public TextConfig address;
-	public TextConfig jobTitle;
-	public String url;
+	public void setBaseTemplate(String baseTemplate) {
+		this.baseTemplate = baseTemplate;
+	}
+	
+
+    protected TemplateConfig(Parcel in) {
+        baseTemplate = in.readString();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(baseTemplate);
+    }
+
+    public static final Parcelable.Creator<TemplateConfig> CREATOR = new Parcelable.Creator<TemplateConfig>() {
+        @Override
+        public TemplateConfig createFromParcel(Parcel in) {
+            return new TemplateConfig(in);
+        }
+
+        @Override
+        public TemplateConfig[] newArray(int size) {
+            return new TemplateConfig[size];
+        }
+    };
+    
+    @Override
+	public String toString() {
+		// TODO Auto-generated method stub
+		return "baseTemplate: " + baseTemplate;
+	}
 }
