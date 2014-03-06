@@ -2,15 +2,23 @@ package com.jackhxs.cardbank;
 
 import java.util.ArrayList;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Point;
 import android.net.Uri;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.telephony.PhoneNumberUtils;
 import android.text.util.Linkify;
+import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -23,25 +31,29 @@ import com.jackhxs.util.ImageUtil;
 import com.xtremelabs.imageutils.ImageLoader;
 
 public class CardAdapter extends ArrayAdapter<BusinessCard> {
-
-    private ArrayList<BusinessCard> myData;
-    private int myResourceId;
-    private Context myContext;
+	private static String TAG = "CardAdapter";
+	
+    private ArrayList<BusinessCard> mBusinessCards;
+    private int mResourceId;
+    private Context mContext;
     
     public CardAdapter(Context context, int resourceId,
-            ArrayList<BusinessCard> objects, ImageLoader mImageLoader) {
-        super(context, resourceId, objects);
-        myData = objects;
-        myResourceId = resourceId;
-        myContext = context;
+            ArrayList<BusinessCard> BusinessCards, ImageLoader mImageLoader) {
+        super(context, resourceId, BusinessCards);
+        mBusinessCards = BusinessCards;
+        mResourceId = resourceId;
+        mContext = context;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         
-    	LayoutInflater inflater = ((Activity) myContext).getLayoutInflater();
-        convertView = inflater.inflate(myResourceId, parent, false);
+    	LayoutInflater inflater = ((Activity) mContext).getLayoutInflater();
+        convertView = inflater.inflate(mResourceId, parent, false);
 
+        
+        RelativeLayout cardLayout = (RelativeLayout) convertView.findViewById(R.id.card_flip_view_card_frame);
+        
         View phoneLayout = (RelativeLayout) convertView.findViewById(R.id.card_flip_view_phone_layout);
         TextView phoneNumber = (TextView) convertView.findViewById(R.id.card_flip_view_phone);
         
@@ -51,33 +63,34 @@ public class CardAdapter extends ArrayAdapter<BusinessCard> {
         TextView streetAddress = (TextView) convertView.findViewById(R.id.card_flip_view_address);
         
         
-        phoneNumber.setText(PhoneNumberUtils.formatNumber(myData.get(position).getPhone()));
-        phoneLayout.setOnClickListener(new PhoneClickListener(myData.get(position).getPhone(), myContext));
+        phoneNumber.setText(PhoneNumberUtils.formatNumber(mBusinessCards.get(position).getPhone()));
+        phoneLayout.setOnClickListener(new PhoneClickListener(mBusinessCards.get(position).getPhone(), mContext));
         
-        emailAddress.setText(myData.get(position).getEmail());
-        emailLayout.setOnClickListener(new EmailClickListener(myData.get(position).getEmail(), myContext));
+        emailAddress.setText(mBusinessCards.get(position).getEmail());
+        emailLayout.setOnClickListener(new EmailClickListener(mBusinessCards.get(position).getEmail(), mContext));
         
-        streetAddress.setText(myData.get(position).getAddress());
+        streetAddress.setText(mBusinessCards.get(position).getAddress());
         Linkify.addLinks(streetAddress, Linkify.MAP_ADDRESSES);
         
-        ImageView imgView = (ImageView) convertView
-                .findViewById(R.id.card_flip_view_image);
-        //myImageLoader.loadImage(imgView, myData[position].imageUrl);
-        int index = Integer.parseInt(myData.get(position).getImageUrl());
-        Bitmap newCard = ImageUtil.GenerateCardImage((Activity) myContext,
-                App.templateConfig[index],
-                myData.get(position).getFirstName() + " " + myData.get(position).getLastName(), 
-                myData.get(position).getEmail(), 
-                myData.get(position).getPhone(),
-                myData.get(position).getCompanyName(),
-                myData.get(position).getAddress(),
-                myData.get(position).getJobTitle());
-        imgView.setImageBitmap(newCard);
-
+        BusinessCardLayoutBuilder mBusinessCardLayoutBuilder = new BusinessCardLayoutBuilder(cardLayout, mBusinessCards.get(position).getTemplate(), 
+        		mBusinessCards.get(position), getCardWidth((Activity) mContext), (Activity) mContext);
+        
+        mBusinessCardLayoutBuilder.getLayout();
+        
         return convertView;
     }
 
-   
+    private int getCardWidth(Activity mActivity) {
+    	
+    	 Display display = mActivity.getWindowManager().getDefaultDisplay();
+         Point size = new Point();
+         display.getSize(size);
+         int width = size.x;
+         
+         return width;
+    }
+    
+    
     private class PhoneClickListener implements OnClickListener {
 
     	private String mPhoneNumber;

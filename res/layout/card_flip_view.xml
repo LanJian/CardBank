@@ -11,15 +11,15 @@
         android:layout_alignParentTop="true"
         android:background="@color/card_background"
          >
+	
+       <RelativeLayout
+		    android:id="@+id/card_flip_view_card_frame"
+		    style="@style/card_flip_view_layout"
+		     />
 
-        <ImageView
-            android:id="@+id/card_flip_view_image"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:adjustViewBounds="true"
-            android:scaleType="centerCrop" />
-
+        
     </RelativeLayout>
+
 
    <LinearLayout
        android:id="@+id/card_details_layout"
