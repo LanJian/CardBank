@@ -14,13 +14,11 @@ import com.squareup.picasso.Picasso;
 
 
 public class BusinessCardLayoutBuilder {
-
 	private RelativeLayout buisinessCardLayout;
 	private Template template; 
 	private BusinessCard cardDetails;
 	
 	int width, height;
-
 	float whScale = 0.541f;
 	
 	private Activity mActivity;
@@ -61,9 +59,7 @@ public class BusinessCardLayoutBuilder {
         addField(buisinessCardLayout, template.properties.address, cardDetails.getAddress());
         addField(buisinessCardLayout, template.properties.jobTitle, cardDetails.getJobTitle());
         
-	    
-		return buisinessCardLayout;
-		
+	    return buisinessCardLayout;
 	};
 	
 	private void addField(RelativeLayout mBusinessCardLayout, TextConfig fieldConfig, String value) {
@@ -102,6 +98,5 @@ public class BusinessCardLayoutBuilder {
         mBusinessCardLayout.addView(mImageView);
 		
         return mImageView;
-	}
-	
+	}	
 }
