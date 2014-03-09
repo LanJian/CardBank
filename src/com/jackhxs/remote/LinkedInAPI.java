@@ -43,10 +43,10 @@ public class LinkedInAPI {
 	}
 
 	private class ApiResult extends AsyncTask<String, Integer, String> {
-		private OnTaskCompleted listener;
+		private RemoteAPICompleted listener;
 		private String cache;
 		
-		public ApiResult(OnTaskCompleted listener, String cache){
+		public ApiResult(RemoteAPICompleted listener, String cache){
 			this.listener = listener;
 		}
 
@@ -72,7 +72,7 @@ public class LinkedInAPI {
 		}
 
 		protected void onPostExecute(String result) {
-			this.listener.onTaskCompleted(result);
+			this.listener.remoteCompleted(result);
 		}
 	}
 
@@ -95,12 +95,12 @@ public class LinkedInAPI {
 		new RequestTokenInit().execute();
 	}
 
-	public void getUserinfo(OnTaskCompleted cb) {
+	public void getUserinfo(RemoteAPICompleted cb) {
 		ApiResult apiResult = new ApiResult(cb, UserInfoCache);
 		apiResult.execute(PERSONAL_INFO_URL);
 	}
 
-	public void getUserConnection(OnTaskCompleted cb) {
+	public void getUserConnection(RemoteAPICompleted cb) {
 		ApiResult apiResult = new ApiResult(cb, UserContactsCache);
 		apiResult.execute(CONNECTION_INFO_URL);
 	}

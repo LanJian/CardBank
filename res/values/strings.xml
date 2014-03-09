@@ -29,6 +29,7 @@
     <string name="empty_contact"> Your contact list is empty</string>
     <string name="empty_referral"> Your referral list is empty</string>
     
+    <string name="login_login_string_lnkd">Login with LinkedIn</string>
     <string name="login_login_string">Login</string>
     <string name="login_email">Email</string>
     <string name="login_password">Password</string>

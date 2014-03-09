@@ -4,7 +4,6 @@ import java.nio.charset.Charset;
 import java.text.ParseException;
 
 import android.app.ActionBar;
-import android.app.ActionBar.Tab;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -22,6 +21,7 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.jackhxs.data.AccountType;
 import com.jackhxs.data.BusinessCard;
 import com.jackhxs.remote.Constants;
 import com.jackhxs.remote.Constants.Operation;
@@ -30,7 +30,8 @@ import com.jackhxs.remote.RemoteService;
 
 public class MainActivity extends Activity implements CreateNdefMessageCallback, JSONResultReceiver.Receiver {
 	private NfcAdapter mNfcAdapter;
-	private Boolean editCardImmediately;
+	private AccountType accountType;
+	private Boolean edited;
 	private Boolean networkFinished;
 	private Boolean startedPolling;
 	private Boolean pollingInProgress;
@@ -70,10 +71,10 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback,
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		editCardImmediately = 
-				getIntent().getExtras().getString("mode", "oldAccount").equals("newAccount");
-		startedPolling = pollingInProgress = networkFinished = false;
+		
+		accountType = App.accounType;
 		longPollCount = 0;
+		edited = startedPolling = pollingInProgress = networkFinished = false;
 		
 		if (!Util.isTablet(getApplicationContext())) {
 			getActionBar().setDisplayShowTitleEnabled(false);
@@ -148,7 +149,7 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback,
 	}
 	
 	private void addTab(String tabName, Fragment frag, String name) {
-	/*
+		/*
 		ActionBar actionBar = getActionBar();
 		Tab tab = actionBar
 				.newTab()
@@ -225,8 +226,8 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback,
 			addTab("Referrals", fragment, "referrals");
 			
 			// this is always the last call
-			if (editCardImmediately) {
-				editCardImmediately = !editCardImmediately;
+			if (!edited && accountType == AccountType.NEW_ACCOUNT) {
+				edited = !edited;
 				Intent intent = new Intent(
 					getApplicationContext(),
 					CardEditActivity.class);
