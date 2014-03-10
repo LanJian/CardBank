@@ -8,7 +8,7 @@ import android.widget.RelativeLayout.LayoutParams;
 
 import com.jackhxs.data.BusinessCard;
 import com.jackhxs.data.Template;
-import com.jackhxs.data.TemplateProperties.TextConfig;
+import com.jackhxs.data.TextConfig;
 import com.jackhxs.remote.Constants;
 import com.squareup.picasso.Picasso;
 
@@ -51,15 +51,15 @@ public class BusinessCardLayoutBuilder {
 		ImageView background = addBackground(buisinessCardLayout);
 		
 		Picasso.with(mActivity).setDebugging(true);
-	    Picasso.with(mActivity).load(Constants.API_ADDRESS_V1 + template.imageUrl).into(background);
+	    Picasso.with(mActivity).load(Constants.API_ADDRESS_V1 + template.getImageUrl()).into(background);
 	    
 	    
-	    addField(buisinessCardLayout, template.properties.name, cardDetails.getFirstName() + " " + cardDetails.getLastName());
-        addField(buisinessCardLayout, template.properties.phone, cardDetails.getPhone());
-        addField(buisinessCardLayout, template.properties.email, cardDetails.getEmail());
-        addField(buisinessCardLayout, template.properties.companyName, cardDetails.getCompanyName());
-        addField(buisinessCardLayout, template.properties.address, cardDetails.getAddress());
-        addField(buisinessCardLayout, template.properties.jobTitle, cardDetails.getJobTitle());
+	    addField(buisinessCardLayout, template.getProperties().name, cardDetails.getFirstName() + " " + cardDetails.getLastName());
+        addField(buisinessCardLayout, template.getProperties().phone, cardDetails.getPhone());
+        addField(buisinessCardLayout, template.getProperties().email, cardDetails.getEmail());
+        addField(buisinessCardLayout, template.getProperties().companyName, cardDetails.getCompanyName());
+        addField(buisinessCardLayout, template.getProperties().address, cardDetails.getAddress());
+        addField(buisinessCardLayout, template.getProperties().jobTitle, cardDetails.getJobTitle());
         
 	    
 		return buisinessCardLayout;
@@ -78,7 +78,7 @@ public class BusinessCardLayoutBuilder {
         
         
         layoutParams.leftMargin = (int) (fieldConfig.left * width);
-        layoutParams.topMargin = (int) (fieldConfig.top * height);
+        layoutParams.topMargin = (int) ((fieldConfig.top - 0.15) * height);
         
         textView.setTextColor(Color.parseColor(fieldConfig.color));
         

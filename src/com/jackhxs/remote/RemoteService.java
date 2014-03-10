@@ -129,15 +129,18 @@ public class RemoteService extends IntentService {
             }
             case UPDATE_CARD:
             case POST_CARD: {
-                String simpleCardJSON = intent.getStringExtra("simpleCardJSON");
+            	String simpleCardJSON = intent.getStringExtra("simpleCardJSON");
+            	BusinessCard mBusinessCard = intent.getParcelableExtra("BusinessCard");
 
-                BusinessCard simpleCard = new Gson().fromJson(simpleCardJSON, BusinessCard.class);
+                //BusinessCard simpleCard = new Gson().fromJson(simpleCardJSON, BusinessCard.class);
                 JsonObject res;
                 
                 if (command.equals(Operation.UPDATE_CARD)) {
-                	res = service.updateCard(userId, simpleCard.get_id(), sessionId, simpleCard);
+                	res = service.updateCard(userId, mBusinessCard.get_id(), sessionId, mBusinessCard);
                 }
                 else {
+                	BusinessCard simpleCard = new Gson().fromJson(simpleCardJSON, BusinessCard.class);
+                    
                 	res = service.addCard(userId, sessionId, simpleCard);
                 }
                 
@@ -201,18 +204,6 @@ public class RemoteService extends IntentService {
             }
             case GET_TEMPLATES: {
             	ArrayList<Template> templates = (ArrayList<Template>) service.getTemplates();
-            	
-            	
-            	
-            	Log.i(TAG, "recieved " + templates.size() + " templates");
-            	
-            	Log.i(TAG, Boolean.toString(templates.get(0) == null));
-            	Log.i(TAG, Boolean.toString(templates.get(0).properties == null));
-            	Log.i(TAG, Boolean.toString(templates.get(0).properties.name == null));
-            	Log.i(TAG, Boolean.toString(templates.get(0).properties.name.toString() == null));
-            	
-            	Log.i(TAG, templates.get(0).properties.name.toString());
-            	
             	
             	resultBundle.putString("action", Operation.GET_TEMPLATES.toString());
             	resultBundle.putString("dataType", "templates");

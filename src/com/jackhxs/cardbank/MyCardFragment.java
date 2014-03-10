@@ -5,8 +5,11 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
@@ -22,6 +25,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -31,21 +35,30 @@ import com.devspark.progressfragment.ProgressFragment;
 import com.google.gson.Gson;
 import com.jackhxs.data.BusinessCard;
 import com.jackhxs.data.Template;
+import com.jackhxs.data.TemplateProperties;
+import com.jackhxs.data.TextConfig;
+import com.jackhxs.data.TemplateConfig;
 import com.jackhxs.remote.JSONResultReceiver;
 import com.jackhxs.remote.RemoteService;
 import com.jackhxs.remote.Constants.Operation;
 import com.jackhxs.util.ImageUtil;
+import com.larswerkman.holocolorpicker.ColorPicker;
+import com.larswerkman.holocolorpicker.SVBar;
 
 @SuppressLint("ValidFragment")
 public class MyCardFragment extends ProgressFragment implements JSONResultReceiver.Receiver{
 	private static final String TAG = "CardFragment";
 	
+	// View holder
 	private View mContentView;
     
+	// holds the user's current data (values and configurations/template)
 	private BusinessCard myCard;
 	
+	// Used to make API calls
 	public JSONResultReceiver mReceiver;
     
+	// Used to register editText change listeners
 	private enum FieldName {
 		NAME,
 		COMPANY,
@@ -55,36 +68,83 @@ public class MyCardFragment extends ProgressFragment implements JSONResultReceiv
 		ADDRESS
 	}; 
 	
+	// EditTexts and TextConfigViews (Custom Views)  
 	private EditText editTextName;
-	private EditText editCompanyName;
-	private EditText editJobTitle;
-	private EditText editEmail;
-	private EditText editPhone;
-	private EditText editAddress;
+	private TextConfigView nameConfig;
 	
+	private EditText editCompanyName;
+	private TextConfigView companyConfig;
+	
+	private EditText editJobTitle;
+	private TextConfigView jobTitleConfig;
+	
+	private EditText editEmail;
+	private TextConfigView emailConfig;
+	
+	private EditText editPhone;
+	private TextConfigView phoneConfig;
+	
+	private EditText editAddress;
+	private TextConfigView addressConfig;
+	
+	
+	// Timer and bool used to save changes
 	private Timer timer=new Timer();
     private boolean updatePending = false;
     
+    // ViewPager and adapter used to display cards
     private ViewPager mPager;
 
-    private PagerAdapter mPagerAdapter;
+    private BusinessTemplateAdapter mPagerAdapter;
     private PagerContainer mContainer;
 
+    // List of templates
     private ArrayList<Template> templates;
     
-	/*
-	 * TODO This isn't needed. needs to be removed in future
-	 */
-    @SuppressLint("ValidFragment")
-	public MyCardFragment(BusinessCard card) {
-		myCard = card;
-		//this.setHasOptionsMenu(true);
-	}
+    
+    
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/*
+* Not USED ANYMORE
+@Override
+public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+// Inflate the menu items for use in the action bar
+inflater.inflate(R.menu.my_card_fragment_actions, menu);
+super.onCreateOptionsMenu(menu, inflater);
+}
 
-    public MyCardFragment() {
-		
-	}
 
+@Override
+public boolean onOptionsItemSelected(MenuItem item) {
+// The action bar home/up action should open or close the drawer.
+// ActionBarDrawerToggle will take care of this.
+
+// Handle action buttons
+switch(item.getItemId()) {
+case R.id.action_edit:
+// create intent to perform web search for this planet
+Intent intent = new Intent(
+getActivity(),
+CardEditActivity.class);
+startActivity(intent);
+return true;
+
+
+default:
+return super.onOptionsItemSelected(item);
+}
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// */
+
+    
+    
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /*
+     * LIFECYCLE EVENTS
+     *////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    
+    
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -95,13 +155,7 @@ public class MyCardFragment extends ProgressFragment implements JSONResultReceiv
 		templates = new ArrayList<Template>();
 	}
 
-	@Override
-	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		// Inflate the menu items for use in the action bar
-		inflater.inflate(R.menu.my_card_fragment_actions, menu);
-		super.onCreateOptionsMenu(menu, inflater);
-	}
-
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, 
 			Bundle savedInstanceState) {
@@ -136,7 +190,7 @@ public class MyCardFragment extends ProgressFragment implements JSONResultReceiv
         // Add some spacing between cards
         mPager.setPageMargin(30); 
         
-        mPager.setOnPageChangeListener(new SelectorChangeListener());
+        mPager.setOnPageChangeListener(new TemplateChangeListener());
 		
         return super.onCreateView(inflater, container, savedInstanceState);
 		
@@ -153,44 +207,23 @@ public class MyCardFragment extends ProgressFragment implements JSONResultReceiv
         setEmptyText("no data");
     }
 	
-	private void updateCardUI(View rootView) {
-		if (myCard != null){
-			Log.e(TAG, "Updating Card elements");
-			
-			mPagerAdapter = new BusinessTemplateAdapter(getFragmentManager(), templates, myCard);
-	        mPager.setAdapter(mPagerAdapter);
-			
-	        mPager.setOffscreenPageLimit(mPagerAdapter.getCount());
-	        
-	        //If hardware acceleration is enabled, you should also remove
-	        // clipping on the pager for its children.
-	        mPager.setClipChildren(false);
-	        
-	        mPagerAdapter.notifyDataSetChanged();
+	@Override
+	public void onPause() {
+		super.onPause();
+		
+		if (updatePending) {
+			Log.e(TAG, "saving now");
+			timer.cancel();
+			 
+			saveCard();
 		}
+		
 	}
 	
-
-	@Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-         // The action bar home/up action should open or close the drawer.
-         // ActionBarDrawerToggle will take care of this.
-        
-		// Handle action buttons
-        switch(item.getItemId()) {
-	        case R.id.action_edit:
-	        	// create intent to perform web search for this planet
-	            Intent intent = new Intent(
-	    				getActivity(),
-	    				CardEditActivity.class);
-	    		startActivity(intent);
-	    		return true;
-	    			
-	    		
-	        default:
-	            return super.onOptionsItemSelected(item);
-        }
-    }
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	/*
+	 * API Callback
+	 *////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	@Override
 	public void onReceiveResult(int resultCode, Bundle resultData) {
@@ -213,7 +246,7 @@ public class MyCardFragment extends ProgressFragment implements JSONResultReceiv
 			/*
 			 * TODO This line crashes after long break
 			 */
-			myCard = App.myCards[0];
+			myCard = myCards[0];
 			
 			Template currentTemplate = myCard.getTemplate();
 			
@@ -223,9 +256,10 @@ public class MyCardFragment extends ProgressFragment implements JSONResultReceiv
 			
 			setupInitialFields(myCard);
 			
-			updateCardUI(getView());
+			addNewCards();
 			
 			setContentShown(true);
+			
 		} else if (resultData.getString("action") != null && resultData.getString("action").equals(Operation.GET_TEMPLATES.toString())) {
 			ArrayList<Template> moreTemplates = resultData.getParcelableArrayList("templates");
 			
@@ -237,7 +271,7 @@ public class MyCardFragment extends ProgressFragment implements JSONResultReceiv
 				Log.i(TAG, t.toString());
 			}
 			
-			updateCardUI(getView());
+			addNewCards();
 			
 			
 		} else {
@@ -245,36 +279,163 @@ public class MyCardFragment extends ProgressFragment implements JSONResultReceiv
 		}
 	}
 	
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	/*
+	 * View Controls and delegation methods
+	 *////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	private void setupInitialFields(BusinessCard myCard2) {
+	
+	/**
+	 * This method creates the ViewPager pages when there is new data to be displayed.
+	 * 
+	 *  e.g. when there are new templates.
+	 *  
+	 *  It will also created the PagerAdapter if not already setup.
+	 */
+	private void addNewCards() {
+		if (myCard != null){
+			Log.e(TAG, "Loading cards from templates");
+			
+			if (mPagerAdapter == null) {
+				mPagerAdapter = new BusinessTemplateAdapter(getFragmentManager(), templates, myCard);
+		        mPager.setAdapter(mPagerAdapter);
+				
+		        mPager.setOffscreenPageLimit(mPagerAdapter.getCount());
+		        
+		        //If hardware acceleration is enabled, you should also remove
+		        // clipping on the pager for its children.
+		        mPager.setClipChildren(false);
+		        
+			}
+	        mPagerAdapter.notifyDataSetChanged();
+		}
+	}
+	
+	/**
+	 * This method updates all the content in the "pages" in the ViewPager. IE when the user makes changes to content
+	 * 
+	 * @param myCard The business card object holding the updated data.
+	 */
+	private void updateCardUI(BusinessCard myCard) {
+		if (myCard != null){
+			Log.e(TAG, "Updating Card elements");
+			
+			mPagerAdapter.updateCardContent(myCard);
+		}
+	}
+	
+	
+	
+	
+	/**
+	 * This method will setup the editText fields and the TextConfigViews with their listeners, and populate with the initial values
+	 * 
+	 * This method should only be called once when the User's card data have been fetched from the server. 
+	 * 
+	 * @param myCard The business card object holding the initial data.
+	 */
+	private void setupInitialFields(BusinessCard myCard) {
 		
 		editTextName = (EditText) mContentView.findViewById(R.id.edit_name);
 		editTextName.setText(myCard.getFirstName() + " " + myCard.getLastName());
 		editTextName.addTextChangedListener(new cardChangeListener(FieldName.NAME));
 		
+		nameConfig = (TextConfigView) mContentView.findViewById(R.id.name_config);
+		nameConfig.setColor(Color.parseColor(myCard.getTemplate().getProperties().name.color));
+		nameConfig.setText((myCard.getFirstName() == null || myCard.getFirstName().equalsIgnoreCase("")) ? "" : myCard.getFirstName().substring(0, 1));
+		nameConfig.setOnClickListener(new TextConfigClickListener(myCard.getTemplate().getProperties().name, 
+				(myCard.getTemplateConfig().getProperties() == null) ? null :myCard.getTemplateConfig().getProperties().name, FieldName.NAME));
+		
 		editCompanyName = (EditText) mContentView.findViewById(R.id.edit_company);
 		editCompanyName.setText(myCard.getCompanyName());
 		editCompanyName.addTextChangedListener(new cardChangeListener(FieldName.COMPANY));
+		
+		companyConfig = (TextConfigView) mContentView.findViewById(R.id.company_config);
+		companyConfig.setColor(Color.parseColor(myCard.getTemplate().getProperties().companyName.color));
+		companyConfig.setText((myCard.getCompanyName() == null || myCard.getCompanyName().equalsIgnoreCase("")) ? "" : myCard.getCompanyName().substring(0, 1));
+		companyConfig.setOnClickListener(new TextConfigClickListener(myCard.getTemplate().getProperties().companyName,
+				(myCard.getTemplateConfig().getProperties() == null) ? null :myCard.getTemplateConfig().getProperties().companyName, FieldName.COMPANY));
 		
 		editJobTitle = (EditText) mContentView.findViewById(R.id.edit_job_title);
 		editJobTitle.setText(myCard.getJobTitle());
 		editJobTitle.addTextChangedListener(new cardChangeListener(FieldName.TITLE));
 		
+		jobTitleConfig = (TextConfigView) mContentView.findViewById(R.id.job_title_config);
+		jobTitleConfig.setColor(Color.parseColor(myCard.getTemplate().getProperties().jobTitle.color));
+		jobTitleConfig.setText((myCard.getJobTitle() == null || myCard.getJobTitle().equalsIgnoreCase("")) ? "" : myCard.getJobTitle().substring(0, 1));
+		jobTitleConfig.setOnClickListener(new TextConfigClickListener(myCard.getTemplate().getProperties().jobTitle,
+				(myCard.getTemplateConfig().getProperties() == null) ? null :myCard.getTemplateConfig().getProperties().jobTitle, FieldName.TITLE));
+		
 		editEmail = (EditText) mContentView.findViewById(R.id.edit_email);
 		editEmail.setText(myCard.getEmail());
 		editEmail.addTextChangedListener(new cardChangeListener(FieldName.EMAIL));
+		
+		emailConfig = (TextConfigView) mContentView.findViewById(R.id.email_config);
+		emailConfig.setColor(Color.parseColor(myCard.getTemplate().getProperties().email.color));
+		emailConfig.setText((myCard.getEmail() == null || myCard.getEmail().equalsIgnoreCase("")) ? "" : myCard.getEmail().substring(0, 1));
+		emailConfig.setOnClickListener(new TextConfigClickListener(myCard.getTemplate().getProperties().email,
+				(myCard.getTemplateConfig().getProperties() == null) ? null :myCard.getTemplateConfig().getProperties().email, FieldName.EMAIL));
 		
 		editPhone = (EditText) mContentView.findViewById(R.id.edit_phone);
 		editPhone.setText(PhoneNumberUtils.formatNumber(myCard.getPhone()));
 		editPhone.addTextChangedListener(new cardChangeListener(FieldName.PHONE));
 		
+		phoneConfig = (TextConfigView) mContentView.findViewById(R.id.phone_config);
+		phoneConfig.setColor(Color.parseColor(myCard.getTemplate().getProperties().phone.color));
+		phoneConfig.setText((myCard.getPhone() == null || myCard.getPhone().equalsIgnoreCase("")) ? "" : myCard.getPhone().substring(0, 1));
+		phoneConfig.setOnClickListener(new TextConfigClickListener(myCard.getTemplate().getProperties().phone,
+				(myCard.getTemplateConfig().getProperties() == null) ? null :myCard.getTemplateConfig().getProperties().phone, FieldName.PHONE));
+		
 		editAddress = (EditText) mContentView.findViewById(R.id.edit_address);
 		editAddress.setText(myCard.getAddress());
 		editAddress.addTextChangedListener(new cardChangeListener(FieldName.ADDRESS));
 		
+		addressConfig = (TextConfigView) mContentView.findViewById(R.id.address_config);
+		addressConfig.setColor(Color.parseColor(myCard.getTemplate().getProperties().address.color));
+		addressConfig.setText((myCard.getAddress() == null || myCard.getAddress().equalsIgnoreCase("")) ? "" : myCard.getAddress().substring(0, 1));
+		addressConfig.setOnClickListener(new TextConfigClickListener(myCard.getTemplate().getProperties().address,
+				(myCard.getTemplateConfig().getProperties() == null) ? null :myCard.getTemplateConfig().getProperties().address, FieldName.ADDRESS));
 		
 	}
 
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	/*
+	 * Functions used to save the user changes to the user's profile online
+	 *///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	/**
+	 * This method will start a 2 second timer that save changes when the timer reaches zero. 
+	 * Calling this method again during the 2 second period will cancel the previous timer and start a new one that will save all previous changes
+	 * 
+	 */
+	private void delaySaveCard() {
+		timer.cancel();
+		updatePending = true;
+		timer = new Timer();
+        timer.schedule(new saveCardTimer(), 2000); // 2s
+	}
+	
+	/**
+	 * This is the TimerTask that will be triggered when the timer from @link {@link MyCardFragment#delaySaveCard() delaySaveCard}
+	 * 
+	 * DO NOT use this class directly.
+	 * 
+	 */
+	private class saveCardTimer extends TimerTask {
+
+		@Override
+		public void run() {
+			saveCard();
+		}
+		
+	}
+	
+	
+	/**
+	 * This method will actually perform the API call to save the user's changes to the server. 
+	 * 
+	 * Please Use {@link #delaySaveCard() delaySaveCard} to save changes unless you want to save changes immediately (IE when exiting)
+	 */
 	private void saveCard() {
 		if (myCard != null && updatePending) {
 			
@@ -284,26 +445,24 @@ public class MyCardFragment extends ProgressFragment implements JSONResultReceiv
 			intent.putExtra("receiver", mReceiver);
 			intent.putExtra("operation", (Parcelable) Operation.UPDATE_CARD);
 			intent.putExtra("accessToken", App.sessionId);
-			intent.putExtra("simpleCardJSON", new Gson().toJson(App.myCards[0]));
+			//intent.putExtra("simpleCardJSON", new Gson().toJson(App.myCards[0]));
+			intent.putExtra("BusinessCard", myCard);
 
 			getActivity().startService(intent);
 			
 		}
 	}
 	
-	@Override
-	public void onPause() {
-		super.onPause();
-		
-		if (updatePending) {
-			Log.e(TAG, "saving now");
-			timer.cancel();
-			 
-			saveCard();
-		}
-		
-	}
-
+	
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	/*
+	 * Listener classes
+	 *///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	
+	/**
+	 * This object listens to changes in the input fields + formats the phone number field automatically. It then saves all changes
+	 */
 	private class cardChangeListener extends PhoneNumberFormattingTextWatcher {
 		FieldName mFieldName;
 		
@@ -329,32 +488,54 @@ public class MyCardFragment extends ProgressFragment implements JSONResultReceiv
 					myCard.setFirstName(name[0]);
 					myCard.setLastName(""); // clear last name if not present
 				}
+				
+				if (s.toString().length() > 0) {
+					nameConfig.setText(s.toString().substring(0, 1));
+				}
+				
+				nameConfig.setColor(Color.parseColor(myCard.getTemplate().getProperties().name.color));
+				
 				break;
 				case COMPANY:
 					String company = s.toString();
 					myCard.setCompanyName(company);
+					if (company.length() > 0) {
+						companyConfig.setText(company.substring(0, 1));
+					}
 					break;
 				case TITLE:
 					String jobTitle = s.toString();
 					myCard.setJobTitle(jobTitle);
+					if (jobTitle.length() > 0) {
+						companyConfig.setText(jobTitle.substring(0, 1));
+					}
 					break;
 				case EMAIL:
 					String email = s.toString();
 					myCard.setEmail(email);
+					if (email.length() > 0) {
+						companyConfig.setText(email.substring(0, 1));
+					}
 					break;
 				case PHONE:
 					String phone = s.toString();
 					myCard.setPhone(phone);
+					if (phone.length() > 0) {
+						companyConfig.setText(phone.substring(0, 1));
+					}
 					break;
 				case ADDRESS:
 					String address = s.toString();
 					myCard.setAddress(address);
+					if (address.length() > 0) {
+						companyConfig.setText(address.substring(0, 1));
+					}
 					break;
 				default:
 					break;
 					
 			}
-			updateCardUI(getView());
+			updateCardUI(myCard);
 		}
 		
 		@Override 
@@ -372,23 +553,11 @@ public class MyCardFragment extends ProgressFragment implements JSONResultReceiv
 
 	} 
 	
-	private void delaySaveCard() {
-		timer.cancel();
-		updatePending = true;
-		timer = new Timer();
-        timer.schedule(new saveCardTimer(), 2000); // 2s
-	}
 	
-	private class saveCardTimer extends TimerTask {
-
-		@Override
-		public void run() {
-			saveCard();
-		}
-		
-	}
-	
-	public class SelectorChangeListener implements ViewPager.OnPageChangeListener {
+	/**
+	 * This object listens for template changes and saves them automatically
+	 */
+	public class TemplateChangeListener implements ViewPager.OnPageChangeListener {
 		// unused
 		@Override public void onPageScrollStateChanged(int state) {}
 		@Override public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
@@ -399,11 +568,149 @@ public class MyCardFragment extends ProgressFragment implements JSONResultReceiv
 			
 			myCard.setTemplate(templates.get(position));
 			
-			myCard.getTemplateConfig().setBaseTemplate(myCard.getTemplate().templateName);
+			myCard.getTemplateConfig().setBaseTemplate(myCard.getTemplate().getTemplateName());
 			
 			delaySaveCard();
 		}
+		
+	}
+	
+	/**
+	 * This object listens to TextConfig changes and saves them, and updates the view.
+	 */
+	
+	public class TextConfigClickListener implements View.OnClickListener {
 
-	    
+		private TextConfig textConfig;
+		private TextConfig personalTextConfig;
+		private FieldName fieldName;
+		
+		private ColorPicker picker;
+		private SVBar svBar;
+		
+		public TextConfigClickListener(TextConfig textConfig, TextConfig personalTextConfig, FieldName fieldName) {
+			super();
+			this.textConfig = textConfig;
+			this.personalTextConfig = personalTextConfig;
+			this.fieldName = fieldName;
+		}
+
+		@Override
+		public void onClick(final View view) {
+			
+			AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
+			
+			// set title
+			//alertDialogBuilder.setTitle("Select");
+			 
+			// set dialog message
+			alertDialogBuilder
+				.setView(getActivity().getLayoutInflater().inflate(R.layout.text_customize_dialog, null))
+				.setCancelable(false)
+				.setPositiveButton("OK",new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog,int id) {
+						// if this button is clicked, close
+						// current activity
+						//MainActivity.this.finish();
+						Log.i("Color int", Integer.toString(picker.getColor()));
+						Log.i("Color String",String.format("#%06X", 0xFFFFFF & picker.getColor()));
+						
+						UpdateTemplateConfig(myCard, textConfig, personalTextConfig, String.format("#%06X", 0xFFFFFF & picker.getColor()), fieldName);
+						
+						MyCardFragment.this.updateCardUI(myCard);
+						
+						((TextConfigView)view).setColor( picker.getColor() ); 
+						
+						MyCardFragment.this.delaySaveCard();
+					}
+
+				  })
+				.setNegativeButton("Cancel",new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog,int id) {
+						// if this button is clicked, just close
+						// the dialog box and do nothing
+						dialog.cancel();
+					}
+				});
+ 
+			// create alert dialog
+				AlertDialog alertDialog = alertDialogBuilder.create();
+ 
+			// show it
+			alertDialog.show();
+			
+			
+			picker = (ColorPicker) alertDialog.findViewById(R.id.picker);
+			svBar = (SVBar) alertDialog.findViewById(R.id.svbar);
+			
+			picker.addSVBar(svBar);
+			
+			picker.setNewCenterColor(Color.parseColor(textConfig.color));
+			picker.setOldCenterColor(Color.parseColor(textConfig.color));
+			picker.setColor(Color.parseColor(textConfig.color));
+		 	
+		}
+		
+	}
+	
+	private BusinessCard UpdateTemplateConfig(BusinessCard myCard, TextConfig textConfig, TextConfig personalTextConfig, String color, FieldName fieldName) {
+
+		if (myCard.getTemplateConfig().getProperties() == null) {
+			myCard.getTemplateConfig().setProperties(new TemplateProperties());
+		}
+		
+		if (personalTextConfig == null) {
+			personalTextConfig = new TextConfig(textConfig.left, textConfig.top, textConfig.color);
+			
+			
+		}
+		
+		personalTextConfig.color = color;
+		
+		switch (fieldName) {
+		case NAME:
+			// update the TemplateConfig in order to save
+			myCard.getTemplateConfig().getProperties().name = personalTextConfig;
+			
+			// Update the Current Template in order to display correctly
+			myCard.getTemplate().getProperties().name.color = color;
+			break;
+		case COMPANY:
+			// update the TemplateConfig in order to save
+			myCard.getTemplateConfig().getProperties().companyName = personalTextConfig;
+			
+			// Update the Current Template in order to display correctly
+			myCard.getTemplate().getProperties().companyName.color = color;
+			break;
+		case TITLE:
+			// update the TemplateConfig in order to save
+			myCard.getTemplateConfig().getProperties().jobTitle = personalTextConfig;
+			
+			// Update the Current Template in order to display correctly
+			myCard.getTemplate().getProperties().jobTitle.color = color;
+			break;
+		case EMAIL:
+			// update the TemplateConfig in order to save
+			myCard.getTemplateConfig().getProperties().email = personalTextConfig;
+			
+			// Update the Current Template in order to display correctly
+			myCard.getTemplate().getProperties().email.color = color;
+			break;
+		case PHONE:
+			// update the TemplateConfig in order to save
+			myCard.getTemplateConfig().getProperties().phone = personalTextConfig;
+			
+			// Update the Current Template in order to display correctly
+			myCard.getTemplate().getProperties().phone.color = color;
+			break;
+		case ADDRESS:
+			// update the TemplateConfig in order to save
+			myCard.getTemplateConfig().getProperties().address = personalTextConfig;
+			
+			// Update the Current Template in order to display correctly
+			myCard.getTemplate().getProperties().address.color = color;
+			break;
+		}
+		return myCard;
 	}
 }
