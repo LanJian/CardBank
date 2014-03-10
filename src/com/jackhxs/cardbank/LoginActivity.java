@@ -170,8 +170,13 @@ RemoteAPICompleted {
 	public void onReceiveResult(int resultCode, Bundle resultData) {
 		Log.e("paul", "result");
 
-		Integer errorCode = resultData.getInt("errorCode", 0);
-		String errorMsg = resultData.getString("errorMsg", null);
+		Integer errorCode = null;
+		String errorMsg = null;
+		
+		if (resultData != null) {
+			errorCode = resultData.getInt("errorCode", 0);
+			errorMsg = resultData.getString("errorMsg", null);
+		}
 		
 		if (progress != null) {
 			progress.dismiss();
@@ -233,7 +238,7 @@ RemoteAPICompleted {
 
 			Log.e("Success", "logged in");
 
-			Intent intent = new Intent(this, MainActivity.class);
+			Intent intent = new Intent(this, HomeActivity.class);
 			startActivity(intent);
 			
 			this.finish();
