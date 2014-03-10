@@ -5,9 +5,9 @@ import android.os.Parcelable;
 
 public class Template implements Parcelable {
 	
-	public TemplateProperties properties;
-	public String imageUrl;
-	public String templateName;
+	private TemplateProperties properties;
+	private String imageUrl;
+	private String templateName;
 	
 	
    
@@ -44,6 +44,30 @@ public class Template implements Parcelable {
 
 
 
+
+	public TemplateProperties getProperties() {
+		return properties;
+	}
+
+	public void setProperties(TemplateProperties properties) {
+		this.properties = properties;
+	}
+
+	public String getImageUrl() {
+		return imageUrl;
+	}
+
+	public void setImageUrl(String imageUrl) {
+		this.imageUrl = imageUrl;
+	}
+
+	public String getTemplateName() {
+		return templateName;
+	}
+
+	public void setTemplateName(String templateName) {
+		this.templateName = templateName;
+	}
 
 	@Override
 	public String toString() {

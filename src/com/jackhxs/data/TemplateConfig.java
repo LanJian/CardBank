@@ -6,21 +6,9 @@ import android.os.Parcelable;
 public class TemplateConfig implements Parcelable {
 
 	private String baseTemplate;
-
-	public String getBaseTemplate() {
-		return baseTemplate;
-	}
-
-	public void setBaseTemplate(String baseTemplate) {
-		this.baseTemplate = baseTemplate;
-	}
+	private TemplateProperties properties;
 	
-
-    protected TemplateConfig(Parcel in) {
-        baseTemplate = in.readString();
-    }
-
-    @Override
+	@Override
     public int describeContents() {
         return 0;
     }
@@ -28,6 +16,7 @@ public class TemplateConfig implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(baseTemplate);
+        dest.writeValue(properties);
     }
 
     public static final Parcelable.Creator<TemplateConfig> CREATOR = new Parcelable.Creator<TemplateConfig>() {
@@ -47,4 +36,27 @@ public class TemplateConfig implements Parcelable {
 		// TODO Auto-generated method stub
 		return "baseTemplate: " + baseTemplate;
 	}
+    
+    public String getBaseTemplate() {
+		return baseTemplate;
+	}
+
+	public void setBaseTemplate(String baseTemplate) {
+		this.baseTemplate = baseTemplate;
+	}
+	
+
+    public TemplateProperties getProperties() {
+		return properties;
+	}
+
+	public void setProperties(TemplateProperties properties) {
+		this.properties = properties;
+	}
+
+	protected TemplateConfig(Parcel in) {
+        baseTemplate = in.readString();
+        properties = (TemplateProperties) in.readValue(TemplateProperties.class.getClassLoader());
+        
+    }
 }
