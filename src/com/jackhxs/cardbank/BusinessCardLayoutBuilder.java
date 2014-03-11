@@ -7,8 +7,8 @@ import android.widget.TextView;
 import android.widget.RelativeLayout.LayoutParams;
 
 import com.jackhxs.data.BusinessCard;
-import com.jackhxs.data.Template;
-import com.jackhxs.data.TextConfig;
+import com.jackhxs.data.template.Template;
+import com.jackhxs.data.template.TextConfig;
 import com.jackhxs.remote.Constants;
 import com.squareup.picasso.Picasso;
 
@@ -74,7 +74,7 @@ public class BusinessCardLayoutBuilder {
         
         
         layoutParams.leftMargin = (int) (fieldConfig.left * width);
-        layoutParams.topMargin = (int) ((fieldConfig.top - 0.15) * height);
+        layoutParams.topMargin = (int) ((fieldConfig.top) * height);
         
         textView.setTextColor(Color.parseColor(fieldConfig.color));
         

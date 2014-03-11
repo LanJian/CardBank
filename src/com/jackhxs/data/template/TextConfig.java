@@ -1,4 +1,4 @@
-package com.jackhxs.data;
+package com.jackhxs.data.template;
 
 import android.os.Parcel;
 import android.os.Parcelable;

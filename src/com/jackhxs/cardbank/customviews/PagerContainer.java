@@ -1,4 +1,4 @@
-package com.jackhxs.cardbank;
+package com.jackhxs.cardbank.customviews;
 
 import android.content.Context;
 import android.graphics.Point;

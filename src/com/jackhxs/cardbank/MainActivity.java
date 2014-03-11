@@ -128,10 +128,12 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback,
 		// Handle presses on the action bar items
 		switch (item.getItemId()) {
 		case R.id.action_edit: {
+			/*
 			Intent intent = new Intent(
 				getApplicationContext(),
 				CardEditActivity.class);
 			startActivity(intent);
+			*/
 			return true;
 		}
 		default:

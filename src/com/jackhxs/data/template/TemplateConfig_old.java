@@ -1,4 +1,4 @@
-package com.jackhxs.data;
+package com.jackhxs.data.template;
 
 public class TemplateConfig_old {
 	public class TextConfig {

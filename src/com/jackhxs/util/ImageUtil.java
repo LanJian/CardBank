@@ -22,7 +22,7 @@ import android.util.LruCache;
 import android.util.TypedValue;
 import android.view.Display;
 
-import com.jackhxs.data.TemplateConfig_old;
+import com.jackhxs.data.template.TemplateConfig_old;
 
 public class ImageUtil {
 	final static int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);

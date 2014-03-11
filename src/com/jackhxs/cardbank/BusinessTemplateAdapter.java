@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.jackhxs.data.BusinessCard;
-import com.jackhxs.data.Template;
+import com.jackhxs.data.template.Template;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;

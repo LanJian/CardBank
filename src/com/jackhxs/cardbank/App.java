@@ -13,7 +13,7 @@ import android.content.res.Configuration;
 import com.google.gson.Gson;
 import com.jackhxs.data.AccountType;
 import com.jackhxs.data.BusinessCard;
-import com.jackhxs.data.TemplateConfig_old;
+import com.jackhxs.data.template.TemplateConfig_old;
 
 public class App extends Application {
 	public static String sessionId;

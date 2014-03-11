@@ -1,5 +1,8 @@
 package com.jackhxs.data;
 
+import com.jackhxs.data.template.Template;
+import com.jackhxs.data.template.TemplateConfig;
+
 import android.os.Parcel;
 import android.os.Parcelable;
 

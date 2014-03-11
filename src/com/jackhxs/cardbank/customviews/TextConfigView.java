@@ -1,4 +1,9 @@
-package com.jackhxs.cardbank;
+package com.jackhxs.cardbank.customviews;
+
+import com.jackhxs.cardbank.R;
+import com.jackhxs.cardbank.R.color;
+import com.jackhxs.cardbank.R.layout;
+import com.jackhxs.cardbank.R.styleable;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -61,13 +66,9 @@ public class TextConfigView extends LinearLayout {
 	}
  	
 	public void setColor(int color) {
-		Log.i("tag", Integer.toHexString(color));
-		Log.i("tag", "#" + String.format("06X", (0xFFFFFFFF - color)));
-		
 		textColor.setBackgroundColor(color);
 		title.setTextColor(getContrastColor(color));
 
-		//title.setTextColor(Color.RED);
 		title.setAlpha(100);
 	}
 	

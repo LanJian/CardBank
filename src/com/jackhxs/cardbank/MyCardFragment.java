@@ -33,11 +33,13 @@ import android.widget.Toast;
 
 import com.devspark.progressfragment.ProgressFragment;
 import com.google.gson.Gson;
+import com.jackhxs.cardbank.customviews.PagerContainer;
+import com.jackhxs.cardbank.customviews.TextConfigView;
 import com.jackhxs.data.BusinessCard;
-import com.jackhxs.data.Template;
-import com.jackhxs.data.TemplateProperties;
-import com.jackhxs.data.TextConfig;
-import com.jackhxs.data.TemplateConfig;
+import com.jackhxs.data.template.Template;
+import com.jackhxs.data.template.TemplateConfig;
+import com.jackhxs.data.template.TemplateProperties;
+import com.jackhxs.data.template.TextConfig;
 import com.jackhxs.remote.JSONResultReceiver;
 import com.jackhxs.remote.RemoteService;
 import com.jackhxs.remote.Constants.Operation;
@@ -149,7 +151,6 @@ return super.onOptionsItemSelected(item);
 	public void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		setHasOptionsMenu(true);
 		
 		// Create an empty list to store templates
 		templates = new ArrayList<Template>();
@@ -570,6 +571,15 @@ return super.onOptionsItemSelected(item);
 			
 			myCard.getTemplateConfig().setBaseTemplate(myCard.getTemplate().getTemplateName());
 			
+			/*
+			 * TODO update left and top values of template config`
+			 * 
+			 * TODO Done, but might was to reconsider only resetting top and left values
+			 */
+			/*
+			*/	
+			myCard.getTemplateConfig().setProperties(templates.get(position).getProperties());
+			
 			delaySaveCard();
 		}
 		
@@ -661,8 +671,9 @@ return super.onOptionsItemSelected(item);
 		
 		if (personalTextConfig == null) {
 			personalTextConfig = new TextConfig(textConfig.left, textConfig.top, textConfig.color);
-			
-			
+		} else {
+			personalTextConfig.left = textConfig.left;
+			personalTextConfig.top = textConfig.top;
 		}
 		
 		personalTextConfig.color = color;

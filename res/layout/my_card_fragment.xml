@@ -21,7 +21,7 @@
             android:adjustViewBounds="true"
             android:scaleType="centerCrop" />
 		
-        <com.jackhxs.cardbank.PagerContainer
+        <com.jackhxs.cardbank.customviews.PagerContainer
 	        android:id="@+id/pager_container"
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
@@ -35,7 +35,7 @@
 	            android:layout_width="328dp"
 	            android:layout_height="184dp"
 	            android:layout_gravity="center_horizontal"  />
-        </com.jackhxs.cardbank.PagerContainer>
+        </com.jackhxs.cardbank.customviews.PagerContainer>
         
     </RelativeLayout>
 
@@ -75,7 +75,7 @@
 				    android:imeOptions="actionNext"
 				    android:inputType="textPersonName" />
 				 
-				<com.jackhxs.cardbank.TextConfigView
+				<com.jackhxs.cardbank.customviews.TextConfigView
 				    android:id="@+id/name_config"
 				    android:layout_width="wrap_content"
 				    android:layout_height="wrap_content"
@@ -108,7 +108,7 @@
 				    android:imeOptions="actionNext"
 				    android:inputType="textPersonName" />
 				 
-				<com.jackhxs.cardbank.TextConfigView
+				<com.jackhxs.cardbank.customviews.TextConfigView
 				    android:id="@+id/company_config"
 				    android:layout_width="wrap_content"
 				    android:layout_height="wrap_content"
@@ -140,7 +140,7 @@
 				    android:imeOptions="actionNext"
 				    android:inputType="textPersonName" />
 				 
-				<com.jackhxs.cardbank.TextConfigView
+				<com.jackhxs.cardbank.customviews.TextConfigView
 				    android:id="@+id/job_title_config"
 				    android:layout_width="wrap_content"
 				    android:layout_height="wrap_content"
@@ -172,7 +172,7 @@
 			        android:imeOptions="actionNext"
 			        android:inputType="textEmailAddress" />
 				 
-				<com.jackhxs.cardbank.TextConfigView
+				<com.jackhxs.cardbank.customviews.TextConfigView
 				    android:id="@+id/email_config"
 				    android:layout_width="wrap_content"
 				    android:layout_height="wrap_content"
@@ -204,7 +204,7 @@
 			        android:imeOptions="actionNext"
 			        android:inputType="phone" />
 				 
-				<com.jackhxs.cardbank.TextConfigView
+				<com.jackhxs.cardbank.customviews.TextConfigView
 				    android:id="@+id/phone_config"
 				    android:layout_width="wrap_content"
 				    android:layout_height="wrap_content"
@@ -236,7 +236,7 @@
 				    android:imeOptions="actionNext"
 				    android:inputType="textPersonName" />
 				 
-				<com.jackhxs.cardbank.TextConfigView
+				<com.jackhxs.cardbank.customviews.TextConfigView
 				    android:id="@+id/address_config"
 				    android:layout_width="wrap_content"
 				    android:layout_height="wrap_content"

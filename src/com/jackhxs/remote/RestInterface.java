@@ -16,7 +16,7 @@ import com.google.gson.JsonObject;
 import com.jackhxs.data.APIResult;
 import com.jackhxs.data.LoginSignupResponse;
 import com.jackhxs.data.BusinessCard;
-import com.jackhxs.data.Template;
+import com.jackhxs.data.template.Template;
 
 /**
  * Created by moomou on 8/4/13.

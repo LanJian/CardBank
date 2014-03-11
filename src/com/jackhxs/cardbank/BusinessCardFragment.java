@@ -1,8 +1,8 @@
 package com.jackhxs.cardbank;
 
 import com.jackhxs.data.BusinessCard;
-import com.jackhxs.data.Template;
-import com.jackhxs.data.TextConfig;
+import com.jackhxs.data.template.Template;
+import com.jackhxs.data.template.TextConfig;
 
 import android.annotation.SuppressLint;
 import android.graphics.Color;

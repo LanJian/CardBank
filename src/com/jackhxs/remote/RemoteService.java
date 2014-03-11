@@ -17,7 +17,7 @@ import com.jackhxs.cardbank.App;
 import com.jackhxs.data.APIResult;
 import com.jackhxs.data.LoginSignupResponse;
 import com.jackhxs.data.BusinessCard;
-import com.jackhxs.data.Template;
+import com.jackhxs.data.template.Template;
 import com.jackhxs.remote.Constants.Operation;
 import com.squareup.okhttp.OkHttpClient;
 
