@@ -6,6 +6,7 @@ import java.util.TimerTask;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -19,7 +20,9 @@ import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.telephony.PhoneNumberUtils;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -27,6 +30,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -44,6 +49,7 @@ import com.jackhxs.remote.JSONResultReceiver;
 import com.jackhxs.remote.RemoteService;
 import com.jackhxs.remote.Constants.Operation;
 import com.jackhxs.util.ImageUtil;
+import com.jackhxs.util.Utils;
 import com.larswerkman.holocolorpicker.ColorPicker;
 import com.larswerkman.holocolorpicker.SVBar;
 
@@ -104,43 +110,6 @@ public class MyCardFragment extends ProgressFragment implements JSONResultReceiv
     private ArrayList<Template> templates;
     
     
-    
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/*
-* Not USED ANYMORE
-@Override
-public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-// Inflate the menu items for use in the action bar
-inflater.inflate(R.menu.my_card_fragment_actions, menu);
-super.onCreateOptionsMenu(menu, inflater);
-}
-
-
-@Override
-public boolean onOptionsItemSelected(MenuItem item) {
-// The action bar home/up action should open or close the drawer.
-// ActionBarDrawerToggle will take care of this.
-
-// Handle action buttons
-switch(item.getItemId()) {
-case R.id.action_edit:
-// create intent to perform web search for this planet
-Intent intent = new Intent(
-getActivity(),
-CardEditActivity.class);
-startActivity(intent);
-return true;
-
-
-default:
-return super.onOptionsItemSelected(item);
-}
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// */
-
-    
-    
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /*
      * LIFECYCLE EVENTS
@@ -188,8 +157,10 @@ return super.onOptionsItemSelected(item);
         // Instantiate a ViewPager and a PagerAdapter.
         mPager = mContainer.getViewPager();
         
+        Utils.ConfigurePagerSize(mPager, getActivity());
+        
         // Add some spacing between cards
-        mPager.setPageMargin(30); 
+        mPager.setPageMargin((int) (10 * Utils.getDensity(getActivity()))); 
         
         mPager.setOnPageChangeListener(new TemplateChangeListener());
 		

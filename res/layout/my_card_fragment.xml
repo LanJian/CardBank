@@ -29,12 +29,14 @@
 	        android:layout_marginBottom="8dp"
 	         >
         
+            <!-- Width and Height are adjusted via code -->
 	        <android.support.v4.view.ViewPager
 	            xmlns:android="http://schemas.android.com/apk/res/android"
 	            android:id="@+id/pager"
-	            android:layout_width="328dp"
-	            android:layout_height="184dp"
-	            android:layout_gravity="center_horizontal"  />
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_gravity="center_horizontal" />
+
         </com.jackhxs.cardbank.customviews.PagerContainer>
         
     </RelativeLayout>
@@ -251,7 +253,7 @@
     </ScrollView>
  
     <ImageView
-       android:id="@+id/imageView1"
+       android:id="@+id/horizontal_shadow"
        android:layout_width="fill_parent"
        android:layout_height="wrap_content"
        android:layout_alignTop="@id/card_details_layout"

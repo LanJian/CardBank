@@ -23,8 +23,6 @@ public class BusinessCardFragment extends Fragment {
 	private BusinessCard cardDetails;
 	
 	int width;
-
-	float whScale = 0.541f;
 	
 	RelativeLayout mBusinessCardLayout;
 	
