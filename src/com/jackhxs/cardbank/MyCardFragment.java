@@ -383,7 +383,7 @@ return super.onOptionsItemSelected(item);
 		
 		phoneConfig = (TextConfigView) mContentView.findViewById(R.id.phone_config);
 		phoneConfig.setColor(Color.parseColor(myCard.getTemplate().getProperties().phone.color));
-		phoneConfig.setText((myCard.getPhone() == null || myCard.getPhone().equalsIgnoreCase("")) ? "" : myCard.getPhone().substring(0, 1));
+		phoneConfig.setText((myCard.getPhone() == null || myCard.getPhone().equalsIgnoreCase("")) ? "" : (PhoneNumberUtils.stripSeparators(myCard.getPhone())).substring(0, 1));
 		phoneConfig.setOnClickListener(new TextConfigClickListener(myCard.getTemplate().getProperties().phone,
 				(myCard.getTemplateConfig().getProperties() == null) ? null :myCard.getTemplateConfig().getProperties().phone, FieldName.PHONE));
 		
@@ -508,28 +508,28 @@ return super.onOptionsItemSelected(item);
 					String jobTitle = s.toString();
 					myCard.setJobTitle(jobTitle);
 					if (jobTitle.length() > 0) {
-						companyConfig.setText(jobTitle.substring(0, 1));
+						jobTitleConfig.setText(jobTitle.substring(0, 1));
 					}
 					break;
 				case EMAIL:
 					String email = s.toString();
 					myCard.setEmail(email);
 					if (email.length() > 0) {
-						companyConfig.setText(email.substring(0, 1));
+						emailConfig.setText(email.substring(0, 1));
 					}
 					break;
 				case PHONE:
 					String phone = s.toString();
 					myCard.setPhone(phone);
 					if (phone.length() > 0) {
-						companyConfig.setText(phone.substring(0, 1));
+						phoneConfig.setText((PhoneNumberUtils.stripSeparators(myCard.getPhone())).substring(0, 1));
 					}
 					break;
 				case ADDRESS:
 					String address = s.toString();
 					myCard.setAddress(address);
 					if (address.length() > 0) {
-						companyConfig.setText(address.substring(0, 1));
+						addressConfig.setText(address.substring(0, 1));
 					}
 					break;
 				default:
