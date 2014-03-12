@@ -11,20 +11,22 @@ import android.content.res.AssetManager;
 import android.content.res.Configuration;
 
 import com.google.gson.Gson;
-import com.jackhxs.data.SimpleCard;
-import com.jackhxs.data.TemplateConfig;
+import com.jackhxs.data.AccountType;
+import com.jackhxs.data.BusinessCard;
+import com.jackhxs.data.template.TemplateConfig_old;
 
 public class App extends Application {
 	public static String sessionId;
 	public static String userId;
 
-	public static SimpleCard[] myCards;
-	public static SimpleCard[] myContacts;
-	public static SimpleCard[] myReferrals;
-	
-	public static TemplateConfig[] templateConfig;
+	public static AccountType accounType;
+	public static BusinessCard[] myCards;
+	public static BusinessCard[] myContacts;
+	public static BusinessCard[] myReferrals;
+
+	public static TemplateConfig_old[] templateConfig;
 	public static Calendar lastUpdated;
-	
+
 	public Boolean addContact() {
 		return null;
 	}
@@ -53,16 +55,16 @@ public class App extends Application {
 		try {
 			inputStream = assetManager.open("template.json");
 			BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"), 8);
-		    StringBuilder sb = new StringBuilder();
+			StringBuilder sb = new StringBuilder();
 
-		    String line = null;
-		    
-		    while ((line = reader.readLine()) != null) {
-		        sb.append(line + "\n");
-		    }
-		    
-		    templateConfig = new Gson().fromJson(sb.toString(), TemplateConfig[].class);
-		    
+			String line = null;
+
+			while ((line = reader.readLine()) != null) {
+				sb.append(line + "\n");
+			}
+
+			templateConfig = new Gson().fromJson(sb.toString(), TemplateConfig_old[].class);
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

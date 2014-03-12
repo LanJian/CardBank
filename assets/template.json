@@ -1,35 +1,36 @@
 [
 	{
-		"url": "template_white",
+		"url": "template_circle",
 		"name": {
 			"color": "black",
-			"left": 50,
-			"top": 100
+			"left": 0.065,
+			"top": 0.24
 		},
 		"phone": {
 			"color": "black",
-			"left": 50,
-			"top": 350
+			"left": 0.065,
+			"top": 0.841
 		},
 		"email": {
 			"color": "black",
-			"left": 50,
-			"top": 400
+			"left": 0.065,
+			"top": 0.961
 		},
         "company": {
 			"color": "black",
-			"left": 450,
-			"top": 350
+			"left": 0.586,
+			"top": 0.841
 		},
         "address": {
 			"color": "black",
-			"left": 450,
-			"top": 400
+			"left": 0.586,
+			"top": 0.961
 		},
         "jobTitle": {
 			"color": "black",
-			"left": 450,
-			"top": 100
+			"left": 0.586,
+			"top": 0.24
 		}
 	}
 ]
+

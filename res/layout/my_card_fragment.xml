@@ -1,0 +1,255 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res/com.jackhxs.cardbank"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#FFF"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:id="@+id/card_wrapper_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:background="@drawable/bg_card_leather"
+        >
+        
+        <com.jackhxs.cardbank.customviews.PagerContainer
+	        android:id="@+id/pager_container"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_marginTop="12dp"
+	         >
+        
+            <!-- Width and Height are adjusted via code -->
+	        <android.support.v4.view.ViewPager
+	            xmlns:android="http://schemas.android.com/apk/res/android"
+	            android:id="@+id/pager"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_gravity="center_horizontal" />
+
+        </com.jackhxs.cardbank.customviews.PagerContainer>
+        
+    </RelativeLayout>
+
+    <ScrollView
+        android:id="@+id/card_details_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+		android:layout_below="@id/card_wrapper_layout"
+		android:background="@color/light_grey"  >
+        
+		<LinearLayout
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:orientation="vertical"
+			android:padding="16dp" >
+
+			<TextView
+			    android:id="@+id/name_title"
+			    style="@style/my_card_headers"
+			    android:text="@string/name_title" />
+
+			<LinearLayout
+			    android:layout_width="match_parent"
+			    android:layout_height="wrap_content"
+			    android:gravity="right"
+			    android:orientation="horizontal" >
+			
+				<EditText
+				    android:id="@+id/edit_name"
+				    android:layout_width="0dp"
+				    android:layout_height="wrap_content"
+				    android:layout_gravity="bottom"
+				    android:layout_weight="1"
+				    android:ems="10"
+				    android:hint="@string/edit_name_hint"
+				    android:imeOptions="actionNext"
+				    android:inputType="textPersonName" />
+				 
+				<com.jackhxs.cardbank.customviews.TextConfigView
+				    android:id="@+id/name_config"
+				    android:layout_width="wrap_content"
+				    android:layout_height="wrap_content"
+				    android:layout_marginBottom="4dp"
+				    android:background="?android:selectableItemBackground"
+				    custom:borderColor="@color/black" />
+				
+			</LinearLayout>
+
+			<TextView
+			    android:id="@+id/company_title"
+			    style="@style/my_card_headers"
+			    android:text="@string/company_title" />
+
+			
+			<LinearLayout
+			    android:layout_width="match_parent"
+			    android:layout_height="wrap_content"
+			    android:gravity="right"
+			    android:orientation="horizontal" >
+			
+			    <EditText
+				    android:id="@+id/edit_company"
+				    android:layout_width="0dp"
+				    android:layout_height="wrap_content"
+				    android:layout_gravity="bottom"
+				    android:layout_weight="1"
+				    android:ems="10"
+				    android:hint="@string/edit_company_hint"
+				    android:imeOptions="actionNext"
+				    android:inputType="textPersonName" />
+				 
+				<com.jackhxs.cardbank.customviews.TextConfigView
+				    android:id="@+id/company_config"
+				    android:layout_width="wrap_content"
+				    android:layout_height="wrap_content"
+				    android:layout_marginBottom="4dp"
+				    android:background="?android:selectableItemBackground"
+				    custom:borderColor="@color/black" />
+				
+			</LinearLayout>
+			
+			<TextView
+			    android:id="@+id/job_title_title"
+			    style="@style/my_card_headers"
+			    android:text="@string/job_title_title" />
+
+			<LinearLayout
+			    android:layout_width="match_parent"
+			    android:layout_height="wrap_content"
+			    android:gravity="right"
+			    android:orientation="horizontal" >
+			
+			    <EditText
+				    android:id="@+id/edit_job_title"
+				    android:layout_width="0dp"
+				    android:layout_height="wrap_content"
+				    android:layout_gravity="bottom"
+				    android:layout_weight="1"
+				    android:ems="10"
+				    android:hint="@string/edit_job_title_hint"
+				    android:imeOptions="actionNext"
+				    android:inputType="textPersonName" />
+				 
+				<com.jackhxs.cardbank.customviews.TextConfigView
+				    android:id="@+id/job_title_config"
+				    android:layout_width="wrap_content"
+				    android:layout_height="wrap_content"
+				    android:layout_marginBottom="4dp"
+				    android:background="?android:selectableItemBackground"
+				    custom:borderColor="@color/black" />
+				
+			</LinearLayout>
+			
+			<TextView
+			    android:id="@+id/email_title"
+			    style="@style/my_card_headers"
+			    android:text="@string/email_title" />
+
+			<LinearLayout
+			    android:layout_width="match_parent"
+			    android:layout_height="wrap_content"
+			    android:gravity="right"
+			    android:orientation="horizontal" >
+			
+			    <EditText
+			        android:id="@+id/edit_email"
+			        android:layout_width="0dp"
+			        android:layout_height="wrap_content"
+				    android:layout_gravity="bottom"
+			        android:layout_weight="1"
+			        android:ems="10"
+			        android:hint="@string/edit_email_hint"
+			        android:imeOptions="actionNext"
+			        android:inputType="textEmailAddress" />
+				 
+				<com.jackhxs.cardbank.customviews.TextConfigView
+				    android:id="@+id/email_config"
+				    android:layout_width="wrap_content"
+				    android:layout_height="wrap_content"
+				    android:layout_marginBottom="4dp"
+				    android:background="?android:selectableItemBackground"
+				    custom:borderColor="@color/black" />
+				
+			</LinearLayout>
+			
+			<TextView
+			    android:id="@+id/phone_title"
+			    style="@style/my_card_headers"
+			    android:text="@string/phone_title" />
+			
+			<LinearLayout
+			    android:layout_width="match_parent"
+			    android:layout_height="wrap_content"
+			    android:gravity="right"
+			    android:orientation="horizontal" >
+			
+			    <EditText
+			        android:id="@+id/edit_phone"
+			        android:layout_width="0dp"
+			        android:layout_height="wrap_content"
+				    android:layout_gravity="bottom"
+			        android:layout_weight="1"
+			        android:ems="10"
+			        android:hint="@string/edit_phone_hint"
+			        android:imeOptions="actionNext"
+			        android:inputType="phone" />
+				 
+				<com.jackhxs.cardbank.customviews.TextConfigView
+				    android:id="@+id/phone_config"
+				    android:layout_width="wrap_content"
+				    android:layout_height="wrap_content"
+				    android:layout_marginBottom="4dp"
+				    android:background="?android:selectableItemBackground"
+				    custom:borderColor="@color/black" />
+				
+			</LinearLayout>
+			
+			<TextView
+			    android:id="@+id/address_title"
+			    style="@style/my_card_headers"
+			    android:text="@string/address_title" />
+			
+			<LinearLayout
+			    android:layout_width="match_parent"
+			    android:layout_height="wrap_content"
+			    android:gravity="right"
+			    android:orientation="horizontal" >
+			
+			    <EditText
+				    android:id="@+id/edit_address"
+				    android:layout_width="0dp"
+				    android:layout_height="wrap_content"
+				    android:layout_gravity="bottom"
+				    android:layout_weight="1"
+				    android:ems="10"
+				    android:hint="@string/edit_address_hint"
+				    android:imeOptions="actionNext"
+				    android:inputType="textPersonName" />
+				 
+				<com.jackhxs.cardbank.customviews.TextConfigView
+				    android:id="@+id/address_config"
+				    android:layout_width="wrap_content"
+				    android:layout_height="wrap_content"
+				    android:layout_marginBottom="4dp"
+				    android:background="?android:selectableItemBackground"
+				    custom:borderColor="@color/black" />
+				
+			</LinearLayout>
+			
+		</LinearLayout>
+   
+    </ScrollView>
+ 
+    <ImageView
+       android:id="@+id/horizontal_shadow"
+       android:layout_width="fill_parent"
+       android:layout_height="wrap_content"
+       android:layout_alignTop="@id/card_details_layout"
+       android:scaleType="fitXY"
+       android:src="@drawable/horizontal_shadow" />
+    
+    
+</RelativeLayout>

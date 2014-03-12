@@ -1,5 +1,19 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <resources>
+	<style name="AppBaseTheme" parent="android:Theme.Holo.Light.DarkActionBar">
+    </style>
+  
+	<style name="AppTheme" parent="AppBaseTheme">
+
+	    <item name="android:actionBarStyle">@style/CardBeamActionBar</item>
+    </style>
+  
+	<!-- ActionBar styles -->
+    <style name="CardBeamActionBar" parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
+		 <item name="android:background">@color/actionbar_background</item>
+    </style>
+	
+	
   <style name="button_text" >
     <item name="android:layout_width" >fill_parent</item>
     <item name="android:layout_height" >wrap_content</item>
@@ -13,4 +27,52 @@
     <item name="android:shadowDy" >1</item>
     <item name="android:shadowRadius" >2</item>
   </style>
+  
+  <style name="detail_layout" >
+	<item name="android:orientation">vertical</item>
+	<item name="android:background">@color/white</item>
+	<item name="android:paddingBottom">5dp</item>
+	<item name="android:paddingLeft">8dp</item>
+	<item name="android:paddingRight">8dp</item>
+	<item name="android:paddingTop">5dp</item>
+	
+  </style>
+  
+  
+  <style name="my_card_headers" >
+	<item name="android:gravity" >center_vertical</item>
+    <item name="android:textColor">@color/my_card_header_color</item>
+    <item name="android:textAppearance">?android:attr/textAppearanceSmall</item>
+    <item name="android:textStyle">bold</item>
+    <item name="android:layout_width">wrap_content</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:textAllCaps">true</item>
+  </style>
+  
+  <style name="card_flip_view_layout" >
+	<!-- Nothing yet. maybe some padding -->
+	<item name="android:layout_width" >wrap_content</item>
+	<item name="android:layout_height" >wrap_content</item>
+	<item name="android:layout_weight" >1</item>
+  </style>
+  
+  <style name="card_flip_view_image" >
+	<item name="android:layout_centerVertical" >true</item>
+  </style>
+    
+  <style name="card_flip_view_text" >
+	<item name="android:layout_centerVertical" >true</item>
+	<item name="android:textAppearance" >?android:attr/textAppearanceMedium</item>
+	<item name="android:layout_marginLeft" >10dp</item>
+	<item name="android:textColor">@color/card_flip_view_link_color</item>
+	<item name="android:textStyle">italic</item>
+  </style>
+    
+  <style name="card_flip_view_underline" >
+	<item name="android:layout_marginRight" >-15dp</item>
+	<item name="android:layout_width" >wrap_content</item>
+	<item name="android:layout_height" >1dp</item>
+	<item name="android:background" >@color/card_flip_view_link_color</item>
+  </style>
+   
 </resources>

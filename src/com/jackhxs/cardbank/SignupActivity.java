@@ -117,7 +117,7 @@ JSONResultReceiver.Receiver {
 			
 			Log.e("Success", "logged in");
 			
-			Intent intent = new Intent(this, MainActivity.class);
+			Intent intent = new Intent(this, HomeActivity.class);
 			intent.putExtra("mode", "newAccount");
 			startActivity(intent);
 			finishActivity(0);

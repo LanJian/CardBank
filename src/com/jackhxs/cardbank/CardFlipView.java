@@ -23,7 +23,7 @@ import android.widget.Toast;
 
 import com.aphidmobile.flip.FlipViewController;
 import com.google.gson.Gson;
-import com.jackhxs.data.SimpleCard;
+import com.jackhxs.data.BusinessCard;
 import com.jackhxs.remote.Constants;
 import com.jackhxs.remote.Constants.Operation;
 import com.jackhxs.remote.JSONResultReceiver;
@@ -48,13 +48,18 @@ public class CardFlipView extends Activity implements CreateNdefMessageCallback,
 
         mImageLoader = ImageLoader.buildImageLoaderForActivity(this);
 
-		if (cardViewMode == null || cardViewMode.equals("contact")) {
-            ArrayList<SimpleCard> list = new ArrayList<SimpleCard>();
+        
+        /*
+         * TODO IS THERE ANOTHER MODE? I can't find any.
+         * TODO Is a user allowed to have more than 1 card?
+         */
+        if (cardViewMode == null || cardViewMode.equals("contact")) {
+            ArrayList<BusinessCard> list = new ArrayList<BusinessCard>();
             list.addAll(Arrays.asList(App.myContacts));
 			adapter = new CardAdapter(this, R.layout.card_flip_view, list, mImageLoader);
 		}
 		else {
-            ArrayList<SimpleCard> list = new ArrayList<SimpleCard>();
+            ArrayList<BusinessCard> list = new ArrayList<BusinessCard>();
             list.addAll(Arrays.asList(App.myCards));
 			adapter = new CardAdapter(this, R.layout.card_flip_view, list, mImageLoader);
 		}
@@ -149,10 +154,10 @@ public class CardFlipView extends Activity implements CreateNdefMessageCallback,
 		// record 0 contains the MIME type, record 1 is the AAR, if present
 		String simpleCardJSON = (new String(msg.getRecords()[0].getPayload()));
 
-		List<SimpleCard> cardList = new ArrayList<SimpleCard>(Arrays.asList(App.myContacts));
-		SimpleCard tmpCard = (new Gson()).fromJson(simpleCardJSON, SimpleCard.class);
+		List<BusinessCard> cardList = new ArrayList<BusinessCard>(Arrays.asList(App.myContacts));
+		BusinessCard tmpCard = (new Gson()).fromJson(simpleCardJSON, BusinessCard.class);
 		cardList.add(tmpCard);
-		App.myContacts = cardList.toArray(new SimpleCard[cardList.size()]);
+		App.myContacts = cardList.toArray(new BusinessCard[cardList.size()]);
 
 		Log.e("NFC Data", simpleCardJSON);
 

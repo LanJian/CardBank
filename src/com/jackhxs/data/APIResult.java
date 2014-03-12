@@ -1,7 +1,7 @@
 package com.jackhxs.data;
 
 public class APIResult {
-	public SimpleCard[] cards;
+	public BusinessCard[] cards;
 	public String status;
 	public String updatedAt;
 }

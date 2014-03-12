@@ -1,5 +1,7 @@
 package com.jackhxs.remote;
 
+import java.util.List;
+
 import retrofit.http.Body;
 import retrofit.http.DELETE;
 import retrofit.http.Field;
@@ -12,7 +14,9 @@ import retrofit.http.Query;
 
 import com.google.gson.JsonObject;
 import com.jackhxs.data.APIResult;
-import com.jackhxs.data.SimpleCard;
+import com.jackhxs.data.LoginSignupResponse;
+import com.jackhxs.data.BusinessCard;
+import com.jackhxs.data.template.Template;
 
 /**
  * Created by moomou on 8/4/13.
@@ -28,14 +32,14 @@ public interface RestInterface {
 		@Path("userId") String userId, 
 		@Path("cardId") String cardId, 
 		@Query("sessionId") String sessionId, 
-		@Body SimpleCard simpleCard);
+		@Body BusinessCard simpleCard);
 
 	// Add a new Card
 	@POST("/users/{userId}/cards") // /card/new")
-	JsonObject addCard(@Path("userId") String userId, @Query("sessionId") String sessionId, @Body SimpleCard newCard);
+	JsonObject addCard(@Path("userId") String userId, @Query("sessionId") String sessionId, @Body BusinessCard newCard);
 
 	@DELETE("/users/{userId}/cards") // delete Card
-	JsonObject deleteCard(@Path("userId") String userId, @Query("sessionId") String sessionId, @Body SimpleCard existingCard);
+	JsonObject deleteCard(@Path("userId") String userId, @Query("sessionId") String sessionId, @Body BusinessCard existingCard);
 
 	/** Contacts */
 	@GET("/users/{userId}/contacts") // get contact cards
@@ -43,10 +47,10 @@ public interface RestInterface {
 
 	// Add new Contact
 	@POST("/users/{userId}/contacts") // /contact/new")
-	JsonObject addContact(@Path("userId") String userId, @Query("sessionId") String sessionId, @Body SimpleCard contactCard);
+	JsonObject addContact(@Path("userId") String userId, @Query("sessionId") String sessionId, @Body BusinessCard contactCard);
 
 	@DELETE("/users/{userId}/contacts") // delete a contact
-	JsonObject deleteContact(@Path("userId") String userId, @Query("sessionId") String sessionId, @Body SimpleCard existingContact);
+	JsonObject deleteContact(@Path("userId") String userId, @Query("sessionId") String sessionId, @Body BusinessCard existingContact);
 
     // Referrals
     @FormUrlEncoded
@@ -67,10 +71,16 @@ public interface RestInterface {
 	//Signing up
 	@FormUrlEncoded
 	@POST("/users")
-	JsonObject signup(@Field("email") String email, @Field("password") String password);
+	LoginSignupResponse signup(@Field("email") String email, @Field("password") String password);
 	
 	// Logging In
 	@FormUrlEncoded
 	@POST("/sessions")
-	JsonObject login(@Field("email") String email, @Field("password") String password);
+	LoginSignupResponse login(@Field("email") String email, @Field("password") String password);
+	
+	/** Contacts */
+	@GET("/templates") // get templates
+	List<Template> getTemplates();
+
+	
 }

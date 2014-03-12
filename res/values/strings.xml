@@ -1,11 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-		<string name="your_name"> Your Name</string>
-		<string name="your_number"> 000&#8211;0000</string>
-		<string name="your_email">sample@email.com</string>
-		<string name="your_company">Company</string>
-		<string name="your_jobTitle">Job Title</string>
-		<string name="your_address">Your Address</string>
+	
+    <!-- These are the selectable titles in the navigation drawer -->
+    <string name="nav_drawer_my_card">My Card</string>
+    <string name="nav_drawer_contacts">Contacts</string>
+    <string name="nav_drawer_referrals">Referrals</string>
+    <!-- Not used yet -->
+    <string name="nav_drawer_events">Events</string>
+    
+    <string name="desc_nav_drawer_item_icon">Item Icon</string>
+    
+    <string name="action_edit">Edit</string>
+    	
+	<string name="your_name"> Your Name</string>
+	<string name="your_number"> 000&#8211;0000</string>
+	<string name="your_email">sample@email.com</string>
+	<string name="your_company">Company</string>
+	<string name="your_jobTitle">Job Title</string>
+	<string name="your_address">Your Address</string>
 		
     <string name="app_name">CardBeam</string>
     <string name="hint_enter_text">Enter Text</string>
@@ -17,6 +29,7 @@
     <string name="empty_contact"> Your contact list is empty</string>
     <string name="empty_referral"> Your referral list is empty</string>
     
+    <string name="login_login_string_lnkd">Login with LinkedIn</string>
     <string name="login_login_string">Login</string>
     <string name="login_email">Email</string>
     <string name="login_password">Password</string>
@@ -33,5 +46,25 @@
     <string name="appName">CardBeam</string>
     
     <string name="remember_me">Remember me</string>
-
+    
+    <!-- This is used in the card flip view more button -->
+    <string name="card_flip_view_more">More</string>
+    
+    <!--  This is used when sending out and email -->
+    <string name="email_option">Send email using</string>
+    
+    <!-- These are are used when editing the card -->
+    <string name="name_title"><u>Your name:</u></string>
+    <string name="edit_name_hint">Steve Jobs</string>
+    <string name="company_title"><u>Company name:</u></string>
+    <string name="edit_company_hint">Apple Inc</string>
+    <string name="job_title_title"><u>Position title:</u></string>
+    <string name="edit_job_title_hint">CEO</string>
+    <string name="email_title"><u>Email address:</u></string>
+    <string name="edit_email_hint">sj@apple.com</string>
+    <string name="phone_title"><u>Phone number:</u></string>
+    <string name="edit_phone_hint">408-555-2775</string>
+    <string name="address_title"><u>Address:</u></string>
+    <string name="edit_address_hint">1 Infinity Loop</string>
+    
 </resources>

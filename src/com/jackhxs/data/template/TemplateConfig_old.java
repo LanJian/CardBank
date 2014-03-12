@@ -1,9 +1,9 @@
-package com.jackhxs.data;
+package com.jackhxs.data.template;
 
-public class TemplateConfig {
+public class TemplateConfig_old {
 	public class TextConfig {
-		public int left;
-		public int top;
+		public float left;
+		public float top;
 		public String color;
 	}
 

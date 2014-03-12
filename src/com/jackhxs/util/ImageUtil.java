@@ -5,16 +5,24 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import com.jackhxs.cardbank.R;
+
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
+import android.graphics.Typeface;
+import android.util.DisplayMetrics;
+import android.util.Log;
 import android.util.LruCache;
+import android.util.TypedValue;
+import android.view.Display;
 
-import com.jackhxs.data.TemplateConfig;
+import com.jackhxs.data.template.TemplateConfig_old;
 
 public class ImageUtil {
 	final static int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
@@ -61,7 +69,7 @@ public class ImageUtil {
 	}
 	
 	static public Bitmap GenerateCardImage(Activity ref, 
-			TemplateConfig template, 
+			TemplateConfig_old template, 
 			String name, 
 			String email, 
 			String phone,
@@ -75,22 +83,51 @@ public class ImageUtil {
 		if (cached != null) return cached;
 		
 		Bitmap bg = getBitmapFromAsset(ref, template.url);
-		Bitmap res = combineImages(template, bg, name, email, phone, company, address, jobTitle);
+		Bitmap res = combineImages(template, bg, name, email, phone, company, address, jobTitle, ref);
 		addBitmapToMemoryCache(cacheKey, res);
 		
 		return res;
 	}
 	
-	static public Bitmap combineImages(TemplateConfig template, 
+	static public Bitmap combineImages(TemplateConfig_old template, 
 			Bitmap background, 
 			String name, 
 			String email, 
 			String phone,
 			String company,
 			String address,
-			String jobTitle) { 
-		int width = 768, height = 416;
+			String jobTitle,
+			Activity mActivity) { 
+		
+		int width, height;
 
+		float whScale = 0.541667f; // width to height ratio
+		
+		TypedValue typedValue = new TypedValue();
+		mActivity.getResources().getValue(R.dimen.font_scale, typedValue, true);
+		float fontScale = typedValue.getFloat();
+		
+		Display display = mActivity.getWindowManager().getDefaultDisplay();
+	    DisplayMetrics outMetrics = new DisplayMetrics ();
+	    display.getMetrics(outMetrics);
+
+	    float density  = mActivity.getResources().getDisplayMetrics().density;
+	    float dpWidth  = outMetrics.widthPixels / density;
+		
+	    dpWidth = dpWidth - 20; // there is a 10dp padding on either side
+	    float dpHeight = dpWidth * whScale;
+	    
+	    width = (int) (dpWidth * density);
+	    height = (int) (dpHeight * density);
+	    
+	    Log.i("density", Float.toString(density));
+	    Log.i("height", Float.toString(height));
+	    Log.i("width", Float.toString(width));
+	    Log.i("fontScale", Float.toString(fontScale));
+		
+	    
+	    
+	    
 		Paint paint = new Paint(); 
 		paint.setStyle(Style.FILL);
 		
@@ -110,18 +147,19 @@ public class ImageUtil {
 		comboImage.drawPaint(paint);
 		comboImage.drawBitmap(background, 0, 0, null);
 		
-		paint.setTextSize(50); 
-		comboImage.drawText(name, template.name.left, template.name.top, paint);
-		paint.setTextSize(25); 
-		comboImage.drawText(email, template.email.left, template.email.top, paint);
-		paint.setTextSize(25); 
-		comboImage.drawText(phone, template.phone.left, template.phone.top, paint);
-		paint.setTextSize(25); 
-		comboImage.drawText(company, template.company.left, template.company.top, paint);
-		paint.setTextSize(25); 
-		comboImage.drawText(address, template.address.left, template.address.top, paint);
-		paint.setTextSize(25); 
-		comboImage.drawText(jobTitle, template.jobTitle.left, template.jobTitle.top, paint);
+		paint.setTextSize(25 * fontScale * density); 
+		paint.setTypeface(Typeface.DEFAULT_BOLD);
+		comboImage.drawText(name, template.name.left * width, template.name.top * height, paint);
+		paint.setTextSize(12 * fontScale * density); 
+		comboImage.drawText(email, template.email.left * width, template.email.top * height, paint);
+		paint.setTextSize(12 * fontScale * density); 
+		comboImage.drawText(phone, template.phone.left * width, template.phone.top * height, paint);
+		paint.setTextSize(12 * fontScale * density); 
+		comboImage.drawText(company, template.company.left * width, template.company.top * height, paint);
+		paint.setTextSize(12 * fontScale * density); 
+		comboImage.drawText(address, template.address.left * width, template.address.top * height, paint);
+		paint.setTextSize(12 * fontScale * density); 
+		comboImage.drawText(jobTitle, template.jobTitle.left * width, template.jobTitle.top * height, paint);
 		
 		return cs;
 	}
