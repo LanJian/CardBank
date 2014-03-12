@@ -110,7 +110,6 @@
                 android:layout_marginBottom="5dp"
                 android:layout_marginTop="5dp"
                 android:gravity="right"
-                android:inputType="textCapCharacters"
                 android:textColor="#FFF"
                 android:textSize="16sp" />
 
@@ -121,7 +120,6 @@
                 android:layout_marginBottom="5dp"
                 android:layout_marginTop="5dp"
                 android:gravity="right"
-                android:inputType="textCapCharacters"
                 android:textColor="#FFF"
                 android:textSize="16sp" />
 
@@ -133,6 +131,7 @@
                 android:layout_marginTop="5dp"
                 android:gravity="right"
                 android:inputType="textEmailAddress"
+                android:linksClickable="true"
                 android:textColor="#FFF"
                 android:textSize="16sp" />
 
@@ -154,7 +153,6 @@
                 android:layout_marginBottom="5dp"
                 android:layout_marginTop="5dp"
                 android:gravity="right"
-                android:inputType="textCapCharacters"
                 android:textColor="#FFF"
                 android:textSize="16sp" />
 

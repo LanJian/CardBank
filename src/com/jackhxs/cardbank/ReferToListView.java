@@ -1,15 +1,16 @@
 package com.jackhxs.cardbank;
 
-import android.app.Activity;
-import android.app.Fragment;
-import android.app.FragmentTransaction;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
 
-public class ReferToListView extends Activity {
+public class ReferToListView extends FragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        
         if (savedInstanceState == null) {
             Fragment fragment = new CardListFragment();
             Bundle args = new Bundle();
@@ -18,8 +19,9 @@ public class ReferToListView extends Activity {
             args.putBoolean("isRefer", true);
             
             fragment.setArguments(args);
-            FragmentTransaction ft = getFragmentManager().beginTransaction();
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.add(android.R.id.content, fragment).commit();
         }
+        
     }
 }

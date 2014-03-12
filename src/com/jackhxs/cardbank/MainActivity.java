@@ -4,9 +4,7 @@ import java.nio.charset.Charset;
 import java.text.ParseException;
 
 import android.app.ActionBar;
-import android.app.ActionBar.Tab;
 import android.app.Activity;
-import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.nfc.NdefMessage;
@@ -17,12 +15,14 @@ import android.nfc.NfcEvent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.jackhxs.data.SimpleCard;
+import com.jackhxs.data.AccountType;
+import com.jackhxs.data.BusinessCard;
 import com.jackhxs.remote.Constants;
 import com.jackhxs.remote.Constants.Operation;
 import com.jackhxs.remote.JSONResultReceiver;
@@ -30,7 +30,8 @@ import com.jackhxs.remote.RemoteService;
 
 public class MainActivity extends Activity implements CreateNdefMessageCallback, JSONResultReceiver.Receiver {
 	private NfcAdapter mNfcAdapter;
-	private Boolean editCardImmediately;
+	private AccountType accountType;
+	private Boolean edited;
 	private Boolean networkFinished;
 	private Boolean startedPolling;
 	private Boolean pollingInProgress;
@@ -70,10 +71,10 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback,
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		editCardImmediately = 
-				getIntent().getExtras().getString("mode", "oldAccount").equals("newAccount");
-		startedPolling = pollingInProgress = networkFinished = false;
+		
+		accountType = App.accounType;
 		longPollCount = 0;
+		edited = startedPolling = pollingInProgress = networkFinished = false;
 		
 		if (!Util.isTablet(getApplicationContext())) {
 			getActionBar().setDisplayShowTitleEnabled(false);
@@ -127,10 +128,12 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback,
 		// Handle presses on the action bar items
 		switch (item.getItemId()) {
 		case R.id.action_edit: {
+			/*
 			Intent intent = new Intent(
 				getApplicationContext(),
 				CardEditActivity.class);
 			startActivity(intent);
+			*/
 			return true;
 		}
 		default:
@@ -148,6 +151,7 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback,
 	}
 	
 	private void addTab(String tabName, Fragment frag, String name) {
+		/*
 		ActionBar actionBar = getActionBar();
 		Tab tab = actionBar
 				.newTab()
@@ -156,16 +160,19 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback,
 						new TabListener<CardFragment>(this, name,
 								frag));
 		actionBar.addTab(tab);
+		*/
 	}
 
 	private void dataUpdated(Bundle resultData) throws ParseException {
 		String dataType = resultData.getString("dataType");
-		SimpleCard[] data = (SimpleCard[]) resultData.getParcelableArray(dataType);
+		BusinessCard[] data = (BusinessCard[]) resultData.getParcelableArray(dataType);
 		
 		if (dataType.equals("cards")) {
 			App.myCards = data;
 			
-			Fragment cardFragment = new CardFragment(App.myCards[0]);
+			///////////////////////////////////////////////////////////////////////////////////////////////////
+			// Change to default constructor to avoid compilation error. This whole class is not needed anyway
+			Fragment cardFragment = new MyCardFragment();
 			addTab("My Card", cardFragment, "myCard");
 			
 			startService(Operation.GET_CONTACTS);
@@ -218,18 +225,19 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback,
 		}
 		else if (dataType.equals("referrals")){ //referalls
 			App.myReferrals = data;
-			
+			/*
 			Fragment fragment = new ReferralsListFragment();
 			addTab("Referrals", fragment, "referrals");
 			
 			// this is always the last call
-			if (editCardImmediately) {
-				editCardImmediately = !editCardImmediately;
+			if (!edited && accountType == AccountType.NEW_ACCOUNT) {
+				edited = !edited;
 				Intent intent = new Intent(
 					getApplicationContext(),
 					CardEditActivity.class);
 				startActivity(intent);
 			}
+			*/
 		}
 	}
 
@@ -270,7 +278,7 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback,
 		Integer myContactLength = App.myContacts.length;
 
 		App.myContacts[myContactLength] = 
-				(new Gson()).fromJson(simpleCardJSON, SimpleCard.class);
+				(new Gson()).fromJson(simpleCardJSON, BusinessCard.class);
 		
 		Log.e("NFC Data", simpleCardJSON);
 		

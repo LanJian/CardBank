@@ -9,6 +9,8 @@ public final class Constants {
 	public static final int STATUS_FINISHED = 1;
 	public static final int STATUS_ERROR  = 2;
 
+	public static final String API_ADDRESS_V1 = "http://cardbeam-server.herokuapp.com/";
+	
 	/** REST Interface Constants */
 	public enum Operation implements Parcelable{
 		POST_SIGNUP,
@@ -16,13 +18,14 @@ public final class Constants {
 		GET_CARDS,
 		GET_CONTACTS,
 		POST_CARD,
-		PUT_CARD,
+		UPDATE_CARD,
 		POST_CONTACT,
 		DEL_CONTACT,
 		DEL_CARD,
 		DEL_REFER,
         REFER,
-        LIST_REFERRALS;
+        LIST_REFERRALS,
+        GET_TEMPLATES;
 
 		@Override
 		public int describeContents() {
