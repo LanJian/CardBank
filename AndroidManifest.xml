@@ -10,8 +10,14 @@
 
     <uses-permission android:name="android.permission.NFC" />
     <uses-permission android:name="android.permission.INTERNET" />
+	
+    <!-- used to directly call other contacts -->
 	<uses-permission android:name="android.permission.CALL_PHONE" />
 
+	<!-- used to allow user to select know email account in the login and signup activities -->
+	<uses-permission android:name="android.permission.GET_ACCOUNTS" />
+	
+	
     <application
         android:allowBackup='true'
         android:name='com.jackhxs.cardbank.App'

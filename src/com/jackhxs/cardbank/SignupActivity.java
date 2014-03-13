@@ -1,5 +1,7 @@
 package com.jackhxs.cardbank;
 
+import java.util.List;
+
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -10,16 +12,20 @@ import android.os.Parcelable;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 
 import com.jackhxs.remote.Constants;
 import com.jackhxs.remote.Constants.Operation;
 import com.jackhxs.remote.JSONResultReceiver;
 import com.jackhxs.remote.RemoteService;
+import com.jackhxs.util.Utils;
 
 public class SignupActivity extends Activity implements
 JSONResultReceiver.Receiver {
-	private EditText emailField, passwordField, confirmField;
+	private EditText passwordField, confirmField;
+	private AutoCompleteTextView emailField;
 	public JSONResultReceiver mReceiver;
 	private ProgressDialog progress;
 
@@ -33,9 +39,25 @@ JSONResultReceiver.Receiver {
 		mReceiver = new JSONResultReceiver(new Handler());
 		mReceiver.setReceiver(this);
 
-		emailField = (EditText) findViewById(R.id.login_email);
+		emailField = (AutoCompleteTextView) findViewById(R.id.login_email);
 		passwordField = (EditText) findViewById(R.id.login_password);
 		confirmField = (EditText) findViewById(R.id.login_password2);
+		
+		List<String> emails = Utils.getEmails(this);
+		
+		emailField.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, emails));
+
+		emailField.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+
+			@Override
+			public void onFocusChange(View v, boolean hasFocus) {
+				if (hasFocus) {
+					Log.d("getting focus", "now");
+					emailField.showDropDown();
+				}
+			}
+			
+		});
 	}
 
 	@Override

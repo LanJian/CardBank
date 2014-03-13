@@ -1,8 +1,15 @@
 package com.jackhxs.cardbank;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -13,10 +20,13 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.View;
 import android.view.Window;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.CheckBox;
 import android.widget.EditText;
 
@@ -27,6 +37,7 @@ import com.jackhxs.remote.JSONResultReceiver;
 import com.jackhxs.remote.LinkedInAPI;
 import com.jackhxs.remote.RemoteAPICompleted;
 import com.jackhxs.remote.RemoteService;
+import com.jackhxs.util.Utils;
 
 public class LoginActivity extends Activity implements 
 JSONResultReceiver.Receiver,
@@ -34,7 +45,8 @@ RemoteAPICompleted {
 	public static final String PREFS_NAME = "MyPrefsFile";
 
 	private String email, password;
-	private EditText emailField, passwordField;
+	private EditText passwordField;
+	private AutoCompleteTextView emailField;
 	private CheckBox rememberLogin;
 
 	public JSONResultReceiver mReceiver;
@@ -53,9 +65,13 @@ RemoteAPICompleted {
 
 		settings = getSharedPreferences(PREFS_NAME, 0);
 
-		emailField = (EditText) findViewById(R.id.login_email);
+		emailField = (AutoCompleteTextView) findViewById(R.id.login_email);
 		passwordField = (EditText) findViewById(R.id.login_password);
 		rememberLogin = (CheckBox) findViewById(R.id.rememberMeCheckbox);
+		
+		List<String> emails = Utils.getEmails(this);
+		
+		emailField.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, emails));
 
 		if (settings.getBoolean("authenticated", false)) {
 			App.sessionId = settings.getString("sessionId", "none");
@@ -65,6 +81,19 @@ RemoteAPICompleted {
 				onReceiveResult(-1, null);	
 			}
 		}
+		
+		emailField.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+
+			@Override
+			public void onFocusChange(View v, boolean hasFocus) {
+				if (hasFocus) {
+					Log.d("getting focus", "now");
+					emailField.showDropDown();
+				}
+			}
+			
+		});
+		
 	}
 
 	@Override
