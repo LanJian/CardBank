@@ -6,49 +6,34 @@ import java.util.TimerTask;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
-import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.telephony.PhoneNumberUtils;
 import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.Display;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
-import android.view.WindowManager;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.devspark.progressfragment.ProgressFragment;
-import com.google.gson.Gson;
 import com.jackhxs.cardbank.customviews.PagerContainer;
 import com.jackhxs.cardbank.customviews.TextConfigView;
 import com.jackhxs.data.BusinessCard;
 import com.jackhxs.data.template.Template;
-import com.jackhxs.data.template.TemplateConfig;
 import com.jackhxs.data.template.TemplateProperties;
 import com.jackhxs.data.template.TextConfig;
+import com.jackhxs.remote.Constants;
 import com.jackhxs.remote.JSONResultReceiver;
 import com.jackhxs.remote.RemoteService;
 import com.jackhxs.remote.Constants.Operation;
-import com.jackhxs.util.ImageUtil;
 import com.jackhxs.util.Utils;
 import com.larswerkman.holocolorpicker.ColorPicker;
 import com.larswerkman.holocolorpicker.SVBar;
@@ -136,21 +121,8 @@ public class MyCardFragment extends ProgressFragment implements JSONResultReceiv
 		mReceiver.setReceiver(this);
 		
 		
-		final Intent intentCards = new Intent(Intent.ACTION_SYNC, null, getActivity(), RemoteService.class);
-		
-		intentCards.putExtra("receiver", mReceiver);
-		intentCards.putExtra("operation",(Parcelable) Operation.GET_CARDS);
-		
-		Log.i(TAG, "Loading my cards");
-		getActivity().startService(intentCards);
-		
-		final Intent intentTemplates = new Intent(Intent.ACTION_SYNC, null, getActivity(), RemoteService.class);
-		
-		intentTemplates.putExtra("receiver", mReceiver);
-		intentTemplates.putExtra("operation",(Parcelable) Operation.GET_TEMPLATES);
-		
-		Log.i(TAG, "Loading templates");
-		getActivity().startService(intentTemplates);
+		getMyCard();
+		getTemplates();
 		
 		mContainer = (PagerContainer) mContentView.findViewById(R.id.pager_container);
 
@@ -194,61 +166,149 @@ public class MyCardFragment extends ProgressFragment implements JSONResultReceiv
 	
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	/*
-	 * API Callback
+	 * API Calls and CallBacks
 	 *////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	/**
+	 * This method will load a The user's card
+	 */
+	private void getMyCard() {
+		final Intent intentCards = new Intent(Intent.ACTION_SYNC, null, getActivity(), RemoteService.class);
+		
+		intentCards.putExtra("receiver", mReceiver);
+		intentCards.putExtra("operation",(Parcelable) Operation.GET_CARDS);
+		
+		Log.i(TAG, "Loading my cards");
+		getActivity().startService(intentCards);
+	}
 	
+	/**
+	 * This method will load a list of availiable templates
+	 */
+	private void getTemplates() {
+		final Intent intentCards = new Intent(Intent.ACTION_SYNC, null, getActivity(), RemoteService.class);
+		
+		intentCards.putExtra("receiver", mReceiver);
+		intentCards.putExtra("operation",(Parcelable) Operation.GET_TEMPLATES);
+		
+		Log.i(TAG, "Loading my cards");
+		getActivity().startService(intentCards);
+	}
+	
+	/**
+	 * This method will actually perform the API call to save the user's changes to the server. 
+	 * 
+	 * Please Use {@link #delaySaveCard() delaySaveCard} to save changes unless you want to save changes immediately (IE when exiting)
+	 */
+	private void saveCard() {
+		if (myCard != null && updatePending) {
+			
+			final Intent intent = new Intent(Intent.ACTION_SYNC, null, getActivity(), RemoteService.class);
+
+			
+			intent.putExtra("receiver", mReceiver);
+			intent.putExtra("operation", (Parcelable) Operation.UPDATE_CARD);
+			intent.putExtra("accessToken", App.sessionId);
+			//intent.putExtra("simpleCardJSON", new Gson().toJson(App.myCards[0]));
+			intent.putExtra("BusinessCard", myCard);
+
+			getActivity().startService(intent);
+			
+		}
+	}
 	@Override
 	public void onReceiveResult(int resultCode, Bundle resultData) {
 		
 		Log.d(TAG, "recieved Result in MyCardFragment");
 		
-		Log.d(TAG, resultData.getString("action") );
-		
-		
-		if (resultData.getString("action") != null && resultData.getString("action").equals(Operation.POST_CARD.toString())) {
-			// card saved successfully
-			Log.d(TAG, "card saved successfully");
-			updatePending = false;
+		switch (resultCode) {
+
+		case Constants.STATUS_FINISHED: {
 			
-		}
-		else if (resultData.getString("action") != null && resultData.getString("action").equals(Operation.GET_CARDS.toString())){
-			BusinessCard[] myCards = (BusinessCard[]) resultData.getParcelableArray("cards");
+			Operation command = resultData.getParcelable("operation");
+			if (command != null){
+				switch (command) {
+				case POST_CARD:
+				case UPDATE_CARD:
+						// card saved successfully
+					Log.d(TAG, "card saved successfully");
+					updatePending = false;
+					break;
+				
+				case GET_CARDS: 
+					BusinessCard[] myCards = (BusinessCard[]) resultData.getParcelableArray("cards");
+					
+					App.myCards = myCards;
+					/*
+					 * TODO This line crashes after long break
+					 */
+					myCard = myCards[0];
+					
+					Template currentTemplate = myCard.getTemplate();
+					
+					templates.add(0,currentTemplate);
+					
+					Log.i(TAG, currentTemplate.toString());
+					
+					setupInitialFields(myCard);
+					
+					addNewCards();
+					
+					setContentShown(true);
+					
+					break;
+				case GET_TEMPLATES:
+					ArrayList<Template> moreTemplates = resultData.getParcelableArrayList("templates");
+					
+					Log.i(TAG, "recieved " + moreTemplates.size() + " templates");
+					
+					templates.addAll(moreTemplates);
+					
+					for (Template t : templates) {
+						Log.i(TAG, t.toString());
+					}
+					
+					addNewCards();
+					
+					break;
+				default:
+					Log.e(TAG, "UNSUPPORTED OPERATION " + command.toString());
+				}
 			
-			App.myCards = myCards;
-			/*
-			 * TODO This line crashes after long break
-			 */
-			myCard = myCards[0];
-			
-			Template currentTemplate = myCard.getTemplate();
-			
-			templates.add(0,currentTemplate);
-			
-			Log.i(TAG, currentTemplate.toString());
-			
-			setupInitialFields(myCard);
-			
-			addNewCards();
-			
-			setContentShown(true);
-			
-		} else if (resultData.getString("action") != null && resultData.getString("action").equals(Operation.GET_TEMPLATES.toString())) {
-			ArrayList<Template> moreTemplates = resultData.getParcelableArrayList("templates");
-			
-			Log.i(TAG, "recieved " + moreTemplates.size() + " templates");
-			
-			templates.addAll(moreTemplates);
-			
-			for (Template t : templates) {
-				Log.i(TAG, t.toString());
 			}
 			
-			addNewCards();
-			
-			
-		} else {
-			Log.e(TAG, "UNSUPPORTED OPERATION");
+			break;
 		}
+		case Constants.STATUS_ERROR: 
+			Operation command = resultData.getParcelable("operation");
+			if (command != null){
+				switch (command) {
+				case POST_CARD:
+				case UPDATE_CARD:
+					Log.e(TAG, "failed to save changes: try again");
+					// retry to save card by calling saveCard(); again. need to keep track of failed API calls
+					
+					break;
+				case GET_CARDS: 
+					Log.e(TAG, "failed to load user cards: try again");
+					// retry to download user's cards  by calling getMyCard(); again. need to keep track of failed API calls
+					
+					break;
+				case GET_TEMPLATES:
+					Log.e(TAG, "failed to load templates: try again");
+					// retry to download user's cards  by calling gettemplates(); again. need to keep track of failed API calls
+					
+					break;
+				default:
+					Log.e(TAG, "UNSUPPORTED OPERATION " + command.toString());
+					break;
+				}
+			
+			}
+			
+			break;
+		}
+		
 	}
 	
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -402,28 +462,6 @@ public class MyCardFragment extends ProgressFragment implements JSONResultReceiv
 		
 	}
 	
-	
-	/**
-	 * This method will actually perform the API call to save the user's changes to the server. 
-	 * 
-	 * Please Use {@link #delaySaveCard() delaySaveCard} to save changes unless you want to save changes immediately (IE when exiting)
-	 */
-	private void saveCard() {
-		if (myCard != null && updatePending) {
-			
-			final Intent intent = new Intent(Intent.ACTION_SYNC, null, getActivity(), RemoteService.class);
-
-			
-			intent.putExtra("receiver", mReceiver);
-			intent.putExtra("operation", (Parcelable) Operation.UPDATE_CARD);
-			intent.putExtra("accessToken", App.sessionId);
-			//intent.putExtra("simpleCardJSON", new Gson().toJson(App.myCards[0]));
-			intent.putExtra("BusinessCard", myCard);
-
-			getActivity().startService(intent);
-			
-		}
-	}
 	
 	
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

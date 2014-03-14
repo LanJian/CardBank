@@ -4,7 +4,6 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -20,7 +19,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.devspark.progressfragment.ProgressFragment;
-import com.jackhxs.data.APIResult;
 import com.jackhxs.data.BusinessCard;
 import com.jackhxs.remote.Constants.Operation;
 import com.jackhxs.remote.JSONResultReceiver;
@@ -127,16 +125,6 @@ public class CardListFragment extends ProgressFragment implements JSONResultRece
 			e.printStackTrace();
 		}
 		
-		/*
-		// This is needed to prevent generating repeat tabs on home screen
-		if (resultData.getBoolean("longPoll", false)) {
-			return;
-		}
-		
-		Fragment listFragment = new CardListFragment();
-		//addTab("Contact", listFragment, "myContact");
-		*/
-			
 		mImageLoader = ImageLoader.buildImageLoaderForSupportFragment(this);
 		//mImageLoader = ImageLoader.buildImageLoaderForFragment(this);
 

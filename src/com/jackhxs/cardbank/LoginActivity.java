@@ -230,7 +230,7 @@ RemoteAPICompleted {
 
 			break;
 		}
-		case Constants.STATUS_ERROR: {
+		case Constants.STATUS_ERROR: 
 			if (App.accounType == AccountType.LINKED_ACCOUNT &&
 					errorCode == 403) { 
 
@@ -258,7 +258,7 @@ RemoteAPICompleted {
 			Util.showWifiErrorToast(context);
 			Log.e("Network Error", "Error logging in");
 			break;
-		}
+		
 		}
 
 		// Why even check this if there is a network or login issue? it will always fail

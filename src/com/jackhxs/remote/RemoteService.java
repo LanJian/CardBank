@@ -57,8 +57,9 @@ public class RemoteService extends IntentService {
         String userId = App.userId;
         Boolean success = true;
         
-    	resultBundle.putBoolean("longPoll", intent.getBooleanExtra("longPoll", false));
-    	
+        resultBundle.putBoolean("longPoll", intent.getBooleanExtra("longPoll", false));
+        resultBundle.putParcelable("operation", command);
+
     	Log.i(TAG, intent.getParcelableExtra("operation").toString());
     	
     	try {
@@ -105,7 +106,6 @@ public class RemoteService extends IntentService {
                  *  same thing for action. 
                  */
                 resultBundle.putString("dataType", "cards");
-                resultBundle.putString("action", Operation.GET_CARDS.toString());
                 resultBundle.putBoolean("result", true);
                 break;
             }
@@ -123,7 +123,6 @@ public class RemoteService extends IntentService {
                 resultBundle.putString("dataType", "contacts");
                 resultBundle.putString("updatedAt", result.updatedAt);
                 resultBundle.putBoolean("result", true);
-                resultBundle.putString("action", Operation.GET_CONTACTS.toString());
                 
                 break;
             }
@@ -145,7 +144,6 @@ public class RemoteService extends IntentService {
                 }
                 
                 Boolean result = res.get("status").getAsString().equals("success") ? true : false;
-                resultBundle.putString("action", Operation.POST_CARD.toString());
                 resultBundle.putBoolean("result", result);
                 break;
             }
@@ -157,21 +155,18 @@ public class RemoteService extends IntentService {
                 Boolean result = res.get("status").getAsString().equals("success") ? true : false;
                 
                 resultBundle.putString("dataType", "postCard");
-                resultBundle.putString("action", Operation.POST_CONTACT.toString());
                 resultBundle.putBoolean("result", result);
                 break;
             }
             case DEL_CARD: {
                 //SimpleCard existingCard = intent.getParcelableExtra("existingCard");
                 //Boolean result = service.deleteCard(userId, sessionId, existingCard);
-                resultBundle.putString("action", "Not Supported");
                 resultBundle.putBoolean("result", false);
                 break;
             }
             case DEL_CONTACT: {
             	//SimpleCard existingCard = intent.getParcelableExtra("existingCard");
                 //Boolean result = service.deleteCard(userId, sessionId, existingCard);
-                resultBundle.putString("action", "Not Supported");
                 resultBundle.putBoolean("result", false);
                 break;
             }
@@ -187,7 +182,6 @@ public class RemoteService extends IntentService {
                 
                 JsonObject res = service.refer(userId, sessionId, referredTo, cardId);
                 Boolean result = res.get("status").getAsString().equals("success") ? true : false;
-                resultBundle.putString("action", Operation.REFER.toString());
                 resultBundle.putBoolean("result", result);
                 break;
             }
@@ -195,7 +189,6 @@ public class RemoteService extends IntentService {
             	APIResult res = service.listReferrals(userId, sessionId);
                 BusinessCard[] referrals = res.cards;
 
-                resultBundle.putString("action", Operation.LIST_REFERRALS.toString());
                 resultBundle.putString("dataType", "referrals");
                 resultBundle.putBoolean("result", true);
                 resultBundle.putParcelableArray("referrals", referrals);
@@ -205,7 +198,6 @@ public class RemoteService extends IntentService {
             case GET_TEMPLATES: {
             	ArrayList<Template> templates = (ArrayList<Template>) service.getTemplates();
             	
-            	resultBundle.putString("action", Operation.GET_TEMPLATES.toString());
             	resultBundle.putString("dataType", "templates");
                 resultBundle.putParcelableArrayList("templates", templates);
             }
@@ -216,14 +208,16 @@ public class RemoteService extends IntentService {
         }
         catch (RetrofitError re) {
         	
-        	Log.e("response body", re.getResponse().getReason());
-        	
-        	// re.isNetworkError() - network error (no connection)
-        	// re.getResponse().getStatus() == 403 - API error (ex: wrong email/password)
-        	
-        	if (re.getResponse() != null && re.getResponse().getStatus() == 403) { // token expired
+        	if (re != null || re.getResponse() != null) {
+                	
+	        	Log.e("response body", re.getResponse().getReason());
+	        	
+	        	// re.isNetworkError() - network error (no connection)
+	        	// re.getResponse().getStatus() == 403 - API error (ex: wrong email/password)
+	        	
+	        	if (re.getResponse() != null && re.getResponse().getStatus() == 403) { // token expired
+	        	}
         	}
-        	
         	success = false;
         }
         finally {
