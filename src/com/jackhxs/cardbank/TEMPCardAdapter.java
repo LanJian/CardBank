@@ -65,10 +65,13 @@ public class TEMPCardAdapter extends ArrayAdapter<BusinessCard> {
         LayoutInflater inflater = ((Activity) myContext).getLayoutInflater();
         row = inflater.inflate(myResourceId, parent, false);
 
-        TextView txtView = (TextView) row.findViewById(R.id.txtTitle);
+        TextView txtView = (TextView) row.findViewById(R.id.fullName);
+        TextView jobTitle = (TextView) row.findViewById(R.id.jobTitle);
         txtView.setText(myData.get(position).getFirstName() + " "
                 + myData.get(position).getLastName());
 
+        jobTitle.setText(myData.get(position).getJobTitle() + ", " + myData.get(position).getCompanyName());
+        
         txtView = (TextView) row.findViewById(R.id.imgIcon);
         txtView.setText(myData.get(position).getLastName().substring(0, 1).toUpperCase(Locale.US));
         int rand = (int) (Math.random() * ICON_BG_COLORS.length);

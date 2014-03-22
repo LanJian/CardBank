@@ -213,7 +213,7 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback,
 				return;
 			}
 			
-			Fragment listFragment = new CardListFragment();
+			Fragment listFragment = new MyContactsFragment();
 			addTab("Contact", listFragment, "myContact");
 			
 			final Intent intentReferrals = new Intent(Intent.ACTION_SYNC, null, this,

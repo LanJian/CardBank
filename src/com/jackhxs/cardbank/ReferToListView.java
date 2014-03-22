@@ -12,7 +12,7 @@ public class ReferToListView extends FragmentActivity {
 
         
         if (savedInstanceState == null) {
-            Fragment fragment = new CardListFragment();
+            Fragment fragment = new MyContactsFragment();
             Bundle args = new Bundle();
             
             args.putInt("toRefer", getIntent().getIntExtra("toRefer", 0));

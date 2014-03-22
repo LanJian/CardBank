@@ -55,12 +55,35 @@ public class CardFlipView extends Activity implements CreateNdefMessageCallback,
          */
         if (cardViewMode == null || cardViewMode.equals("contact")) {
             ArrayList<BusinessCard> list = new ArrayList<BusinessCard>();
+           
+            //Log.i("count", "" + App.myContacts.length);
+            
             list.addAll(Arrays.asList(App.myContacts));
+           
+            /*
+            list.addAll(Arrays.asList(App.myContacts));
+            list.addAll(Arrays.asList(App.myContacts));
+            list.addAll(Arrays.asList(App.myContacts));
+            list.addAll(Arrays.asList(App.myContacts));
+            list.addAll(Arrays.asList(App.myContacts));
+            list.addAll(Arrays.asList(App.myContacts));
+            */
+            
 			adapter = new CardAdapter(this, R.layout.card_flip_view, list, mImageLoader);
 		}
 		else {
             ArrayList<BusinessCard> list = new ArrayList<BusinessCard>();
             list.addAll(Arrays.asList(App.myCards));
+            
+            /*
+            list.addAll(Arrays.asList(App.myCards));
+            list.addAll(Arrays.asList(App.myCards));
+            list.addAll(Arrays.asList(App.myCards));
+            list.addAll(Arrays.asList(App.myCards));
+            list.addAll(Arrays.asList(App.myCards));
+            list.addAll(Arrays.asList(App.myCards));
+            */
+            
 			adapter = new CardAdapter(this, R.layout.card_flip_view, list, mImageLoader);
 		}
 

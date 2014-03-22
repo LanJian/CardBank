@@ -26,7 +26,7 @@ import com.jackhxs.remote.RemoteService;
 import com.xtremelabs.imageutils.ImageLoader;
 
 // Fragment with a list view of the contacts
-public class CardListFragment extends ProgressFragment implements JSONResultReceiver.Receiver{
+public class MyContactsFragment extends ProgressFragment implements JSONResultReceiver.Receiver{
 	private static final String TAG = "CardListFragment";
 	
 	public JSONResultReceiver mReceiver;
@@ -34,7 +34,7 @@ public class CardListFragment extends ProgressFragment implements JSONResultRece
     
 	private TextView emptyMsg;
 	private ListView myListView;
-	private TEMPCardAdapter myAdapter;
+	private ContactsAdapter mContactsAdapter;
 	private ImageLoader mImageLoader;
 	private boolean mIsRefer;
 	private Integer toRefer;
@@ -50,7 +50,7 @@ public class CardListFragment extends ProgressFragment implements JSONResultRece
 		}
 	}
 
-	public void onListItemClick(AdapterView<?> l, View v, int position, long id) {
+	public void referContact(int position) {
 		if (mIsRefer) {
 			// refer the card
 
@@ -70,7 +70,7 @@ public class CardListFragment extends ProgressFragment implements JSONResultRece
 			startActivity(intent);
 		}
 	}
-
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -140,17 +140,43 @@ public class CardListFragment extends ProgressFragment implements JSONResultRece
 		ArrayList<BusinessCard> list = new ArrayList<BusinessCard>();
 		list.addAll(Arrays.asList(App.myContacts));
 		
-		myAdapter = new TEMPCardAdapter(getActivity(), R.layout.list_view_row, list, mImageLoader);
-		myListView.setAdapter(myAdapter);
+		/*
+		list.addAll(Arrays.asList(App.myContacts));
+		list.addAll(Arrays.asList(App.myContacts));
+		list.addAll(Arrays.asList(App.myContacts));
+		list.addAll(Arrays.asList(App.myContacts));
+		list.addAll(Arrays.asList(App.myContacts));
+		list.addAll(Arrays.asList(App.myContacts));
+		list.addAll(Arrays.asList(App.myContacts));
+		list.addAll(Arrays.asList(App.myContacts));
+		list.addAll(Arrays.asList(App.myContacts));
+		list.addAll(Arrays.asList(App.myContacts));
+		list.addAll(Arrays.asList(App.myContacts));
+		list.addAll(Arrays.asList(App.myContacts));
+		list.addAll(Arrays.asList(App.myContacts));
+		*/
+		
+		
+		mContactsAdapter = new ContactsAdapter(getActivity(), list);
+		myListView.setAdapter(mContactsAdapter);
 
 		myListView.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-				onListItemClick(parent, v, position, id);
-
 				if (mIsRefer) {
+					// refer the card
+
+					referContact(position);
+
 					ImageView referredIcon = (ImageView) v.findViewById(R.id.referredIcon);
 					referredIcon.setVisibility(View.VISIBLE);
+					
+				} else {
+					Intent intent = new Intent(getActivity(), CardFlipView.class);
+					intent.putExtra("mode", "contact");
+					intent.putExtra("position", position);
+					startActivity(intent);
 				}
+				
 			}
 		});
 		

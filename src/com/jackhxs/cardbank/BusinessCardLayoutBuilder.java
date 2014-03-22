@@ -1,4 +1,5 @@
 package com.jackhxs.cardbank;
+
 import android.app.Activity;
 import android.graphics.Color;
 import android.widget.ImageView;
@@ -46,11 +47,10 @@ public class BusinessCardLayoutBuilder {
 		//buisinessCardLayout.setLayoutParams(mLayoutParams);
 		
 		// Image has to be first (so it appears behind the text
-		ImageView background = addBackground(buisinessCardLayout);
+		final ImageView background = addBackground(buisinessCardLayout);
 		
 		Picasso.with(mActivity).setDebugging(true);
 	    Picasso.with(mActivity).load(Constants.API_ADDRESS_V1 + template.getImageUrl()).into(background);
-	    
 	    
 	    addField(buisinessCardLayout, template.getProperties().name, cardDetails.getFirstName() + " " + cardDetails.getLastName());
         addField(buisinessCardLayout, template.getProperties().phone, cardDetails.getPhone());
@@ -99,4 +99,5 @@ public class BusinessCardLayoutBuilder {
 		
         return mImageView;
 	}	
+	
 }

@@ -163,7 +163,7 @@ public class HomeActivity extends FragmentActivity implements CreateNdefMessageC
 				fragment = new MyCardFragment();
 				break;
 			case 1:
-				fragment = new CardListFragment();
+				fragment = new MyContactsFragment();
 				break;
 			case 2:
 				fragment = new ReferralsListFragment();
