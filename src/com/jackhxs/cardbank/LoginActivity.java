@@ -249,7 +249,7 @@ RemoteAPICompleted {
 				return;
 			}
 
-			if (!errorMsg.equals("")) {
+			if (errorMsg != null && !errorMsg.equals("")) {
 				Util.showErrorToast(getApplicationContext(), errorMsg);
 				return;
 			}

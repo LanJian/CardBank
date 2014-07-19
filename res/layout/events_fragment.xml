@@ -4,28 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <LinearLayout
-	    android:id="@+id/event_header"
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    android:orientation="horizontal" >
-	
-	    <Button
-	        android:id="@+id/join_event"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:layout_weight="1"
-	        android:text="Join Event" />
-	
-	    <Button
-	        android:id="@+id/new_event"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:layout_weight="1"
-	        android:text="New Evenet" />
-	
-	</LinearLayout>
-
+   
     <TextView
         android:id="@+id/empty"
         android:layout_width="wrap_content"

@@ -19,10 +19,11 @@ import com.jackhxs.data.BusinessCard;
 import com.jackhxs.remote.JSONResultReceiver;
 import com.jackhxs.remote.RemoteService;
 import com.jackhxs.remote.Constants.Operation;
+import com.jackhxs.util.CardBeamFragment;
 import com.xtremelabs.imageutils.ImageLoader;
 
 
-public class ReferralsListFragment extends ProgressFragment implements JSONResultReceiver.Receiver{
+public class ReferralsListFragment extends CardBeamFragment implements JSONResultReceiver.Receiver{
 	private static final String TAG = "CardListFragment";
 	
 	public JSONResultReceiver mReceiver;

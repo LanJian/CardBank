@@ -23,10 +23,11 @@ import com.jackhxs.data.BusinessCard;
 import com.jackhxs.remote.Constants.Operation;
 import com.jackhxs.remote.JSONResultReceiver;
 import com.jackhxs.remote.RemoteService;
+import com.jackhxs.util.CardBeamFragment;
 import com.xtremelabs.imageutils.ImageLoader;
 
 // Fragment with a list view of the contacts
-public class MyContactsFragment extends ProgressFragment implements JSONResultReceiver.Receiver{
+public class MyContactsFragment extends CardBeamFragment implements JSONResultReceiver.Receiver{
 	private static final String TAG = "CardListFragment";
 	
 	public JSONResultReceiver mReceiver;
@@ -64,7 +65,8 @@ public class MyContactsFragment extends ProgressFragment implements JSONResultRe
 			getActivity().startService(serviceIntent);
 
 		} else {
-			Intent intent = new Intent(getActivity(), CardFlipView.class);
+			//Intent intent = new Intent(getActivity(), CardFlipView.class);
+			Intent intent = new Intent(getActivity(), TestActivity.class);
 			intent.putExtra("mode", "contact");
 			intent.putExtra("position", position);
 			startActivity(intent);
@@ -140,23 +142,6 @@ public class MyContactsFragment extends ProgressFragment implements JSONResultRe
 		ArrayList<BusinessCard> list = new ArrayList<BusinessCard>();
 		list.addAll(Arrays.asList(App.myContacts));
 		
-		/*
-		list.addAll(Arrays.asList(App.myContacts));
-		list.addAll(Arrays.asList(App.myContacts));
-		list.addAll(Arrays.asList(App.myContacts));
-		list.addAll(Arrays.asList(App.myContacts));
-		list.addAll(Arrays.asList(App.myContacts));
-		list.addAll(Arrays.asList(App.myContacts));
-		list.addAll(Arrays.asList(App.myContacts));
-		list.addAll(Arrays.asList(App.myContacts));
-		list.addAll(Arrays.asList(App.myContacts));
-		list.addAll(Arrays.asList(App.myContacts));
-		list.addAll(Arrays.asList(App.myContacts));
-		list.addAll(Arrays.asList(App.myContacts));
-		list.addAll(Arrays.asList(App.myContacts));
-		*/
-		
-		
 		mContactsAdapter = new ContactsAdapter(getActivity(), list);
 		myListView.setAdapter(mContactsAdapter);
 
@@ -171,7 +156,8 @@ public class MyContactsFragment extends ProgressFragment implements JSONResultRe
 					referredIcon.setVisibility(View.VISIBLE);
 					
 				} else {
-					Intent intent = new Intent(getActivity(), CardFlipView.class);
+					//Intent intent = new Intent(getActivity(), CardFlipView.class);
+					Intent intent = new Intent(getActivity(), TestActivity.class);
 					intent.putExtra("mode", "contact");
 					intent.putExtra("position", position);
 					startActivity(intent);

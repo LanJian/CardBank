@@ -35,11 +35,12 @@ import com.jackhxs.remote.JSONResultReceiver;
 import com.jackhxs.remote.RemoteService;
 import com.jackhxs.remote.Constants.Operation;
 import com.jackhxs.util.Utils;
+import com.jackhxs.util.CardBeamFragment;
 import com.larswerkman.holocolorpicker.ColorPicker;
 import com.larswerkman.holocolorpicker.SVBar;
 
 @SuppressLint("ValidFragment")
-public class MyCardFragment extends ProgressFragment implements JSONResultReceiver.Receiver{
+public class MyCardFragment extends CardBeamFragment implements JSONResultReceiver.Receiver{
 	private static final String TAG = "CardFragment";
 	
 	// View holder

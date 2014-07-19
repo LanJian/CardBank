@@ -48,13 +48,25 @@
 
         <activity
             android:name=".HomeActivity"
-            android:screenOrientation="portrait"
-             >
+            android:screenOrientation="portrait" >
         </activity>
         
         <activity
+            android:name="CardFlipView"
+            android:screenOrientation="portrait" >
+        </activity>
+
+         <activity
+            android:name="EventActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+        
+        
+        
+        
+        <activity
             android:screenOrientation="portrait"
-            android:name="CardFlipView">
+            android:name="TestActivity">
             <intent-filter>
                 <action android:name="android.nfc.action.NDEF_DISCOVERED" />
 
@@ -63,7 +75,14 @@
                 <data android:mimeType="application/com.jackhxs.cardbank" />
             </intent-filter>
         </activity>
-
+        
+        
+        <activity
+            android:screenOrientation="portrait"
+            android:name="NewEventActivity">
+        </activity>
+        
+        
         <activity
             android:screenOrientation="portrait"
             android:name="ReferToListView">

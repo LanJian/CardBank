@@ -11,6 +11,7 @@ import com.jackhxs.cardbank.navdrawer.NavDrawerListAdapter;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.nfc.NdefMessage;
@@ -241,7 +242,7 @@ public class HomeActivity extends FragmentActivity implements CreateNdefMessageC
 		// Referrals
 		navDrawerItems.add(new NavDrawerItem(navMenuTitles[2], navMenuIcons.getResourceId(2, -1)));
 		// Events
-		navDrawerItems.add(new NavDrawerItem(navMenuTitles[3], navMenuIcons.getResourceId(3, -1), true, "47"));
+		navDrawerItems.add(new NavDrawerItem(navMenuTitles[3], navMenuIcons.getResourceId(3, -1)));
 				
 		// Recycle the typed array
      	navMenuIcons.recycle();
@@ -284,5 +285,10 @@ public class HomeActivity extends FragmentActivity implements CreateNdefMessageC
 		
 		//startLongPollingGetContact();
 		return msg;
+	}
+	
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+	   super.onActivityResult(requestCode, resultCode, data);
 	}
 }

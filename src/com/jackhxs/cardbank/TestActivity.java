@@ -5,13 +5,26 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import com.google.gson.Gson;
+import com.jackhxs.cardbank.FlipAdapter.Callback;
+import com.jackhxs.data.BusinessCard;
+import com.jackhxs.remote.Constants;
+import com.jackhxs.remote.JSONResultReceiver;
+import com.jackhxs.remote.RemoteService;
+import com.jackhxs.remote.Constants.Operation;
+import com.xtremelabs.imageutils.ImageLoader;
+
+import se.emilsjolander.flipview.FlipView;
+import se.emilsjolander.flipview.FlipView.OnFlipListener;
+import se.emilsjolander.flipview.FlipView.OnOverFlipListener;
+import se.emilsjolander.flipview.OverFlipMode;
 import android.app.Activity;
 import android.content.Intent;
 import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
-import android.nfc.NfcAdapter.CreateNdefMessageCallback;
 import android.nfc.NfcEvent;
+import android.nfc.NfcAdapter.CreateNdefMessageCallback;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
@@ -21,77 +34,59 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-//import com.aphidmobile.flip.FlipViewController;
-import com.google.gson.Gson;
-import com.jackhxs.data.BusinessCard;
-import com.jackhxs.remote.Constants;
-import com.jackhxs.remote.Constants.Operation;
-import com.jackhxs.remote.JSONResultReceiver;
-import com.jackhxs.remote.RemoteService;
-import com.xtremelabs.imageutils.ImageLoader;
+public class TestActivity extends Activity implements Callback, OnFlipListener, OnOverFlipListener, CreateNdefMessageCallback,  JSONResultReceiver.Receiver {
+	
+	private FlipView mFlipView;
+	private CardAdapter mAdapter;
 
-public class CardFlipView extends Activity implements CreateNdefMessageCallback,  JSONResultReceiver.Receiver {
 	private NfcAdapter mNfcAdapter;
 
 	public JSONResultReceiver mReceiver;
 	public String cardViewMode = null;
-	private ImageLoader mImageLoader;
 	
-	//protected FlipViewController myFlipView;
-
+	private String simpleCardJSON;
+	
+	private ArrayList<BusinessCard> list = new ArrayList<BusinessCard>();
+    
 	private void updateCardFlipView() {
+		Log.e("TestActivity", "updateCardFlipView()");
 		updateCardFlipView(0);
 	}
 
 	private void updateCardFlipView(Integer position) {
-		CardAdapter adapter;
-
-        mImageLoader = ImageLoader.buildImageLoaderForActivity(this);
-
-        
-        /*
+		Log.e("TestActivity", "updateCardFlipView(" + position + ")");
+		
+		mFlipView = (FlipView) findViewById(R.id.flip_view);
+		
+		/*
          * TODO IS THERE ANOTHER MODE? I can't find any.
          * TODO Is a user allowed to have more than 1 card?
          */
+        
         if (cardViewMode == null || cardViewMode.equals("contact")) {
-            ArrayList<BusinessCard> list = new ArrayList<BusinessCard>();
-           
-            //Log.i("count", "" + App.myContacts.length);
+            if (App.myContacts != null)
+            	list.addAll(Arrays.asList(App.myContacts));
             
-            list.addAll(Arrays.asList(App.myContacts));
-           
-            /*
-            list.addAll(Arrays.asList(App.myContacts));
-            list.addAll(Arrays.asList(App.myContacts));
-            list.addAll(Arrays.asList(App.myContacts));
-            list.addAll(Arrays.asList(App.myContacts));
-            list.addAll(Arrays.asList(App.myContacts));
-            list.addAll(Arrays.asList(App.myContacts));
-            */
-            
-			adapter = new CardAdapter(this, R.layout.card_flip_view, list, mImageLoader);
+            mAdapter = new CardAdapter(this, R.layout.card_flip_view, list, null);
+    		
 		}
 		else {
-            ArrayList<BusinessCard> list = new ArrayList<BusinessCard>();
             list.addAll(Arrays.asList(App.myCards));
-            
-            /*
-            list.addAll(Arrays.asList(App.myCards));
-            list.addAll(Arrays.asList(App.myCards));
-            list.addAll(Arrays.asList(App.myCards));
-            list.addAll(Arrays.asList(App.myCards));
-            list.addAll(Arrays.asList(App.myCards));
-            list.addAll(Arrays.asList(App.myCards));
-            */
-            
-			adapter = new CardAdapter(this, R.layout.card_flip_view, list, mImageLoader);
+           
+            mAdapter = new CardAdapter(this, R.layout.card_flip_view, list, null);
 		}
 
-		//myFlipView = new FlipViewController(this);
-		//myFlipView.setAdapter(adapter, position);
-		//setContentView(myFlipView);
+        mFlipView.setAdapter(mAdapter);
+		mFlipView.setOnFlipListener(this);
+		mFlipView.setOverFlipMode(OverFlipMode.RUBBER_BAND);
+		mFlipView.setEmptyView(findViewById(R.id.empty_view));
+		mFlipView.setOnOverFlipListener(this);
+		
+		Log.i("position", "" + position);
+		
+		mFlipView.flipTo(position);
 	}
-
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater=getMenuInflater();
@@ -112,19 +107,15 @@ public class CardFlipView extends Activity implements CreateNdefMessageCallback,
                 return super.onOptionsItemSelected(item);
         }
     }
-
-	/**
-	 * Called when the activity is first created.
-	 */
+    
 	@Override
-	public void onCreate(Bundle savedInstanceState) {
+	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
-		cardViewMode = getIntent().getStringExtra("mode");
-		Integer initialPosition = getIntent().getIntExtra("position", 0);
+		setContentView(R.layout.activity_test);
 		
-		updateCardFlipView(initialPosition);
-
+		
+		cardViewMode = getIntent().getStringExtra("mode");
+		
 		// update NFC related configs
 		mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
 
@@ -137,18 +128,50 @@ public class CardFlipView extends Activity implements CreateNdefMessageCallback,
 		// configure remote service callback
 		mReceiver = new JSONResultReceiver(new Handler());
 		mReceiver.setReceiver(this);
+
 		
-        mImageLoader = ImageLoader.buildImageLoaderForActivity(this);
 	}
+	
+	
+	@Override
+	public void onPageRequested(int page) {
+		mFlipView.smoothFlipTo(page);
+	}
+
+	@Override
+	public void onFlippedToPage(FlipView v, int position, long id) {
+		Log.i("pageflip", "Page: "+position);
+		if(position > mFlipView.getPageCount()-3 && mFlipView.getPageCount()<30){
+			//mAdapter.addItems(5);
+		}
+	}
+
+	@Override
+	public void onOverFlip(FlipView v, OverFlipMode mode,
+			boolean overFlippingPrevious, float overFlipDistance,
+			float flipDistancePerPage) {
+		Log.i("overflip", "overFlipDistance = "+overFlipDistance);
+	}
+
+	
 
 	@Override
 	protected void onResume() {
 		super.onResume();
 		//myFlipView.onResume();
 
+		
+		
 		// Check to see that the Activity started due to an Android Beam
 		if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(getIntent().getAction())) {
 			processIntent(getIntent());
+		}
+		
+		if (App.myContacts != null) {
+			
+			Integer initialPosition = getIntent().getIntExtra("position", 0);
+			
+			updateCardFlipView(initialPosition);
 		}
 	}
 
@@ -175,24 +198,14 @@ public class CardFlipView extends Activity implements CreateNdefMessageCallback,
 		NdefMessage msg = (NdefMessage) rawMsgs[0];
 
 		// record 0 contains the MIME type, record 1 is the AAR, if present
-		String simpleCardJSON = (new String(msg.getRecords()[0].getPayload()));
+		simpleCardJSON = (new String(msg.getRecords()[0].getPayload()));
 
-		List<BusinessCard> cardList = new ArrayList<BusinessCard>(Arrays.asList(App.myContacts));
-		BusinessCard tmpCard = (new Gson()).fromJson(simpleCardJSON, BusinessCard.class);
-		cardList.add(tmpCard);
-		App.myContacts = cardList.toArray(new BusinessCard[cardList.size()]);
-
-		Log.e("NFC Data", simpleCardJSON);
-
-		// send the result back to server
-		final Intent serviceIntent = new Intent(Intent.ACTION_SYNC, null, this,
-				RemoteService.class);
-
-		serviceIntent.putExtra("receiver", mReceiver);
-		serviceIntent.putExtra("operation", (Parcelable) Operation.POST_CONTACT);
-		serviceIntent.putExtra("newContactJSON", simpleCardJSON);
-
-		startService(serviceIntent);	
+		final Intent intentCards = new Intent(Intent.ACTION_SYNC, null, this, RemoteService.class);
+		
+		intentCards.putExtra("receiver", mReceiver);
+		intentCards.putExtra("operation",(Parcelable) Operation.GET_CONTACTS);
+		
+		startService(intentCards);
 	}
 
 	/**
@@ -227,10 +240,46 @@ public class CardFlipView extends Activity implements CreateNdefMessageCallback,
 
 	@Override
 	public void onReceiveResult(int resultCode, Bundle resultData) {
+		Log.e("TestActivity", "onReceiveResult");
+		
 		switch (resultCode) {
 		case Constants.STATUS_FINISHED: {
-			Log.e("Update Remote Server Worked", "yay!");
-			updateCardFlipView();
+			
+			Operation command = resultData.getParcelable("operation");
+			if (command != null){
+				switch (command) {
+				case GET_CONTACTS:
+					BusinessCard[] data = (BusinessCard[]) resultData.getParcelableArray("contacts");
+					
+					App.myContacts = data;
+					
+					//List<BusinessCard> cardList = new ArrayList<BusinessCard>(Arrays.asList(App.myContacts));
+					//BusinessCard tmpCard = (new Gson()).fromJson(simpleCardJSON, BusinessCard.class);
+					//cardList.add(tmpCard);
+					//list.add(tmpCard);
+					//App.myContacts = cardList.toArray(new BusinessCard[cardList.size()]);
+
+					Log.e("NFC Data", simpleCardJSON);
+
+					// send the result back to server
+					final Intent serviceIntent = new Intent(Intent.ACTION_SYNC, null, this,
+							RemoteService.class);
+
+					serviceIntent.putExtra("receiver", mReceiver);
+					serviceIntent.putExtra("operation", (Parcelable) Operation.POST_CONTACT);
+					serviceIntent.putExtra("newContactJSON", simpleCardJSON);
+
+					startService(serviceIntent);
+					
+					//mAdapter.notifyDataSetChanged();
+					
+					Log.i("cardList.size()", "" + App.myContacts.length);
+					//Log.i("mAdapter.getCount()", "" + mAdapter.getCount());
+					
+					updateCardFlipView(App.myContacts.length - 1);
+					break;
+				}
+			}
 			break;
 		}
 		case Constants.STATUS_ERROR: {
@@ -240,10 +289,4 @@ public class CardFlipView extends Activity implements CreateNdefMessageCallback,
 		}
 
 	}
-	
-	@Override
-    public void onDestroy() {
-		super.onDestroy();
-        mImageLoader.destroy();
-    }
 }

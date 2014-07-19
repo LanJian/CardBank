@@ -11,6 +11,9 @@
     <string name="desc_nav_drawer_item_icon">Item Icon</string>
     
     <string name="action_edit">Edit</string>
+    <string name="action_add_event">New Event</string>
+    <string name="action_save_event">Save Event</string>
+    <string name="action_join_event">Join an Event</string>
     	
 	<string name="your_name"> Your Name</string>
 	<string name="your_number"> 000&#8211;0000</string>
@@ -66,5 +69,27 @@
     <string name="edit_phone_hint">408-555-2775</string>
     <string name="address_title"><u>Address:</u></string>
     <string name="edit_address_hint">1 Infinity Loop</string>
+    
+    <!-- These are are used when creating events -->
+    <string name="event_name_title">Event Name:</string>
+    <string name="event_name_hint">Christmas Party</string>
+    
+    <string name="event_host_title">Event Host:</string>
+    <string name="event_host_hint">Company Title</string>
+    
+    <string name="event_location_title"><u>Event Location:</u></string>
+    <string name="event_location_hint">Toronto Metro Convention Center</string>
+    
+    <string name="event_stime_title"><u>Start Time:</u></string>
+    <string name="event_stime_hint">Thu, Dec 25, 2014 at 7:00 PM</string>
+    
+    <string name="event_etime_title"><u>End Time:</u></string>
+    <string name="event_etime_hint">Thu, Dec 25, 2014 at 11:00 PM</string>
+    
+    
+    
+    <!-- These are used in the event details view -->
+    <string name="event_host">Hosted By: %s </string>
+    <string name="event_date">From: %1$s to %2$s </string>
     
 </resources>
