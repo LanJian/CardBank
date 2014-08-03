@@ -2,14 +2,22 @@ package com.jackhxs.cardbank;
 
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 import java.util.concurrent.atomic.AtomicLong;
 
+import com.jackhxs.data.BusinessCard;
 import com.jackhxs.data.Event;
+import com.jackhxs.data.template.Template;
+import com.jackhxs.remote.Constants;
+import com.jackhxs.remote.JSONResultReceiver;
+import com.jackhxs.remote.RemoteService;
+import com.jackhxs.remote.Constants.Operation;
 
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -19,22 +27,34 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Parcelable;
 
-public class NewEventActivity extends FragmentActivity {
+public class NewEventActivity extends FragmentActivity implements JSONResultReceiver.Receiver {
+	private static final String TAG = NewEventActivity.class.getSimpleName();
 	
+	// Used to make API calls
+	public JSONResultReceiver mReceiver;
+	    
 	private EditText eventName, eventHost, eventLocation;
 	
 	private TextView eventStartTime, eventEndTime;
+	
+	private Event event = new Event();
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_event);
 
+        mReceiver = new JSONResultReceiver(new Handler());
+		mReceiver.setReceiver(this);
+		
         final SimpleDateFormat sdf = new SimpleDateFormat("EEE, MMM dd, yyyy 'at' h:mm a", Locale.US);
 
         eventName = (EditText) findViewById (R.id.event_name);
@@ -111,22 +131,32 @@ public class NewEventActivity extends FragmentActivity {
     }
 
 	private void createEvent() {
-		Event event = new Event();
-        
-		event.setId("fsd");
+		
+		//event.setEventId("fsd");
 		event.setOwner("sdfa");
-		event.setName(eventName.getText().toString());
+		event.setEventName(eventName.getText().toString());
 		event.setHost(eventHost.getText().toString());
 		event.setLocation(eventLocation.getText().toString());
 		event.setStartTime(eventStartTime.getText().toString());
 		event.setEndTime(eventEndTime.getText().toString());
 		
+		final Intent intentCards = new Intent(Intent.ACTION_SYNC, null, this, RemoteService.class);
+		
+		intentCards.putExtra("receiver", mReceiver);
+		intentCards.putExtra("operation",(Parcelable) Operation.CREATE_EVENT);
+		intentCards.putExtra("event",(Parcelable) event);
+		
+		Log.i(TAG, "Craeting Event with name: " + event.getEventName());
+		startService(intentCards);
+		
+		/*
 		Intent resultIntent = new Intent();
 		resultIntent.putExtra("EVENT", event);
 		
 		setResult(Activity.RESULT_OK, resultIntent);
 		
 		finish();
+		*/
 	}
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -147,6 +177,60 @@ public class NewEventActivity extends FragmentActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
+
+	@Override
+	public void onReceiveResult(int resultCode, Bundle resultData) {
+		
+		switch (resultCode) {
+
+		case Constants.STATUS_FINISHED: {
+			
+			Operation command = resultData.getParcelable("operation");
+			if (command != null){
+				switch (command) {
+				case CREATE_EVENT:
+						// Event Created Successfully
+					Log.d(TAG, "Event Created Successfully");
+					
+					Intent resultIntent = new Intent();
+					resultIntent.putExtra("EVENT", event);
+					
+					setResult(Activity.RESULT_OK, resultIntent);
+					
+					finish();
+					break;
+				
+				// no other cases for now
+				default:
+					Log.e(TAG, "UNSUPPORTED OPERATION " + command.toString());
+				}
+			
+			}
+			
+			break;
+		}
+		case Constants.STATUS_ERROR: 
+			Operation command = resultData.getParcelable("operation");
+			if (command != null){
+				switch (command) {
+				case POST_CARD:
+				case UPDATE_CARD:
+					Log.e(TAG, "failed to create evens: try again");
+				
+					Toast.makeText(this, "Failed to create event", Toast.LENGTH_LONG).show();
+					
+					break;
+				default:
+					Log.e(TAG, "UNSUPPORTED OPERATION " + command.toString());
+					break;
+				}
+			
+			}
+			
+			break;
+		}
+		
+	}
 
 
 }

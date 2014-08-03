@@ -14,6 +14,8 @@ import retrofit.http.Query;
 
 import com.google.gson.JsonObject;
 import com.jackhxs.data.APIResult;
+import com.jackhxs.data.Event;
+import com.jackhxs.data.EventsContainer;
 import com.jackhxs.data.LoginSignupResponse;
 import com.jackhxs.data.BusinessCard;
 import com.jackhxs.data.template.Template;
@@ -78,9 +80,18 @@ public interface RestInterface {
 	@POST("/sessions")
 	LoginSignupResponse login(@Field("email") String email, @Field("password") String password);
 	
-	/** Contacts */
+	/** templates */
 	@GET("/templates") // get templates
 	List<Template> getTemplates();
 
-	
+
+	/** Events */
+	// Create Event
+	@POST("/users/{userId}/events")
+	JsonObject createEvent(@Path("userId") String userId, @Query("sessionId") String sessionId, @Body Event event);
+
+	// Get Events
+	@GET("/users/{userId}/events")
+	EventsContainer getEvents(@Path("userId") String userId, @Query("sessionId") String sessionId);
+
 }

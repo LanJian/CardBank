@@ -15,6 +15,8 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.jackhxs.cardbank.App;
 import com.jackhxs.data.APIResult;
+import com.jackhxs.data.Event;
+import com.jackhxs.data.EventsContainer;
 import com.jackhxs.data.LoginSignupResponse;
 import com.jackhxs.data.BusinessCard;
 import com.jackhxs.data.template.Template;
@@ -200,6 +202,31 @@ public class RemoteService extends IntentService {
             	
             	resultBundle.putString("dataType", "templates");
                 resultBundle.putParcelableArrayList("templates", templates);
+                
+                break;
+            }
+            case CREATE_EVENT: {
+            	Event event = intent.getParcelableExtra("event");
+            	
+                JsonObject res;
+                
+                res = service.createEvent(userId, sessionId, event);
+                
+                Boolean result = res.get("status").getAsString().equals("success") ? true : false;
+                resultBundle.putBoolean("result", result);
+                
+                break;
+            }
+            case GET_EVENTS: {
+            	EventsContainer mEventsContainer = service.getEvents(userId, sessionId);
+            	
+            	resultBundle.putString("dataType", "templates");
+                resultBundle.putParcelableArrayList("events", mEventsContainer.events);
+                
+                resultBundle.putBoolean("result", mEventsContainer.status.equals("success") ? true : false);
+                
+                
+                break;
             }
             default: {
                 break;
@@ -210,7 +237,7 @@ public class RemoteService extends IntentService {
         	
         	if (re != null || re.getResponse() != null) {
                 	
-	        	Log.e("response body", re.getResponse().getReason());
+	        	//Log.e("response body", re.getResponse().getReason());
 	        	
 	        	// re.isNetworkError() - network error (no connection)
 	        	// re.getResponse().getStatus() == 403 - API error (ex: wrong email/password)

@@ -36,7 +36,7 @@ public class EventActivity extends FragmentActivity {
         Event event = eventIntent.getParcelableExtra("EVENT");
         
         
-        String sTime = "", eTime = "";
+        String sTime = "N/A", eTime = "N/A";
         
         Date date;
 		try {
@@ -45,11 +45,12 @@ public class EventActivity extends FragmentActivity {
 	        date = originalTime.parse(event.getEndTime());
 	        eTime = simplifiedTime.format(date);
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NullPointerException e) {
 			e.printStackTrace();
 		}
         
-        eventName.setText(event.getName());
+        eventName.setText(event.getEventName());
         eventHost.setText(String.format(getString(R.string.event_host), event.getHost()));
         eventTime.setText(String.format(getString(R.string.event_date), sTime, eTime));
         

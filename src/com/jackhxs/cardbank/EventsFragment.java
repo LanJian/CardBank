@@ -2,10 +2,13 @@ package com.jackhxs.cardbank;
 
 import java.util.ArrayList;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -22,9 +25,13 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.jackhxs.data.Event;
+import com.jackhxs.remote.Constants;
 import com.jackhxs.remote.JSONResultReceiver;
+import com.jackhxs.remote.RemoteService;
+import com.jackhxs.remote.Constants.Operation;
 
 public class EventsFragment extends Fragment implements JSONResultReceiver.Receiver{
 
@@ -34,10 +41,14 @@ public class EventsFragment extends Fragment implements JSONResultReceiver.Recei
             new String[] { "Android", "iOS", "WindowsMobile", "Blackberry"};
 
 	private ArrayList<String> eventNames;
-	private ArrayList<Event> events;
+	private ArrayList<Event> mEvents;
 	
 	private EventsAdapter mEventsAdapter;
 	
+	// Used to make API calls
+	public JSONResultReceiver mReceiver;
+	
+		
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -53,12 +64,14 @@ public class EventsFragment extends Fragment implements JSONResultReceiver.Recei
 	    View view = inflater.inflate(R.layout.events_fragment,
 	        container, false);
 	    
-	    
+	    mReceiver = new JSONResultReceiver(new Handler());
+		mReceiver.setReceiver(this);
+		
 	    final ListView eventList = (ListView) view.findViewById(R.id.event_list);
 	    final View emptyView = view.findViewById(R.id.empty);
 	    		
 	    eventNames = new ArrayList<String>();
-	    events = new ArrayList<Event>();
+	    mEvents = new ArrayList<Event>();
 	    
 	    
 	    mEventsAdapter = new EventsAdapter(getActivity(), eventNames);
@@ -76,7 +89,7 @@ public class EventsFragment extends Fragment implements JSONResultReceiver.Recei
 				
 				Intent intent = new Intent(getActivity(), EventActivity.class);
 				
-				intent.putExtra("EVENT", events.get(position));
+				intent.putExtra("EVENT", mEvents.get(position));
 				
 				startActivity(intent);
 				
@@ -99,6 +112,14 @@ public class EventsFragment extends Fragment implements JSONResultReceiver.Recei
 			}
 			
 		});
+		
+		final Intent intentCards = new Intent(Intent.ACTION_SYNC, null, getActivity(), RemoteService.class);
+		
+		intentCards.putExtra("receiver", mReceiver);
+		intentCards.putExtra("operation",(Parcelable) Operation.GET_EVENTS);
+		
+		Log.i(TAG, "getting events");
+		getActivity().startService(intentCards);
 		
 	    return view;
 	  }
@@ -159,18 +180,18 @@ public class EventsFragment extends Fragment implements JSONResultReceiver.Recei
 			    	Log.i("list", "" + eventNames.size());
 			    	Event event = new Event();
 			        
-					event.setId(userInput.getText().toString());
+					event.setEventId(userInput.getText().toString());
 					event.setOwner("Or Bar");
-					event.setName("CardBeam Monthly Drinks");
+					event.setEventName("CardBeam Monthly Drinks");
 					event.setHost("CardBeam");
 					event.setLocation("CardBeam Office");
 					event.setStartTime("Fri, Aug 29, 2014 at 5:00 PM");
 					event.setEndTime("Fri, Aug 29, 2014 at 7:00 PM");
 			    	
-					events.add(event);
+					mEvents.add(event);
 			    	Log.i("list", "" + eventNames.size());
 			    	
-			    	eventNames.add(event.getName());
+			    	eventNames.add(event.getEventName());
 			    	
 			    	mEventsAdapter.notifyDataSetChanged();
 			    }
@@ -193,8 +214,63 @@ public class EventsFragment extends Fragment implements JSONResultReceiver.Recei
 
 	@Override
 	public void onReceiveResult(int resultCode, Bundle resultData) {
-		// TODO Auto-generated method stub
 		
+		switch (resultCode) {
+
+		case Constants.STATUS_FINISHED: {
+			
+			Operation command = resultData.getParcelable("operation");
+			if (command != null){
+				switch (command) {
+				case GET_EVENTS:
+						// Event Created Successfully
+					Log.d(TAG, "Event Created Successfully");
+					
+					ArrayList<Event> events = resultData.getParcelableArrayList("events");
+					
+					mEvents.clear();
+					mEvents.addAll(events);
+					
+					eventNames.clear();
+					
+					for (int i = 0; i < events.size(); i++) {
+						eventNames.add(mEvents.get(i).getEventName());
+					}
+					
+					
+					mEventsAdapter.notifyDataSetChanged();
+					
+					break;
+				
+				// no other cases for now
+				default:
+					Log.e(TAG, "UNSUPPORTED OPERATION " + command.toString());
+				}
+			
+			}
+			
+			break;
+		}
+		case Constants.STATUS_ERROR: 
+			Operation command = resultData.getParcelable("operation");
+			if (command != null){
+				switch (command) {
+				case POST_CARD:
+				case UPDATE_CARD:
+					Log.e(TAG, "failed to get events: try again");
+				
+					Toast.makeText(getActivity(), "Failed to get events", Toast.LENGTH_LONG).show();
+					
+					break;
+				default:
+					Log.e(TAG, "UNSUPPORTED OPERATION " + command.toString());
+					break;
+				}
+			
+			}
+			
+			break;
+		}
 	}
 	
 	@Override
@@ -208,8 +284,8 @@ public class EventsFragment extends Fragment implements JSONResultReceiver.Recei
 		  
 		  Event event = data.getParcelableExtra("EVENT");
 	   
-		  eventNames.add(event.getName());
-		  events.add(event);
+		  eventNames.add(event.getEventName());
+		  mEvents.add(event);
 		  
 		  mEventsAdapter.notifyDataSetChanged();
 	  }

@@ -25,8 +25,10 @@ public final class Constants {
 		DEL_REFER,
         REFER,
         LIST_REFERRALS,
-        GET_TEMPLATES;
-
+        GET_TEMPLATES,
+        CREATE_EVENT,
+        GET_EVENTS;
+        
 		@Override
 		public int describeContents() {
 			return 0;

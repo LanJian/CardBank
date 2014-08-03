@@ -9,9 +9,9 @@ public class Event implements Parcelable {
 		
 	}
 	
-	private String Id;
+	private String eventId;
 	private String owner;
-	private String name;
+	private String eventName;
 	private String host;
 	private String location;
 	private String startTime;
@@ -19,11 +19,12 @@ public class Event implements Parcelable {
 	private String expiryTime;
 	
 	
-	public String getId() {
-		return Id;
+	
+	public String getEventId() {
+		return eventId;
 	}
-	public void setId(String id) {
-		Id = id;
+	public void setEventId(String eventId) {
+		this.eventId = eventId;
 	}
 	public String getOwner() {
 		return owner;
@@ -31,11 +32,11 @@ public class Event implements Parcelable {
 	public void setOwner(String owner) {
 		this.owner = owner;
 	}
-	public String getName() {
-		return name;
+	public String getEventName() {
+		return eventName;
 	}
-	public void setName(String name) {
-		this.name = name;
+	public void setEventName(String eventName) {
+		this.eventName = eventName;
 	}
 	public String getHost() {
 		return host;
@@ -68,13 +69,10 @@ public class Event implements Parcelable {
 		this.expiryTime = expiryTime;
 	}
 	
-	
-
-
-    protected Event(Parcel in) {
-        Id = in.readString();
+	protected Event(Parcel in) {
+        eventId = in.readString();
         owner = in.readString();
-        name = in.readString();
+        eventName = in.readString();
         host = in.readString();
         location = in.readString();
         startTime = in.readString();
@@ -89,9 +87,9 @@ public class Event implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(Id);
+        dest.writeString(eventId);
         dest.writeString(owner);
-        dest.writeString(name);
+        dest.writeString(eventName);
         dest.writeString(host);
         dest.writeString(location);
         dest.writeString(startTime);
