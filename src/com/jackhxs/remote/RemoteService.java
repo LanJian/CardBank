@@ -234,6 +234,7 @@ public class RemoteService extends IntentService {
             }
         }
         catch (RetrofitError re) {
+        	re.printStackTrace();
         	
         	if (re != null || re.getResponse() != null) {
                 	

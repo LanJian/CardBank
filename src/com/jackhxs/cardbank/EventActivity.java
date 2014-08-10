@@ -17,10 +17,14 @@ public class EventActivity extends FragmentActivity {
 
 	TextView eventName, eventHost, eventTime;
 	
-	final SimpleDateFormat originalTime = new SimpleDateFormat("EEE, MMM dd, yyyy 'at' h:mm a", Locale.US);
+//	final SimpleDateFormat originalTime = new SimpleDateFormat("EEE, MMM dd, yyyy 'at' h:mm a", Locale.US);
+	final SimpleDateFormat originalTime = new SimpleDateFormat("yyyy-MM-dd'T'h:mm:ss.SSS", Locale.US);
 
 	final SimpleDateFormat simplifiedTime = new SimpleDateFormat("MMM dd, h:mm a", Locale.US);
 
+//	 "2014-08-10T18:26:00.000Z"
+
+	
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

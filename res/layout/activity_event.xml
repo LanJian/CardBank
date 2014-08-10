@@ -44,11 +44,13 @@
  
     <fragment
         android:id="@+id/event_members"
-        android:name="com.jackhxs.cardbank.MyContactsFragment"
+        android:name="com.jackhxs.cardbank.EventMembersFragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_below="@id/event_header" />
+        android:layout_below="@id/event_header"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp" />
 
     <ImageView
         android:id="@+id/shadow"

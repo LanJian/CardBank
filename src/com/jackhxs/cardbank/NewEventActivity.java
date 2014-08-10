@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Locale;
+import java.util.TimeZone;
 import java.util.concurrent.atomic.AtomicLong;
 
 import com.jackhxs.data.BusinessCard;
@@ -47,6 +48,9 @@ public class NewEventActivity extends FragmentActivity implements JSONResultRece
 	
 	private Event event = new Event();
 	
+	private AtomicLong startTime = new AtomicLong();
+	private AtomicLong endTime = new AtomicLong();
+	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,9 +66,6 @@ public class NewEventActivity extends FragmentActivity implements JSONResultRece
         eventLocation = (EditText) findViewById (R.id.event_location);
         eventStartTime = (TextView) findViewById (R.id.event_stime);
         eventEndTime = (TextView) findViewById (R.id.event_etime);
-        
-        final AtomicLong startTime = new AtomicLong();
-        final AtomicLong endTime = new AtomicLong();
         
         final View dialogView = View.inflate(this, R.layout.date_time_picker, null);
         final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
@@ -86,9 +87,12 @@ public class NewEventActivity extends FragmentActivity implements JSONResultRece
 		                                    timePicker.getCurrentHour(),
 		                                    timePicker.getCurrentMinute());
 
+		                 calendar.setTimeZone(TimeZone.getDefault());
+		                 
 		                 startTime.set(calendar.getTimeInMillis());
 		                 
 		                 eventStartTime.setText(sdf.format(calendar.getTime()));
+		                 //startTime = new AtomicLong(calendar.getTime().getTime());
 		                 
 		                 alertDialog.dismiss();
 		            }});
@@ -116,6 +120,8 @@ public class NewEventActivity extends FragmentActivity implements JSONResultRece
 		                                    timePicker.getCurrentHour(),
 		                                    timePicker.getCurrentMinute());
 
+		                 calendar.setTimeZone(TimeZone.getDefault());
+		                 
 		                 endTime.set(calendar.getTimeInMillis());
 		                 
 		                 eventEndTime.setText(sdf.format(calendar.getTime()));
@@ -133,12 +139,12 @@ public class NewEventActivity extends FragmentActivity implements JSONResultRece
 	private void createEvent() {
 		
 		//event.setEventId("fsd");
-		event.setOwner("sdfa");
-		event.setEventName(eventName.getText().toString());
-		event.setHost(eventHost.getText().toString());
-		event.setLocation(eventLocation.getText().toString());
-		event.setStartTime(eventStartTime.getText().toString());
-		event.setEndTime(eventEndTime.getText().toString());
+		//event.setOwner("sdfa");
+		event.setEventName(eventName.getText().toString().trim());
+		event.setHost(eventHost.getText().toString().trim());
+		event.setLocation(eventLocation.getText().toString().trim());
+		event.setStartTime(Long.toString(startTime.get()));
+		event.setEndTime(Long.toString(endTime.get()));
 		
 		final Intent intentCards = new Intent(Intent.ACTION_SYNC, null, this, RemoteService.class);
 		

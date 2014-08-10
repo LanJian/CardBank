@@ -6,6 +6,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.RelativeLayout.LayoutParams;
+import android.text.TextUtils;
 
 import com.jackhxs.data.BusinessCard;
 import com.jackhxs.data.template.Template;
@@ -69,6 +70,11 @@ public class BusinessCardLayoutBuilder {
 		TextView textView = new TextView(mActivity);
         textView.setText(value);
         textView.setTextColor(Color.BLACK);
+        
+        textView.setEllipsize(TextUtils.TruncateAt.END);
+        textView.setHorizontallyScrolling(false);
+        textView.setSingleLine();
+        
         layoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP, RelativeLayout.TRUE);
         layoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT, RelativeLayout.TRUE);
         
