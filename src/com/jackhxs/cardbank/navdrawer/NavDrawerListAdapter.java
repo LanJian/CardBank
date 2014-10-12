@@ -6,6 +6,7 @@ import com.jackhxs.cardbank.R;
 
 import android.app.Activity;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 public class NavDrawerListAdapter extends BaseAdapter {
-	
+	private static final String TAG = NavDrawerListAdapter.class.getSimpleName();
 	private Context context;
 	private ArrayList<NavDrawerItem> navDrawerItems;
 	
@@ -50,7 +51,15 @@ public class NavDrawerListAdapter extends BaseAdapter {
         TextView txtTitle = (TextView) convertView.findViewById(R.id.title);
         TextView txtCount = (TextView) convertView.findViewById(R.id.counter);
          
-        imgIcon.setImageResource(navDrawerItems.get(position).getIcon());        
+        
+        int iconRes = navDrawerItems.get(position).getIcon();
+        
+        if (iconRes > 0) {
+        	imgIcon.setVisibility(View.VISIBLE);
+	        imgIcon.setImageResource(iconRes);  
+        } else {
+        	imgIcon.setVisibility(View.GONE);
+        }
         txtTitle.setText(navDrawerItems.get(position).getTitle());
         
         // displaying count

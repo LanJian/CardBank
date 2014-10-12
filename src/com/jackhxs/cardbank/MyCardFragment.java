@@ -333,7 +333,7 @@ public class MyCardFragment extends CardBeamFragment implements JSONResultReceiv
 				mPagerAdapter = new BusinessTemplateAdapter(getFragmentManager(), templates, myCard);
 		        mPager.setAdapter(mPagerAdapter);
 				
-		        mPager.setOffscreenPageLimit(mPagerAdapter.getCount());
+		        mPager.setOffscreenPageLimit(4);
 		        
 		        //If hardware acceleration is enabled, you should also remove
 		        // clipping on the pager for its children.
@@ -575,8 +575,6 @@ public class MyCardFragment extends CardBeamFragment implements JSONResultReceiv
 
 		@Override
 		public void onPageSelected(int position) {
-			Toast.makeText(getActivity(), "template " + position + " selected", Toast.LENGTH_SHORT).show();	
-			
 			myCard.setTemplate(templates.get(position));
 			
 			myCard.getTemplateConfig().setBaseTemplate(myCard.getTemplate().getTemplateName());

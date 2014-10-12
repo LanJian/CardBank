@@ -5,8 +5,8 @@
     <string name="nav_drawer_my_card">My Card</string>
     <string name="nav_drawer_contacts">Contacts</string>
     <string name="nav_drawer_referrals">Referrals</string>
-    <!-- Not used yet -->
     <string name="nav_drawer_events">Events</string>
+    <string name="nav_drawer_invite">Invite</string>
     
     <string name="desc_nav_drawer_item_icon">Item Icon</string>
     
@@ -91,5 +91,17 @@
     <!-- These are used in the event details view -->
     <string name="event_host">Hosted By: %s </string>
     <string name="event_date">From: %1$s to %2$s </string>
+    
+    <!-- invites -->
+    <string name="invite_title">Invite friends and colleagues</string>
+    <string name="invite_message">Thank you for taking the time to share CardBeam with your friends and colleagues</string>
+    <string name="invite_email">Email</string>
+    <string name="invite_sms">SMS</string>
+    
+    
+    
+    
+    <string name="email_template"><![CDATA[I have found this great app called <a href=www.goo.gl/TVDYmk > CardBeam</a> that I think you should try out]]></string>
+    <string name="sms_template">I have found this great app call CardBeam. You should give it a try by clicking here: goo.gl/TVDYmk</string>
     
 </resources>

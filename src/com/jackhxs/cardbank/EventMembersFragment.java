@@ -39,7 +39,8 @@ public class EventMembersFragment extends CardBeamFragment implements JSONResult
 	private ImageLoader mImageLoader;
 	private boolean mIsRefer;
 	private Integer toRefer;
-
+	private String eventId;
+	
 	public void onCreate(Bundle bundle) {
 		super.onCreate(bundle);
 		
@@ -79,15 +80,11 @@ public class EventMembersFragment extends CardBeamFragment implements JSONResult
 		// Inflate the layout for this fragment
 		mContentView = inflater.inflate(R.layout.event_members_fragment, container, false);
 		
-		mReceiver = new JSONResultReceiver(new Handler());
-		mReceiver.setReceiver(this);
+		Bundle bundle = getArguments();
+		eventId = bundle.getString("eventId");
 		
-		final Intent intentCards = new Intent(Intent.ACTION_SYNC, null, getActivity(), RemoteService.class);
 		
-		intentCards.putExtra("receiver", mReceiver);
-		intentCards.putExtra("operation",(Parcelable) Operation.GET_CONTACTS);
-		
-		getActivity().startService(intentCards);
+		loadMembers();
 		
 		return super.onCreateView(inflater, container, savedInstanceState);
 	}
@@ -108,6 +105,20 @@ public class EventMembersFragment extends CardBeamFragment implements JSONResult
 		super.onDestroy();
 		if (mImageLoader != null) mImageLoader.destroy();
 	}
+	
+	private void loadMembers() {
+		
+		mReceiver = new JSONResultReceiver(new Handler());
+		mReceiver.setReceiver(this);
+		
+		final Intent intentCards = new Intent(Intent.ACTION_SYNC, null, getActivity(), RemoteService.class);
+		
+		intentCards.putExtra("receiver", mReceiver);
+		intentCards.putExtra("operation",(Parcelable) Operation.GET_EVENT_MEMBERS);
+		intentCards.putExtra("eventId", eventId);
+		
+		getActivity().startService(intentCards);
+	}
 
 	@Override
 	public void onReceiveResult(int resultCode, Bundle resultData) {
@@ -115,6 +126,7 @@ public class EventMembersFragment extends CardBeamFragment implements JSONResult
 	
 		Log.d(TAG, "recieved Result in CardListFragment");
 		
+		/*
 		BusinessCard[] data = (BusinessCard[]) resultData.getParcelableArray("contacts");
 		
 
@@ -165,7 +177,7 @@ public class EventMembersFragment extends CardBeamFragment implements JSONResult
 				
 			}
 		});
-		
+		*/
 		setContentShown(true);
 	}
 }

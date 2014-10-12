@@ -16,6 +16,8 @@ import android.view.ViewTreeObserver;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.jackhxs.cardbank.customviews.ShadowLayout;
+
 public class BusinessCardFragment extends Fragment {
 	private static final String TAG = "BusinessCardFragment";
 	

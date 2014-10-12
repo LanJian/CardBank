@@ -8,6 +8,7 @@ import android.widget.TextView;
 import android.widget.RelativeLayout.LayoutParams;
 import android.text.TextUtils;
 
+import com.jackhxs.cardbank.customviews.ShadowLayout;
 import com.jackhxs.data.BusinessCard;
 import com.jackhxs.data.template.Template;
 import com.jackhxs.data.template.TextConfig;
@@ -50,8 +51,7 @@ public class BusinessCardLayoutBuilder {
 		// Image has to be first (so it appears behind the text
 		final ImageView background = addBackground(buisinessCardLayout);
 		
-		Picasso.with(mActivity).setDebugging(true);
-	    Picasso.with(mActivity).load(Constants.API_ADDRESS_V1 + template.getImageUrl()).into(background);
+		Picasso.with(mActivity).load(Constants.API_ADDRESS_V1 + template.getImageUrl()).into(background);
 	    
 	    addField(buisinessCardLayout, template.getProperties().name, cardDetails.getFirstName() + " " + cardDetails.getLastName());
         addField(buisinessCardLayout, template.getProperties().phone, cardDetails.getPhone());

@@ -9,7 +9,7 @@ public class Event implements Parcelable {
 		
 	}
 	
-	private String eventId;
+	private String _id;
 	private String owner;
 	private String eventName;
 	private String host;
@@ -20,11 +20,11 @@ public class Event implements Parcelable {
 	
 	
 	
-	public String getEventId() {
-		return eventId;
+	public String get_id() {
+		return _id;
 	}
-	public void setEventId(String eventId) {
-		this.eventId = eventId;
+	public void set_id(String _id) {
+		this._id = _id;
 	}
 	public String getOwner() {
 		return owner;
@@ -70,7 +70,7 @@ public class Event implements Parcelable {
 	}
 	
 	protected Event(Parcel in) {
-        eventId = in.readString();
+		_id = in.readString();
         owner = in.readString();
         eventName = in.readString();
         host = in.readString();
@@ -87,7 +87,7 @@ public class Event implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(eventId);
+        dest.writeString(_id);
         dest.writeString(owner);
         dest.writeString(eventName);
         dest.writeString(host);

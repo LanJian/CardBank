@@ -5,15 +5,16 @@
     <color name="black">#000</color>
     <color name="dark_grey">#111</color>
     <color name="light_grey">#fff3f3f3</color>
-    <color name="dark_blue">#0a2083</color>
+    <color name="dark_blue">#FF0f2173</color>
+    <color name="dark_blue_minor">#FF182a77</color>
     
     <color name="actionbar_background">@color/dark_blue</color>
     
     <color name="nav_drawer_bakground">@color/dark_grey</color>
     <color name="nav_drawer_item_color">@color/white</color>
     
-    <color name="nav_drawer_background_pressed_start">#1abc9c</color>
-    <color name="nav_drawer_background_pressed_end">#16a085</color>
+    <color name="nav_drawer_background_pressed_start">@color/dark_blue</color>
+    <color name="nav_drawer_background_pressed_end">@color/dark_blue_minor</color>
     
     <color name="counter_text_bg">#626262</color>
     <color name="counter_text_color">#c5c4c4</color>

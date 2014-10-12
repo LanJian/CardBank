@@ -10,7 +10,10 @@ import com.jackhxs.data.Event;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 public class EventActivity extends FragmentActivity {
@@ -34,7 +37,6 @@ public class EventActivity extends FragmentActivity {
         eventHost = (TextView) findViewById (R.id.event_host);
         eventTime = (TextView) findViewById (R.id.event_date);
         
-     
         Intent eventIntent = getIntent();
         
         Event event = eventIntent.getParcelableExtra("EVENT");
@@ -59,5 +61,16 @@ public class EventActivity extends FragmentActivity {
         eventTime.setText(String.format(getString(R.string.event_date), sTime, eTime));
         
         
+        FragmentManager fm = getSupportFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
+         
+        EventMembersFragment eventMembersFragment = new EventMembersFragment();
+        
+        Bundle bundle = new Bundle();
+        bundle.putString("eventId", event.get_id());
+        eventMembersFragment.setArguments(bundle);
+        
+        ft.replace(R.id.event_members, eventMembersFragment);
+        ft.commit();
     }
 }

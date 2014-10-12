@@ -5,6 +5,7 @@
         <item>@string/nav_drawer_contacts</item>
         <item>@string/nav_drawer_referrals</item>
 		<item>@string/nav_drawer_events</item>
+		<item>@string/nav_drawer_invite</item>
 	</string-array>
 	
     <string-array name="fragment_icon_array">
@@ -12,6 +13,7 @@
         <item>@drawable/ic_contacts</item>
         <item>@drawable/ic_referral</item>
         <item>@drawable/ic_events</item>
+        <item>@null</item>
 	</string-array>
 	
 </resources>

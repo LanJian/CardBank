@@ -21,7 +21,7 @@
     <application
         android:allowBackup='true'
         android:name='com.jackhxs.cardbank.App'
-        android:icon="@drawable/cardbeam_icon"
+        android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
 

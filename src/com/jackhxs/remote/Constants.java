@@ -27,7 +27,8 @@ public final class Constants {
         LIST_REFERRALS,
         GET_TEMPLATES,
         CREATE_EVENT,
-        GET_EVENTS;
+        GET_EVENTS,
+        GET_EVENT_MEMBERS;
         
 		@Override
 		public int describeContents() {

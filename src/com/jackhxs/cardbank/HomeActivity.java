@@ -11,9 +11,12 @@ import com.jackhxs.cardbank.navdrawer.NavDrawerListAdapter;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
+import android.net.Uri;
 import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
@@ -23,6 +26,7 @@ import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -169,21 +173,81 @@ public class HomeActivity extends FragmentActivity implements CreateNdefMessageC
 			case 2:
 				fragment = new ReferralsListFragment();
 				break;
-			default:
+			case 3:
 				fragment = new EventsFragment();
 				break;
+			case 4:
+				startInvite();
+				break;
+		    default:
+		    	fragment = new MyCardFragment();
+				break;
+		
+			
 		}
+    	if (fragment != null) { 
+	        FragmentManager fragmentManager = getSupportFragmentManager();
+	        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
+    	}
     	
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
-
-        // update selected item and title, then close the drawer
-        mDrawerList.setItemChecked(position, true);
-        setTitle(navMenuTitles[position]);
-		mDrawerLayout.closeDrawer(mDrawerList);
+    	if (position != 4) {
+	        // update selected item and title, then close the drawer
+	        mDrawerList.setItemChecked(position, true);
+    	    setTitle(navMenuTitles[position]);
+    	}
+			mDrawerLayout.closeDrawer(mDrawerList);
+    	
     }
 
-    @Override
+    private void startInvite() { 
+    	AlertDialog	alertDialog = new AlertDialog.Builder(this).create();
+
+	    alertDialog.setTitle(R.string.invite_title);
+	
+	    alertDialog.setMessage(getString(R.string.invite_message));
+	
+	    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.invite_email), new DialogInterface.OnClickListener() {
+	
+	    	public void onClick(DialogInterface dialog, int id) {
+	    		
+	    		Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
+	    		emailIntent.setType("text/html");
+//	    		emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, new String[]
+//	    		{"[EMAIL PROTECTED]"});
+	    		emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT,
+	    		"Subject");
+	    		
+	    		//emailIntent.putExtra(Intent.EXTRA_TEXT, Html.fromHtml("<a href=\"" + "www.google.com" + "\">" + "Google"+ "</a>"));
+	    		emailIntent.putExtra(Intent.EXTRA_TEXT, Html.fromHtml(getString(R.string.email_template)));
+	    		
+	    		startActivity(Intent.createChooser(emailIntent, "Send mail..."));
+	    	}
+	    }); 
+	
+	    alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, getString(R.string.invite_sms), new DialogInterface.OnClickListener() {
+	
+	    	public void onClick(DialogInterface dialog, int id) {
+	    		Intent sendIntent = new Intent(Intent.ACTION_VIEW);         
+	    		sendIntent.setData(Uri.parse("sms:"));
+	    		
+	    		sendIntent.putExtra("sms_body", getString(R.string.sms_template));
+	    		
+	    		startActivity(sendIntent);
+	    	}
+	    }); 
+	
+//	    alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Button 3 Text", new DialogInterface.OnClickListener() {
+//	
+//	    	public void onClick(DialogInterface dialog, int id) {
+//	    		
+//	    	}
+//	    });
+	    
+	    alertDialog.show();
+		
+	}
+
+	@Override
     public void setTitle(CharSequence title) {
         mTitle = title;
         getActionBar().setTitle(mTitle);
@@ -244,6 +308,9 @@ public class HomeActivity extends FragmentActivity implements CreateNdefMessageC
 		// Events
 		navDrawerItems.add(new NavDrawerItem(navMenuTitles[3], navMenuIcons.getResourceId(3, -1)));
 				
+		// Invites
+		navDrawerItems.add(new NavDrawerItem(navMenuTitles[4], navMenuIcons.getResourceId(4, -1)));
+		
 		// Recycle the typed array
      	navMenuIcons.recycle();
 
@@ -278,12 +345,6 @@ public class HomeActivity extends FragmentActivity implements CreateNdefMessageC
 						createMimeRecord("application/com.jackhxs.cardbank", serializedCard.getBytes()),
 				});
 		
-		/*
-		 *  This refreshes the contact list.
-		 *  a better solution is to check if the contact list is what's being displayed. if it is download the list again after 5 seconds 
-		 */
-		
-		//startLongPollingGetContact();
 		return msg;
 	}
 	

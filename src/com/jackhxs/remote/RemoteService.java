@@ -220,13 +220,23 @@ public class RemoteService extends IntentService {
             case GET_EVENTS: {
             	EventsContainer mEventsContainer = service.getEvents(userId, sessionId);
             	
-            	resultBundle.putString("dataType", "templates");
-                resultBundle.putParcelableArrayList("events", mEventsContainer.events);
+            	resultBundle.putParcelableArrayList("events", mEventsContainer.events);
                 
                 resultBundle.putBoolean("result", mEventsContainer.status.equals("success") ? true : false);
                 
                 
                 break;
+            }
+            case GET_EVENT_MEMBERS: {
+            	
+            	String eventId = intent.getStringExtra("eventId");
+            	
+            	JsonObject eventMembers = service.getEventMember(eventId);
+            	
+            	
+                resultBundle.putBoolean("result",  true);
+                
+            	break;
             }
             default: {
                 break;

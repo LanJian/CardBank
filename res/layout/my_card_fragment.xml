@@ -34,10 +34,16 @@
         android:id="@+id/card_wrapper_layout"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:background="@drawable/bg_card_leather"
-        >
-        
+        android:layout_alignParentTop="true" >
+     
+
+	       <RelativeLayout
+	           android:layout_width="match_parent"
+	           android:layout_height="100dp"
+	           android:background="@color/dark_blue" >
+
+	       </RelativeLayout>
+	    
         <com.jackhxs.cardbank.customviews.PagerContainer
 	        android:id="@+id/pager_container"
 	        android:layout_width="match_parent"
@@ -55,8 +61,9 @@
 
         </com.jackhxs.cardbank.customviews.PagerContainer>
         
+        
     </RelativeLayout>
-
+    
     <ScrollView
         android:id="@+id/card_details_layout"
         android:layout_width="fill_parent"
@@ -267,7 +274,7 @@
 		</LinearLayout>
    
     </ScrollView>
- 
+ <!-- 
     <ImageView
        android:id="@+id/horizontal_shadow"
        android:layout_width="fill_parent"
@@ -276,5 +283,6 @@
        android:scaleType="fitXY"
        android:src="@drawable/horizontal_shadow" />
     
-    
+     -->
+     
 </RelativeLayout>

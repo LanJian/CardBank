@@ -94,4 +94,7 @@ public interface RestInterface {
 	@GET("/users/{userId}/events")
 	EventsContainer getEvents(@Path("userId") String userId, @Query("sessionId") String sessionId);
 
+	// Get Events
+	@GET("/event/{eventId}")
+	JsonObject getEventMember(@Path("eventId") String eventId);
 }

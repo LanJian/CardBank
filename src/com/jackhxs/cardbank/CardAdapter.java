@@ -26,6 +26,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.jackhxs.cardbank.customviews.ShadowLayout;
 import com.jackhxs.data.BusinessCard;
 import com.jackhxs.util.ImageUtil;
 import com.xtremelabs.imageutils.ImageLoader;

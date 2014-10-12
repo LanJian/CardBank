@@ -180,7 +180,7 @@ public class EventsFragment extends Fragment implements JSONResultReceiver.Recei
 			    	Log.i("list", "" + eventNames.size());
 			    	Event event = new Event();
 			        
-					event.setEventId(userInput.getText().toString());
+					event.set_id(userInput.getText().toString());
 					event.setOwner("Or Bar");
 					event.setEventName("CardBeam Monthly Drinks");
 					event.setHost("CardBeam");
