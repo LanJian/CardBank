@@ -101,7 +101,7 @@
     
     
     
-    <string name="email_template"><![CDATA[I have found this great app called <a href=www.goo.gl/TVDYmk > CardBeam</a> that I think you should try out]]></string>
-    <string name="sms_template">I have found this great app call CardBeam. You should give it a try by clicking here: goo.gl/TVDYmk</string>
+    <string name="email_template"><![CDATA[I have found this great app called <a href=www.goo.gl/y5X8b4 > CardBeam</a> that I think you should try out]]></string>
+    <string name="sms_template">I have found this great app call CardBeam. You should give it a try by clicking here: goo.gl/y5X8b4</string>
     
 </resources>
